@@ -1,0 +1,360 @@
+%*********************************************************************
+% fduthesis: 复旦大学论文模板
+% 2020/08/30 v0.7e
+%
+% 重要提示：
+%   1. 请确保使用 UTF-8 编码保存
+%   2. 请使用 XeLaTeX 或 LuaLaTeX 编译
+%   3. 请仔细阅读用户文档
+%   4. 修改、使用、发布本文档请务必遵循 LaTeX Project Public License
+%   5. 不需要的注释可以尽情删除
+%*********************************************************************
+
+\documentclass[type=master, oneside, draft=false]{fduthesis}
+% 模板选项：
+%   type = doctor|master|bachelor  论文类型，默认为本科论文
+%   oneside|twoside                论文的单双面模式，默认为 twoside
+%   draft = true|false             是否开启草稿模式，默认关闭
+% 带选项的用法示例：
+%   \documentclass[oneside]{fduthesis}
+%   \documentclass[twoside, draft=true]{fduthesis}
+%   \documentclass[type=bachelor, twoside, draft=true]{fduthesis}
+
+% 页眉：左标题右章节
+% \makeatletter
+% \let\ps@plain\ps@fancy
+% \makeatother
+% \fancyhf{}
+% \fancyhead[L]{\small\nouppercase{基于多源知识的安全漏洞影响组件的识别方法}}
+% \fancyhead[R]{\small\nouppercase{\csname l__fdu_header_center_mark_tl\endcsname\leftmark}}
+% \fancyfoot[C]{\small\thepage}
+% \pagestyle{fancy}
+
+% 魔改模板：根据学院要求改的格式
+\makeatletter
+\ExplSyntaxOn
+% 专业：改为“专业学位类别（领域）”
+\tl_set:Nn \c__fdu_name_major_tl { 专业学位类别（领域） }
+\__fdu_patch_cmd:Nnn \__fdu_cover_info: { 6em } { 9em }
+% 页眉：左论文标题、右章节名
+\let\ps@plain\ps@fancy
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\fdu@kai\l__fdu_info_title_tl}}
+\fancyhead[R]{\small\nouppercase{\fdu@kai\l__fdu_header_center_mark_tl\leftmark}}
+\fancyfoot[C]{\small\thepage}
+\pagestyle{fancy}
+% 摘要：用逗号而不是封号分隔关键词
+% \cs_set_protected:Npn \__fdu_abstract_end:
+% {
+%   \__fdu_keywords:nNn
+%   { \sffamily \c__fdu_name_keywords_tl \c__fdu_fwid_colon_tl }
+%   \l__fdu_info_keywords_clist { \c__fdu_fwid_comma_tl }
+%   \__fdu_clc:nn
+%   { \sffamily \c__fdu_name_clc_tl \c__fdu_fwid_colon_tl }
+%   { \l__fdu_info_clc_tl }
+% }
+% \cs_set_protected:Npn \__fdu_abstract_en_end:
+% {
+%   \__fdu_keywords:nNn
+%   { \bfseries \c__fdu_name_keywords_en_tl \__fdu_quad: }
+%   \l__fdu_info_keywords_en_clist { , ~ }
+%   \__fdu_clc:nn
+%   { \bfseries \c__fdu_name_clc_en_tl \__fdu_quad: } 
+%   { \l__fdu_info_clc_tl } 
+% }
+% 摘要：页数从罗马小写改为大写
+\ctex_patch_cmd:Nnn \frontmatter
+  { roman } { Roman }
+\ExplSyntaxOff
+\makeatother
+
+\fdusetup{
+  % 参数设置
+  % 允许采用两种方式设置选项：
+  %   1. style/... = ...
+  %   2. style = { ... = ... }
+  % 注意事项：
+  %   1. 不要出现空行
+  %   2. “=” 两侧的空格会被忽略
+  %   3. “/” 两侧的空格不会被忽略
+  %   4. 请使用英文逗号 “,” 分隔选项
+  %
+  % style 类用于设置论文格式
+  style = {
+    font = times,
+    % 西文字体（包括数学字体）
+    % 允许选项：
+    %   font = garamond|libertinus|lm|palatino|times|times*|none
+    %
+    cjk-font = windows,
+    % 中文字体
+    % 允许选项：
+    %   cjk-font = adobe|fandol|founder|mac|sinotype|sourcehan|windows|none
+    %
+    % 注意：
+    %   1. 中文字体设置高度依赖于系统。各系统建议方案：
+    %        windows：cjk-font = windows
+    %        mac：    cjk-font = mac
+    %        linux：  cjk-font = fandol（默认值）
+    %   2. 除 fandol 和 sourcehan 外，其余字体均为商用字体，请注意版权问题
+    %   3. 但 fandol 字体缺字比较严重，而 sourcehan 没有配备楷体和仿宋体
+    %   4. 这里中西文字体设置均注释掉了，即使用默认设置：
+    %        font     = times
+    %        cjk-font = fandol
+    %   5. 使用 font = none / cjk-font = none 关闭默认字体设置，需手动进行配置
+    %
+    font-size = -4,
+    % 字号
+    % 允许选项：
+    %   font-size = -4|5
+    %
+    % fullwidth-stop = catcode,
+    % 是否把全角实心句点 “．” 作为默认的句号形状
+    % 允许选项：
+    %   fullwidth-stop = catcode|mapping|false
+    % 说明：
+    %   catcode   显式的 “。” 会被替换为 “．”（e.g. 不包括用宏定义保存的 “。”）
+    %   mapping   所有的 “。” 会被替换为 “．”（使用 LuaLaTeX 编译则无效）
+    %   false     不进行替换
+    %
+    footnote-style = xits,
+    % 脚注编号样式
+    % 允许选项：
+    %   footnote-style = plain|libertinus|libertinus*|libertinus-sans|
+    %                    pifont|pifont*|pifont-sans|pifont-sans*|
+    %                    xits|xits-sans|xits-sans*
+    %
+    hyperlink = none,
+    % 超链接样式
+    % 允许选项：
+    %   hyperlink = border|color|none
+    %
+    % hyperlink-color = default,
+    % 超链接颜色
+    % 允许选项：
+    %   hyperlink-color = default|classic|elegant|fantasy|material|
+    %                     business|science|summer|autumn|graylevel|prl
+    % 默认与西文字体保持一致
+    %
+    bib-backend = bibtex,
+    % 参考文献支持方式
+    % 允许选项：
+    %   bib-backend = bibtex|biblatex
+    %
+    % bib-style = numerical,
+    % 直接TMD改模板好了：D:\texlive\2021\texmf-dist\bibtex\bst\gbt7714\gbt7714-numerical.bst
+    % Ban: address, publisher, doi, 非 EB/OL 的 url
+    % 参考文献样式
+    % 允许选项：
+    %   bib-style = author-year|numerical|<其他样式>
+    % 说明：
+    %   author-year  著者—出版年制
+    %   numerical    顺序编码制
+    %   <其他样式>   使用其他 .bst（bibtex）或 .bbx（biblatex）格式文件
+    %
+    % cite-style = {},
+    % 引用样式
+    % 默认为空，即与参考文献样式保持一致
+    % 仅适用于 biblatex；如要填写，需保证相应的 .cbx 格式文件能被调用
+    %
+    bib-resource = {res/ref.bib},
+    % 参考文献数据源
+    % 可以是单个文件，也可以是用英文逗号 “,” 隔开的一组文件
+    % 如果使用 biblatex，则必须明确给出 .bib 后缀名
+    %
+    % logo = {fudan-name.pdf},
+    % 封面中的校名图片
+    % 模版已自带，通常不需要额外配置
+    %
+    % logo-size = {0.5\textwidth},      % 只设置宽度
+    % logo-size = {{}, 3cm},            % 只设置高度
+    % logo-size = {8cm, 3cm},           % 设置宽度和高度
+    % 设置校名图片的大小
+    % 通常不需要调整
+    %
+    auto-make-cover = false % 盲审要求
+    % 是否自动生成论文封面（封一）、指导小组成员名单（封二）和声明页（封三）
+    % 除非特殊需要（e.g. 不要封面），否则不建议设为 false
+  },
+  %
+  % info 类用于录入论文信息
+  info = {
+    title = {基于XXX的XXX方法},
+    % 中文标题
+    % 长标题建议使用 “\\” 命令手动换行（不是指在源文件里输入回车符，当然
+    % 源文件里适当的换行可以有助于代码清晰）：
+    %   title = {最高人民法院、最高人民检察院关于适用\\
+    %            犯罪嫌疑人、被告人逃匿、死亡案件违法所得\\
+    %            没收程序若干问题的规定},
+    %
+    title* = {Title Title Title Title},
+    % 英文标题
+    %
+    author = {许聪颖},
+    % author = {},  % 盲审要求
+    % 作者姓名
+    %
+    % author* = {Your name},
+    % 作者姓名（英文 / 拼音）
+    % 目前不需要填写
+    %
+    supervisor = {导师名字\quad 副教授},
+    supervisor = {},  % 盲审要求
+    % 导师
+    % 姓名与职称之间可以用 \quad 打印一个空格
+    %
+    major = {我的专业},
+    % 专业
+    %
+    degree = professional,
+    % 学位类型
+    % 允许选项：
+    %   degree = academic|professional
+    % 说明：
+    %   academic      学术学位
+    %   professional  专业学位
+    %
+    department = {我的学院},
+    % 院系
+    %
+    student-id = {123456789},
+    student-id = {},  % 盲审要求
+    % 作者学号
+    %
+    % date = {2020 年 1 月 1 日},
+    % 日期
+    % 注释掉表示使用编译日期
+    %
+    % secret-level = ii,
+    % 密级
+    % 允许选项：
+    %   secret-level = none|i|ii|iii
+    % 说明：
+    %   none  不显示密级与保密年限
+    %   i     秘密
+    %   ii    机密
+    %   iii   绝密
+    %
+    % secret-year = {五年},
+    % 保密年限
+    % secret-level = none 时该选项无效
+    %
+    instructors = {
+      {彭\quad 鑫 \quad 教\quad 授},
+      {陈碧欢     \quad 副教授},
+      {沈立炜     \quad 副教授}
+    },
+    instructors = {}, % 盲审要求
+    % 指导小组成员
+    % 使用英文逗号 “,” 分隔
+    % 如有需要，可以用 \quad 手工对齐
+    %
+    keywords = {关键词1, 关键词2, 关键词3},
+    % 中文关键字
+    % 使用英文逗号 “,” 分隔
+    %
+    keywords* = {Keyword1, Keyword2, Keyword3},
+    % 英文关键字
+    % 使用英文逗号 “,” 分隔
+    %
+    clc = {TP311}
+    % 中图分类号
+  }
+}
+
+% 需要的宏包可以自行调用
+\usepackage{booktabs}
+\usepackage[labelsep=quad]{caption}
+\usepackage{diagbox}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{makecell}
+\usepackage{physics}
+\usepackage{threeparttable}
+\usepackage{xcolor}
+
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\setdescription{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\ctexset{subsection/tocline={\CTEXnumberline{#1}#2}}
+
+\lstset{
+  % basicstyle=\small\tt,
+  basicstyle=\normalfont\ttfamily,
+  numbers=left,
+  % numberstyle=\small\tt,
+  numberstyle=\normalfont\ttfamily\color{darkgray},
+  stepnumber=1,
+  numbersep=8pt,
+  frame=single,
+  xleftmargin=3em,
+  xrightmargin=1em,
+  framexleftmargin=2em,
+  captionpos=b,
+  keywordstyle=\color{blue!70}, commentstyle=\color{red!50!green!50!blue!50},
+  rulesepcolor=\color{red!20!green!20!blue!20},
+}
+\lstdefinelanguage{json}{
+  literate=
+    {\{}{{{\color{blue}{\{}}}}{1}
+    {\}}{{{\color{blue}{\}}}}}{1}
+    {[}{{{\color{blue}{[}}}}{1}
+    {]}{{{\color{blue}{]}}}}{1},
+}
+
+% 需要的命令可以自行定义
+\newcommand{\hilbertH}{\symcal{H}}
+\newcommand{\ee}{\symrm{e}}
+\newcommand{\ii}{\symrm{i}}
+\newcommand{\ds}{\,\cdot\,}
+
+\includeonly{
+  doc/a1_abstract.tex, doc/a2_abstract_en.tex,
+  doc/c1_introduction.tex, doc/c2_background.tex, doc/c3_approach.tex,
+  doc/c4_implementation.tex, doc/c5_experiment.tex, doc/c6_summary.tex,
+  doc/z1_acknowledgement.tex, doc/z2_review.tex
+}
+
+\begin{document}
+% 盲审要求：指导小组成员不要了，独创性声明不要了
+\begin{titlepage}
+  \makecoveri     % 封面
+  \newpage
+  % \makecoverii    % 指导小组
+\end{titlepage}
+
+\renewcommand{\captionfont}{\small}
+\renewcommand{\lstlistingname}{代码}
+\renewcommand{\lstlistlistingname}{代码}
+\renewcommand{\thelstlisting}{\thechapter-\arabic{lstlisting}}
+
+
+% 这个命令用来关闭版心底部强制对齐，可以减少不必要的 underfull \vbox 提示，但会影响排版效果
+% \raggedbottom
+
+% 前置部分包含目录、中英文摘要以及符号表等
+\frontmatter
+
+\tableofcontents                  % 目录
+\include{doc/a1_abstract.tex}     % 摘要
+\include{doc/a2_abstract_en.tex}  % 英文摘要
+
+% 主体部分是论文的核心
+\mainmatter
+
+\include{doc/c1_introduction.tex}     % 绪论
+\include{doc/c2_background.tex}       % 背景知识与相关工作
+\include{doc/c3_approach.tex}         % 
+\include{doc/c4_implementation.tex}
+\include{doc/c5_experiment.tex}
+\include{doc/c6_summary.tex}
+
+% 后置部分包含参考文献、声明页（自动生成）等
+\backmatter
+
+\printbibliography                    % 参考文献列表
+\include{doc/z1_acknowledgement.tex}  % 致谢
+\include{doc/z2_review.tex}           % 评审意见修改
+
+\end{document}
