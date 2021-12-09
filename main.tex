@@ -34,7 +34,7 @@
 \makeatletter
 \ExplSyntaxOn
 % 专业：改为“专业学位类别（领域）”
-\tl_set:Nn \c__fdu_name_major_tl { 专业学位类别（领域） }
+% \tl_set:Nn \c__fdu_name_major_tl { 专业学位类别（领域） }
 \__fdu_patch_cmd:Nnn \__fdu_cover_info: { 6em } { 9em }
 % 页眉：左论文标题、右章节名
 \let\ps@plain\ps@fancy
@@ -179,7 +179,7 @@
   %
   % info 类用于录入论文信息
   info = {
-    title = {基于XXX的XXX方法},
+    title = {基于多源信息的开源软件漏洞补丁定位方法},
     % 中文标题
     % 长标题建议使用 “\\” 命令手动换行（不是指在源文件里输入回车符，当然
     % 源文件里适当的换行可以有助于代码清晰）：
@@ -187,7 +187,7 @@
     %            犯罪嫌疑人、被告人逃匿、死亡案件违法所得\\
     %            没收程序若干问题的规定},
     %
-    title* = {Title Title Title Title},
+    title* = {Finding Patches for Open Source Software Vulnerabiliies from multiple sources},
     % 英文标题
     %
     author = {许聪颖},
@@ -198,15 +198,15 @@
     % 作者姓名（英文 / 拼音）
     % 目前不需要填写
     %
-    supervisor = {导师名字\quad 副教授},
-    supervisor = {},  % 盲审要求
+    supervisor = {陈碧欢\quad 副教授},
+    % supervisor = {},  % 盲审要求
     % 导师
     % 姓名与职称之间可以用 \quad 打印一个空格
     %
-    major = {我的专业},
+    major = {软件工程},
     % 专业
     %
-    degree = professional,
+    degree = academic,
     % 学位类型
     % 允许选项：
     %   degree = academic|professional
@@ -214,11 +214,11 @@
     %   academic      学术学位
     %   professional  专业学位
     %
-    department = {我的学院},
+    department = {软件学院},
     % 院系
     %
-    student-id = {123456789},
-    student-id = {},  % 盲审要求
+    student-id = {19212010035},
+    % student-id = {},  % 盲审要求
     % 作者学号
     %
     % date = {2020 年 1 月 1 日},
@@ -240,11 +240,12 @@
     % secret-level = none 时该选项无效
     %
     instructors = {
+      {赵文耘 \quad 教\quad 授},
       {彭\quad 鑫 \quad 教\quad 授},
       {陈碧欢     \quad 副教授},
       {沈立炜     \quad 副教授}
     },
-    instructors = {}, % 盲审要求
+    % instructors = {}, % 盲审要求
     % 指导小组成员
     % 使用英文逗号 “,” 分隔
     % 如有需要，可以用 \quad 手工对齐
@@ -310,10 +311,10 @@
 \newcommand{\ds}{\,\cdot\,}
 
 \includeonly{
-  doc/a1_abstract.tex, doc/a2_abstract_en.tex,
-  doc/c1_introduction.tex, doc/c2_background.tex, doc/c3_approach.tex,
-  doc/c4_implementation.tex, doc/c5_experiment.tex, doc/c6_summary.tex,
-  doc/z1_acknowledgement.tex, doc/z2_review.tex
+  src/a1_abstract.tex, src/a2_abstract_en.tex,
+  src/c1_introduction.tex, src/c2_background.tex, src/c3_approach.tex,
+  src/c4_implementation.tex, src/c5_experiment.tex, src/c6_summary.tex,
+  src/z1_acknowledgement.tex, src/z2_review.tex
 }
 
 \begin{document}
@@ -337,24 +338,25 @@
 \frontmatter
 
 \tableofcontents                  % 目录
-\include{doc/a1_abstract.tex}     % 摘要
-\include{doc/a2_abstract_en.tex}  % 英文摘要
+\include{src/a1_abstract.tex}     % 摘要
+\include{src/a2_abstract_en.tex}  % 英文摘要
 
 % 主体部分是论文的核心
 \mainmatter
 
-\include{doc/c1_introduction.tex}     % 绪论
-\include{doc/c2_background.tex}       % 背景知识与相关工作
-\include{doc/c3_approach.tex}         % 
-\include{doc/c4_implementation.tex}
-\include{doc/c5_experiment.tex}
-\include{doc/c6_summary.tex}
+\include{src/c1_introduction.tex}     % 绪论
+\include{src/c2_background.tex}       % 背景知识与相关工作
+\include{src/c3_empirical.tex}         % 
+\include{src/c4_approach.tex}
+\include{src/c5_experiment.tex}
+\include{src/c6_related.tex}
+\include{src/c7_summary.tex}
 
 % 后置部分包含参考文献、声明页（自动生成）等
 \backmatter
 
 \printbibliography                    % 参考文献列表
-\include{doc/z1_acknowledgement.tex}  % 致谢
-\include{doc/z2_review.tex}           % 评审意见修改
+\include{src/z1_acknowledgement.tex}  % 致谢
+\include{src/z2_review.tex}           % 评审意见修改
 
 \end{document}
