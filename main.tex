@@ -274,6 +274,7 @@
 \usepackage{physics}
 \usepackage{threeparttable}
 \usepackage{xcolor}
+\usepackage{xspace}
 
 \setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
 \setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
@@ -330,6 +331,10 @@
 \renewcommand{\lstlistlistingname}{代码}
 \renewcommand{\thelstlisting}{\thechapter-\arabic{lstlisting}}
 
+\newcommand{\congyingEdit}[1]{\textcolor{red}{#1}}
+\newcommand{\tocheck}[1]{\textcolor{black}{#1}}
+\newcommand{\tool}{\textsc{Tracer}\xspace}
+\newcommand{\fn}[1]{\footnote{\scalebox{0.82}{#1}}}
 
 % 这个命令用来关闭版心底部强制对齐，可以减少不必要的 underfull \vbox 提示，但会影响排版效果
 % \raggedbottom
