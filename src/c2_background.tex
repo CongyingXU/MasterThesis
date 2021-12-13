@@ -1,7 +1,48 @@
-\chapter{背景知识}
+\chapter{背景知识及相关工作}
 
-本章节介绍了背景知识。
+本文主要问题是finding，。。。。
 
-\section{CVE--通用漏洞披露}
-\section{NVD--(美国)国家漏洞数据库}
-\section{漏洞补丁}
+本章将介绍本文工作中的背景知识，包括：通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）；此外，将从漏洞披露信息的质量、漏洞补丁的分析及应用三个方面介绍本文的相关工作。
+
+
+\section{背景知识}
+% 本小节主要介绍本文工作中的背景知识，包括：通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）。
+
+\subsection{通用漏洞披露(CVE)} 
+通用漏洞披露(Common Vulnerability Exposure，CVE)，是指。。。被广泛关注和参考。
+官方或第三方平台？再顺路引出相关的sources，作为例子。
+
+
+\subsection{漏洞通告} 
+漏洞通告（advisory），是指。。。
+官方或第三方？再顺路引出相关的sources，作为例子。
+
+\subsection{漏洞补丁}
+是指。。。。
+.Patch
+Git, SVN commit 
+
+
+
+\section{相关工作}
+\subsection{漏洞信息质量}
+漏洞数据库（例如：CVE、NVD）被广泛关注，其中的漏洞信息也被广泛参考使用。随着漏洞数据库积累的漏洞数据越来越多，研究人员也越来越关注其中的漏洞信息的质量。
+
+Nguyen和Massacci\cite{nguyen2013reliability}最早揭示了NVD数据库中漏洞所影响的软件版本信息的不可靠性。为了提高该信息的可靠性，Nguyen\cite{nguyen2016automatic}和Dashevskyi等人\cite{dashevskyi2018screening}开发了工具以确定某一旧软件版本是否会受到新披露的漏洞的影响。他们认为：如果旧版本包含修复漏洞所更改的源代码行，则该版本被视为受漏洞影响。\tocheck{董等人}\cite{dong2019towards}从漏洞的描述信息中识别受漏洞影响的软件名称和版本，并与漏洞报告所提供的软件名称和版本信息进行对比。他们发现漏洞数据库中会遗漏真正受漏洞影响的版本，也会错误地包含了不受漏洞影响的版本。\tocheck{陈等人}\cite{chen2020automated}识别受漏洞影响的开源库信息。Chaparro等人的工作\cite{chaparro2017detecting}检测漏洞描述中是否缺少用于重现漏洞的关键步骤或预期效果信息。\tocheck{穆等人}的工作\cite{mu2018understanding}揭示了漏洞报告丢失重现漏洞信息的普遍性。以上工作已侧重于漏洞信息的多个方面，而本文的工作重点则是研究漏洞的补丁信息，并尝试自动化地从不同来源漏洞报告的综合信息中定位漏洞补丁。
+% \tocheck{jo等人}\cite{jo2020gapfinder}识别网络安全领域内的语义不一致。
+% \tocheck{这些工作侧重于漏洞信息的不同方面。按照这个方向，我们的工作重点是漏洞补丁，并尝试从漏洞报告的综合来源中识别漏洞补丁。}
+
+近期，\tocheck{Tan等人}完成了一项与本文的研究问题相似的工作\cite{Tan2021locating}。他们使用深度学习排名算法对代码仓库中的提交（commit）历史进行排名，把排在首位的提交当作为漏洞的补丁提交。他们的工作包含两个假设：（1）CVE中，受漏洞影响的软件的代码仓库已知；（2）漏洞与其补丁提交在数量上是一对一的映射关系。然而，事实上，受漏洞影响的软件的代码仓库并不已知，而需人工识别；此外，漏洞与其补丁提交在数量上存在一对多的关系（Sec.\ref{sec:cardinality}）。
+
+
+\subsection{漏洞补丁分析}
+当前，有多中补丁分析相关的任务可用于提高软件安全性，如：补丁的生成和部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁的存在性测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}以及秘密补丁识别\cite{xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine}。
+
+此外，研究人员也已为Java\cite{ponta2019manually}、C/C++\cite{fan2020ac}以及特定开源项目\cite{jimenez2018enabling}构建安全补丁数据集。基于这些数据集，研究人员已开展实证研究以表征漏洞及其补丁\cite{zaman2011security,li2017large,liu2020large,antal2020exploring}。在这些工作中，补丁信息多由人工识别\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine,ponta2019manually,zaman2011security}，或通过启发式规则识别，例如：在CVE的引用链接中查找补丁提交信息\cite{duan2019automating,fan2020ac,jimenez2018enabling,li2017large,liu2020large}，以及在提交信息（commitmessage）中搜索CVE标识符\cite{fan2020ac,jimenez2018enabling,antaloring}。这些工作存在的问题为：通过人工收集成本过高，且耗时较长；然而，启发式规则的方法又不足以找到或是找全补丁。
+
+
+\subsection{漏洞补丁应用}
+漏洞补丁信息可被用于多种软件安全性任务。例如，基于漏洞补丁生成漏洞攻击程序\cite{brumley2008automatic,you2017semfuzz}，通过软件成分分析以确定项目是否使用包含漏洞的第三方库，并判定该漏洞所影响的函数是否被调用\cite{pashchenko2018vulnerable,ponta2020detection,pashchenko2020vuln4real,Wang2020empirical}，以及通过学习漏洞特征\cite{li2016vulpecker,li2018vuldeepecker,zhou2019devign,jimenez2019importance}、通过匹配漏洞签名\cite{jang2012redebug,kim2017vuddy}、通过匹配漏洞和补丁检测签名\cite{xu2020patch,xiao2020mvp,cui2020vuldetector}来检测程序中的漏洞。
+
+
+与上一小结的补丁分析工作类似，这些工作中的CVE补丁主要通过人工识别\cite{pashchenko2018vulnerable,ponta2020detection,pashchenko2020vuln4real,xiao2020mvp}、基于启发式规则的方法\cite{li2016vulpecker,li2018vuldeepecker,you2017semfuzz,Wang2020empirical,jimenez2019importance}或直接取自为特定项目建立CVE和补丁之间映射关系的安全公告\cite{jang2012redebug,kim2017vuddy,xu2020patch}。但是，人工识别的成本过高，而且基于启发式规则的方法找到或是找全补丁。

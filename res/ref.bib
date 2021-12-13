@@ -17,3 +17,694 @@
 	keywords = {开源软件, 漏洞数据库, 版本控制, 开源漏洞情报, 开源漏洞库},
 	abstract = {近年来,随着软件开发周期的不断缩短,越来越多的软件开发者在其项目代码中使用大量的开源代码.软件开发者往往只关注自己负责部分的代码安全,几乎不关注项目采用的开源代码的安全性问题.开源软件的使用者很难将传统漏洞数据库中的漏洞条目对应到当前的软件版本中.现有的漏洞版本控制方案和开源代码的版本控制方案之间存在一定的差异,这使得开源代码使用者无法及时修复存在漏洞的代码,因此一个能够准确收集开源漏洞情报并对漏洞进行精确匹配的漏洞库是十分必要的.首先介绍了开源代码的广泛使用带来的潜在安全挑战;其次对现有开源漏洞库平台的情况进行了详细分析,同时对现有开源漏洞库从多个维度进行了对比研究;然后给出了当前开源漏洞库建设面临的问题和挑战;最后给出了建设开源漏洞数据库的一些建议.}
 }
+
+
+@online{Synopsys-report,
+author = {Synopsys Cybersecurity Research Center},
+title = {Open Source Security and Risk Analysis Report},
+lastaccessed = {August 31, 2021},
+url={https://www.synopsys.com/content/dam/synopsys/sig-assets/reports/rep-ossra-2021.pdf},
+year={2021},
+}
+
+@online{Snyk-report,
+author = {Snyk},
+title = {State of the Open Source~Security Report},
+lastaccessed = {August 31, 2021},
+url={https://snyk.io/wp-content/uploads/sooss_report_v2.pdf},
+year={2019},
+}
+
+@online{cve,
+title = {CVE List},
+lastaccessed = {August 31, 2021},
+url={https://cve.mitre.org/cve/},
+}
+
+@online{nvd,
+title = {National Vulnerability Database},
+lastaccessed = {August 31, 2021},
+url={https://nvd.nist.gov},
+}
+
+@online{blackduck,
+title = {Black Duck},
+url = {https://www.synopsys.com/content/dam/synopsys/sig-assets/datasheets/bdknowledgebase-ds-ul.pdf},
+lastaccessed = {August 31, 2021},
+}
+
+@online{whitesource,
+title = {WhiteSource},
+url = {https://www.whitesourcesoftware.com/vulnerability-database/},
+lastaccessed = {August 31, 2021},
+}
+
+@online{Veracode,
+title = {Veracode},
+url = {https://sca.veracode.com/vulnerability-database/search},
+lastaccessed = {August 31, 2021},
+}
+
+@online{snyk,
+title = {Snyk},
+url = {https://snyk.io/vuln},
+lastaccessed = {August 31, 2021},
+}
+
+@online{gitlab,
+title = {GitLab},
+url = {https://gitlab.com/gitlab-org/security-products/gemnasium-db},
+lastaccessed = {August 31, 2021},
+}
+
+@online{jsrender,
+lastaccessed = {August 31, 2021},
+url={https://github.com/BorisMoore/jsrender/commit/f984e139deb0a7648d5b543860ec652c21f6dcf6},
+}
+
+@online{moped,
+lastaccessed = {August 31, 2021},
+url={https://github.com/mongoid/moped/commit/dd5a7c14b5d2e466f7875d079af71ad19774609b},
+}
+
+@online{bson-ruby,
+lastaccessed = {August 31, 2021},
+url={https://github.com/mongodb/bson-ruby/commit/976da329ff03ecdfca3030eb6efe3c85e6db9999},
+}
+
+@online{python-jose-1,
+lastaccessed = {August 31, 2021},
+url={https://github.com/mpdavis/python-jose/commit/89b46353b9f611e9da38de3d2fedf52331167b93},
+}
+
+@online{python-jose-2,
+lastaccessed = {August 31, 2021},
+url={https://github.com/mpdavis/python-jose/commit/73007d6887a7517ac07c6e755e494baee49ef513},
+}
+
+@online{james-hupa-1,
+lastaccessed = {August 31, 2021},
+url={https://svn.apache.org/viewvc?view=revision&revision=1373762},
+}
+
+@online{james-hupa-2,
+lastaccessed = {August 31, 2021},
+url={https://github.com/apache/james-hupa/commit/aff28a8117a49969b0fc8cc9926c19fa90146d8d},
+}
+
+@online{deltaspike-1,
+lastaccessed = {August 31, 2021},
+url={https://github.com/apache/deltaspike/commit/4e2502358526b944fc5514c206d306e97ff271bb},
+}
+
+@online{deltaspike-2,
+lastaccessed = {August 31, 2021},
+url={https://github.com/apache/deltaspike/commit/72e607f3be66c30c72b32c24b44e9deaa8e54608},
+}
+
+@online{deltaspike-3,
+lastaccessed = {August 31, 2021},
+url={https://github.com/apache/deltaspike/commit/d95abe8c01d256da2ce0a5a88f4593138156a4e5},
+}
+
+@online{django-1,
+lastaccessed = {August 31, 2021},
+url={https://github.com/django/django/commit/103ebe2b5ff1b2614b85a52c239f471904d26244},
+}
+
+@online{django-2,
+lastaccessed = {August 31, 2021},
+url={https://github.com/django/django/commit/36f580a17f0b3cb087deadf3b65eea024f479c21},
+}
+
+@online{django-3,
+lastaccessed = {August 31, 2021},
+url={https://github.com/django/django/commit/092cd66cf3c3e175acce698d6ca2012068d878fa},
+}
+
+@online{django-4,
+lastaccessed = {August 31, 2021},
+url={https://github.com/django/django/commit/11c5e0609bcc0db93809de2a08e0dc3d70b393e4},
+}
+
+@online{libimobiledevice,
+lastaccessed = {August 31, 2021},
+url={https://github.com/libimobiledevice/libimobiledevice/commit/df1f5c4d70d0c19ad40072f5246ca457e7f9849e},
+}
+
+@online{libusbmuxd,
+lastaccessed = {August 31, 2021},
+url={https://github.com/libimobiledevice/libusbmuxd/commit/4397b3376dc4e4cb1c991d0aed61ce6482614196},
+}
+
+@online{debian,
+title = {Debian Security Tracker},
+url = {https://security-tracker.debian.org/tracker/},
+lastaccessed = {August 31, 2021},
+}
+
+@online{redhat,
+title = {Red Hat Bugzilla},
+url = {https://bugzilla.redhat.com/},
+lastaccessed = {August 31, 2021},
+}
+
+@online{SecurityFocus,
+title = {SecurityFocus},
+url = {https://www.securityfocus.com},
+lastaccessed = {August 31, 2021},
+}
+
+@online{nvd-feed,
+title = {NVD Data Feeds},
+url = {https://nvd.nist.gov/vuln/data-feeds},
+lastaccessed = {August 31, 2021},
+}
+
+@online{debian-repo,
+title = {Debian Repository for Advisories},
+url = {https://salsa.debian.org/security-tracker-team/security-tracker/-/tree/master/data/CVE},
+lastaccessed = {August 31, 2021},
+}
+
+@online{redhat-api,
+title = {WebService API of Red Hat},
+url = {https://bugzilla.redhat.com/docs/en/html/api/index.html},
+lastaccessed = {August 31, 2021},
+}
+
+@online{ruby-saml-1,
+lastaccessed = {August 31, 2021},
+url={https://github.com/onelogin/ruby-saml/commit/048a544730930f86e46804387a6b6fad50d8176f},
+}
+
+@online{SECURITY-1573,
+lastaccessed = {August 31, 2021},
+url={https://www.jenkins.io/security/advisory/2019-09-25/\#SECURITY-1573},
+}
+
+@online{THRIFT-4647,
+lastaccessed = {August 31, 2021},
+url={https://issues.apache.org/jira/browse/THRIFT-4647},
+}
+
+@online{github-api-1,
+title = {GitHub REST API},
+lastaccessed = {August 31, 2021},
+url={https://docs.github.com/en/rest/reference/search\#search-commits},
+}
+
+@online{github-api-2,
+title = {GitHub REST API},
+lastaccessed = {August 31, 2021},
+url={https://docs.github.com/en/rest/reference/repos\#list-branches},
+}
+
+@online{github-api-3,
+title = {GitHub REST API},
+lastaccessed = {August 31, 2021},
+url={https://docs.github.com/en/rest/reference/repos\#list-commits},
+}
+
+@online{ruby-saml-2,
+lastaccessed = {August 31, 2021},
+url={https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280},
+}
+
+@online{ruby-saml-3,
+lastaccessed = {August 31, 2021},
+url={https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c},
+}
+
+@online{ruby-saml-4,
+lastaccessed = {August 31, 2021},
+url={https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8},
+}
+
+@online{CVE-2011-1950,
+lastaccessed = {August 31, 2021},
+url={https://nvd.nist.gov/vuln/detail/CVE-2011-1950},
+}
+
+@online{UNDERTOW-1430,
+lastaccessed = {August 31, 2021},
+url={https://issues.redhat.com/browse/UNDERTOW-1430},
+}
+
+@online{undertow,
+lastaccessed = {August 31, 2021},
+url={https://github.com/undertow-io/undertow/commit/c46b7b49c5a561731c84a76ee52244369af1af8a},
+}
+
+@online{CVE-2019-10077,
+lastaccessed = {August 31, 2021},
+url={https://nvd.nist.gov/vuln/detail/CVE-2019-10077},
+}
+
+@online{jspwiki,
+lastaccessed = {August 31, 2021},
+url={https://github.com/apache/jspwiki/commit/87c89f0405d6b31fc165358ce5d5bc4536e32a8a},
+}
+
+@online{go-ethereum-1,
+lastaccessed = {August 31, 2021},
+url={https://github.com/ethereum/go-ethereum/commit/fb9f7261ec51e38eedb454594fc19f00de1a6834},
+}
+
+@online{go-ethereum-2,
+lastaccessed = {August 31, 2021},
+url={https://github.com/ethereum/go-ethereum/commit/83e2761c3a13524bd5d6597ac08994488cf872ef},
+}
+
+@online{release-note,
+lastaccessed = {August 31, 2021},
+url={https://docs.saltstack.com/en/latest/topics/releases/2018.3.3.html},
+}
+
+
+
+
+@online{,
+author = {},
+title = {},
+lastaccessed = {August 31, 2021},
+url={},
+year={},
+}
+
+% cve information quality
+
+@inproceedings{Tan2021locating,
+  title={Locating the Security Patches for Disclosed OSS Vulnerabilities with Vulnerability-Commit Correlation Ranking},
+  author={Xin Tan and Yuan Zhang and Chenyuan Mi and Jiajun Cao and Kun Sun and Yifan Lin and Min Yang},
+  booktitle={Proceedings of the 28th ACM Conference on Computer and Communications Security},
+  year={2021},
+}
+
+% affected version
+
+@inproceedings{nguyen2013reliability,
+  title={The (un) reliability of nvd vulnerable versions data: An empirical experiment on google chrome vulnerabilities},
+  author={Nguyen, Viet Hung and Massacci, Fabio},
+  booktitle={Proceedings of the 8th ACM SIGSAC Symposium on Information, Computer and Communications Security},
+  pages={493--498},
+  year={2013},
+}
+
+@article{nguyen2016automatic,
+  title={An automatic method for assessing the versions affected by a vulnerability},
+  author={Nguyen, Viet Hung and Dashevskyi, Stanislav and Massacci, Fabio},
+  journal={Empirical Software Engineering},
+  volume={21},
+  number={6},
+  pages={2268--2297},
+  year={2016},
+}
+
+@article{dashevskyi2018screening,
+  title={A screening test for disclosed vulnerabilities in foss components},
+  author={Dashevskyi, Stanislav and Brucker, Achim D and Massacci, Fabio},
+  journal={IEEE Transactions on Software Engineering},
+  volume={45},
+  number={10},
+  pages={945--966},
+  year={2019},
+}
+
+% affected library
+
+@inproceedings{dong2019towards,
+  title={Towards the detection of inconsistencies in public security vulnerability reports},
+  author={Dong, Ying and Guo, Wenbo and Chen, Yueqi and Xing, Xinyu and Zhang, Yuqing and Wang, Gang},
+  booktitle={Proceedings of the 28th USENIX Security Symposium},
+  pages={869--885},
+  year={2019},
+}
+
+@inproceedings{chen2020automated,
+  title={Automated identification of libraries from vulnerability data},
+  author={Chen, Yang and Santosa, Andrew E and Sharma, Asankhaya and Lo, David},
+  booktitle={Proceedings of the ACM/IEEE 42nd International Conference on Software Engineering: Software Engineering in Practice},
+  pages={90--99},
+  year={2020},
+}
+
+% other
+
+@inproceedings{chaparro2017detecting,
+  title={Detecting missing information in bug descriptions},
+  author={Chaparro, Oscar and Lu, Jing and Zampetti, Fiorella and Moreno, Laura and Di Penta, Massimiliano and Marcus, Andrian and Bavota, Gabriele and Ng, Vincent},
+  booktitle={Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering},
+  pages={396--407},
+  year={2017},
+}
+
+@inproceedings{mu2018understanding,
+  title={Understanding the reproducibility of crowd-reported security vulnerabilities},
+  author={Mu, Dongliang and Cuevas, Alejandro and Yang, Limin and Hu, Hang and Xing, Xinyu and Mao, Bing and Wang, Gang},
+  booktitle={Proceedings of the 27th USENIX Security Symposium},
+  pages={919--936},
+  year={2018},
+}
+
+@article{jo2020gapfinder,
+  title={GapFinder: Finding Inconsistency of Security Information From Unstructured Text},
+  author={Jo, Hyeonseong and Kim, Jinwoo and Porras, Phillip and Yegneswaran, Vinod and Shin, Seungwon},
+  journal={IEEE Transactions on Information Forensics and Security},
+  volume={16},
+  pages={86--99},
+  year={2021},
+}
+
+
+% patch presence testing
+
+@inproceedings{zhang2018precise,
+  title={Precise and accurate patch presence test for binaries},
+  author={Zhang, Hang and Qian, Zhiyun},
+  booktitle={Proceedings of the 27th USENIX Security Symposium},
+  pages={887--902},
+  year={2018},
+}
+
+@inproceedings{jiang2020pdiff,
+  title={PDiff: Semantic-based Patch Presence Testing for Downstream Kernels},
+  author={Jiang, Zheyue and Zhang, Yuan and Xu, Jun and Wen, Qi and Wang, Zhenghe and Zhang, Xiaohan and Xing, Xinyu and Yang, Min and Yang, Zhemin},
+  booktitle={Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications Security},
+  pages={1149--1163},
+  year={2020},
+}
+
+@inproceedings{dai2020bscout,
+  title={BScout: Direct Whole Patch Presence Test for Java Executables},
+  author={Dai, Jiarun and Zhang, Yuan and Jiang, Zheyue and Zhou, Yingtian and Chen, Junyan and Xing, Xinyu and Zhang, Xiaohan and Tan, Xin and Yang, Min and Yang, Zhemin},
+  booktitle={Proceedings of the 29th USENIX Security Symposium},
+  pages={1147--1164},
+  year={2020}
+}
+
+% patch generation
+
+@inproceedings{kim2013automatic,
+  title={Automatic patch generation learned from human-written patches},
+  author={Kim, Dongsun and Nam, Jaechang and Song, Jaewoo and Kim, Sunghun},
+  booktitle={Proceedings of the 35th International Conference on Software Engineering},
+  pages={802--811},
+  year={2013},
+}
+
+@inproceedings{xu2020automatic,
+  title={Automatic Hot Patch Generation for Android Kernels},
+  author={Xu, Zhengzi and Zhang, Yulong and Zheng, Longri and Xia, Liangzhao and Bao, Chenfu and Wang, Zhi and Liu, Yang},
+  booktitle={Proceedings of the 29th USENIX Security Symposium},
+  pages={2397--2414},
+  year={2020},
+}
+
+% automated patching
+
+@inproceedings{mulliner2013patchdroid,
+  title={Patchdroid: Scalable third-party security patches for android devices},
+  author={Mulliner, Collin and Oberheide, Jon and Robertson, William and Kirda, Engin},
+  booktitle={Proceedings of the 29th Annual Computer Security Applications Conference},
+  pages={259--268},
+  year={2013},
+}
+
+@inproceedings{duan2019automating,
+  title={Automating Patching of Vulnerable Open-Source Software Versions in Application Binaries.},
+  author={Duan, Ruian and Bijlani, Ashish and Ji, Yang and Alrawi, Omar and Xiong, Yiyuan and Ike, Moses and Saltaformaggio, Brendan and Lee, Wenke},
+  booktitle={Proceedings of the 26th Annual Network and Distributed System Security Symposium},
+  year={2019},
+}
+
+@inproceedings{machiry2020spider,
+  title={Spider: Enabling fast patch propagation in related software repositories},
+  author={Machiry, Aravind and Redini, Nilo and Camellini, Eric and Kruegel, Christopher and Vigna, Giovanni},
+  booktitle={Proceedings of the IEEE Symposium on Security and Privacy},
+  pages={1562--1579},
+  year={2020},
+}
+
+% security commits
+
+@inproceedings{zhou2017automated,
+  title={Automated identification of security issues from commit messages and bug reports},
+  author={Zhou, Yaqin and Sharma, Asankhaya},
+  booktitle={Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering},
+  pages={914--919},
+  year={2017},
+}
+
+@inproceedings{xu2017spain,
+  title={Spain: security patch analysis for binaries towards understanding the pain and pills},
+  author={Xu, Zhengzi and Chen, Bihuan and Chandramohan, Mahinthan and Liu, Yang and Song, Fu},
+  booktitle={Proceedings of the IEEE/ACM 39th International Conference on Software Engineering},
+  pages={462--472},
+  year={2017},
+}
+
+@inproceedings{sabetta2018practical,
+  title={A practical approach to the automatic classification of security-relevant commits},
+  author={Sabetta, Antonino and Bezzi, Michele},
+  booktitle={Proceedings of the IEEE International Conference on Software Maintenance and Evolution},
+  pages={579--582},
+  year={2018},
+}
+
+@inproceedings{chen2020machine,
+  title={A Machine Learning Approach for Vulnerability Curation},
+  author={Chen, Yang and Santosa, Andrew E and Yi, Ang Ming and Sharma, Abhishek and Sharma, Asankhaya and Lo, David},
+  booktitle={Proceedings of the 17th International Conference on Mining Software Repositories},
+  pages={32--42},
+  year={2020},
+}
+
+% empirical study
+
+@inproceedings{zaman2011security,
+  title={Security versus performance bugs: a case study on firefox},
+  author={Zaman, Shahed and Adams, Bram and Hassan, Ahmed E},
+  booktitle={Proceedings of the 8th working conference on mining software repositories},
+  pages={93--102},
+  year={2011},
+}
+
+@inproceedings{li2017large,
+  title={A large-scale empirical study of security patches},
+  author={Li, Frank and Paxson, Vern},
+  booktitle={Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security},
+  pages={2201--2215},
+  year={2017},
+}
+
+@inproceedings{antal2020exploring,
+  title={Exploring the Security Awareness of the Python and JavaScript Open Source Communities},
+  author={Antal, G{\'a}bor and Keleti, M{\'a}rton and Heged{\u{u}}s, P{\'e}ter},
+  booktitle={Proceedings of the 17th International Conference on Mining Software Repositories},
+  pages={16--20},
+  year={2020},
+}
+
+@inproceedings{liu2020large,
+  title={A large-scale empirical study on vulnerability distribution within projects and the lessons learned},
+  author={Liu, Bingchang and Meng, Guozhu and Zou, Wei and Gong, Qi and Li, Feng and Lin, Min and Sun, Dandan and Huo, Wei and Zhang, Chao},
+  booktitle={Proceedings of the IEEE/ACM 42nd International Conference on Software Engineering},
+  pages={1547--1559},
+  year={2020},
+}
+
+% data set
+
+@inproceedings{jimenez2018enabling,
+  title={Enabling the continous analysis of security vulnerabilities with vuldata7},
+  author={Jimenez, Matthieu and Le Traon, Yves and Papadakis, Mike},
+  booktitle={Proceedings of the IEEE International Working Conference on Source Code Analysis and Manipulation},
+  pages = {56--61},
+  year={2018},
+}
+
+@inproceedings{ponta2019manually,
+  title={A manually-curated dataset of fixes to vulnerabilities of open-source software},
+  author={Ponta, Serena Elisa and Plate, Henrik and Sabetta, Antonino and Bezzi, Michele and Dangremont, C{\'e}dric},
+  booktitle={Proceedings of the IEEE/ACM 16th International Conference on Mining Software Repositories},
+  pages={383--387},
+  year={2019},
+}
+
+@inproceedings{fan2020ac,
+  title={AC/C++ Code Vulnerability Dataset with Code Changes and CVE Summaries},
+  author={Fan, Jiahao and Li, Yi and Wang, Shaohua and Nguyen, Tien N},
+  booktitle={Proceedings of the 17th International Conference on Mining Software Repositories},
+  pages={508--512},
+  year={2020},
+}
+
+@inproceedings{gkortzis2018vulinoss,
+  title={VulinOSS: a dataset of security vulnerabilities in open-source systems},
+  author={Gkortzis, Antonios and Mitropoulos, Dimitris and Spinellis, Diomidis},
+  booktitle={Proceedings of the 15th International Conference on Mining Software Repositories},
+  pages={18--21},
+  year={2018},
+}
+
+@inproceedings{namrud2019androvul,
+  title={AndroVul: a repository for Android security vulnerabilities},
+  author={Namrud, Zakeya and Kpodjedo, S{\`e}gla and Talhi, Chamseddine},
+  booktitle={Proceedings of the 29th Annual International Conference on Computer Science and Software Engineering},
+  pages={64--71},
+  year={2019},
+}
+
+
+%  exploit generation
+
+@inproceedings{brumley2008automatic,
+  title={Automatic patch-based exploit generation is possible: Techniques and implications},
+  author={Brumley, David and Poosankam, Pongsin and Song, Dawn and Zheng, Jiang},
+  booktitle={Proceedings of the  IEEE Symposium on Security and Privacy},
+  pages={143--157},
+  year={2008},
+}
+
+@inproceedings{you2017semfuzz,
+  title={Semfuzz: Semantics-based automatic generation of proof-of-concept exploits},
+  author={You, Wei and Zong, Peiyuan and Chen, Kai and Wang, XiaoFeng and Liao, Xiaojing and Bian, Pan and Liang, Bin},
+  booktitle={Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security},
+  pages={2139--2154},
+  year={2017},
+}
+
+% software composition analysis
+
+@inproceedings{cadariu2015tracking,
+  title={Tracking known security vulnerabilities in proprietary software systems},
+  author={Cadariu, Mircea and Bouwers, Eric and Visser, Joost and van Deursen, Arie},
+  booktitle={Proceedings of the IEEE 22nd International Conference on Software Analysis, Evolution, and Reengineering},
+  pages={516--519},
+  year={2015},
+}
+
+@article{alqahtani2016tracing,
+  title={Tracing known security vulnerabilities in software repositories--A Semantic Web enabled modeling approach},
+  author={Alqahtani, Sultan S and Eghan, Ellis E and Rilling, Juergen},
+  journal={Science of Computer Programming},
+  volume={121},
+  pages={153--175},
+  year={2016},
+}
+
+@inproceedings{pashchenko2018vulnerable,
+  title={Vulnerable open source dependencies: Counting those that matter},
+  author={Pashchenko, Ivan and Plate, Henrik and Ponta, Serena Elisa and Sabetta, Antonino and Massacci, Fabio},
+  booktitle={Proceedings of the 12th ACM/IEEE International Symposium on Empirical Software Engineering and Measurement},
+  pages={1--10},
+  year={2018},
+}
+
+@article{ponta2020detection,
+  title={Detection, assessment and mitigation of vulnerabilities in open source dependencies},
+  author={Ponta, Serena Elisa and Plate, Henrik and Sabetta, Antonino},
+  journal={Empirical Software Engineering},
+  volume={25},
+  number={5},
+  pages={3175--3215},
+  year={2020},
+}
+
+@article{pashchenko2020vuln4real,
+  title={Vuln4Real: A Methodology for Counting Actually Vulnerable Dependencies},
+  author={Pashchenko, Ivan and Plate, Henrik and Ponta, Serena Elisa and Sabetta, Antonino and Massacci, Fabio},
+  journal={IEEE Transactions on Software Engineering},
+  year={2020},
+}
+
+@inproceedings{Wang2020empirical,
+  author={Y. {Wang} and B. {Chen} and K. {Huang} and B. {Shi} and C. {Xu} and X. {Peng} and Y. {Wu} and Y. {Liu}},
+  booktitle={ICSME}, 
+  title={An Empirical Study of Usages, Updates and Risks of Third-Party Libraries in Java Projects}, 
+  year={2020},
+  pages={35--45},
+}
+
+% vulnerability detection
+
+@inproceedings{li2016vulpecker,
+  title={Vulpecker: an automated vulnerability detection system based on code similarity analysis},
+  author={Li, Zhen and Zou, Deqing and Xu, Shouhuai and Jin, Hai and Qi, Hanchao and Hu, Jie},
+  booktitle={Proceedings of the 32nd Annual Conference on Computer Security Applications},
+  pages={201--213},
+  year={2016},
+}
+
+@inproceedings{perl2015vccfinder,
+  title={Vccfinder: Finding potential vulnerabilities in open-source projects to assist code audits},
+  author={Perl, Henning and Dechand, Sergej and Smith, Matthew and Arp, Daniel and Yamaguchi, Fabian and Rieck, Konrad and Fahl, Sascha and Acar, Yasemin},
+  booktitle={Proceedings of the 22nd ACM SIGSAC Conference on Computer and Communications Security},
+  pages={426--437},
+  year={2015},
+}
+
+@inproceedings{jimenez2019importance,
+  title={The importance of accounting for real-world labelling when predicting software vulnerabilities},
+  author={Jimenez, Matthieu and Rwemalika, Renaud and Papadakis, Mike and Sarro, Federica and Le Traon, Yves and Harman, Mark},
+  booktitle={Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+  pages={695--705},
+  year={2019},
+}
+
+@inproceedings{xu2020patch,
+  title={Patch based vulnerability matching for binary programs},
+  author={Xu, Yifei and Xu, Zhengzi and Chen, Bihuan and Song, Fu and Liu, Yang and Liu, Ting},
+  booktitle={Proceedings of the 29th ACM SIGSOFT International Symposium on Software Testing and Analysis},
+  pages={376--387},
+  year={2020},
+}
+
+@inproceedings{li2018vuldeepecker,
+  title={Vuldeepecker: A deep learning-based system for vulnerability detection},
+  author={Li, Zhen and Zou, Deqing and Xu, Shouhuai and Ou, Xinyu and Jin, Hai and Wang, Sujuan and Deng, Zhijun and Zhong, Yuyi},
+  booktitle={Proceedings of the 25th Annual Network and Distributed System Security Symposium},
+  year={2018},
+}
+
+@inproceedings{zhou2019devign,
+  title={Devign: Effective Vulnerability Identification by Learning Comprehensive Program Semantics via Graph Neural Networks},
+  author={Zhou, Yaqin and Liu, Shangqing and Siow, Jingkai and Du, Xiaoning and Liu, Yang},
+  booktitle={Proceedings of the 32nd Annual Conference on Neural Information Processing Systems},
+  pages={10197--10207},
+  year={2019},
+}  
+  
+@inproceedings{kim2017vuddy,
+  title={Vuddy: A scalable approach for vulnerable code clone discovery},
+  author={Kim, Seulbae and Woo, Seunghoon and Lee, Heejo and Oh, Hakjoo},
+  booktitle={Proceedings of the IEEE Symposium on Security and Privacy},
+  pages={595--614},
+  year={2017},
+}
+
+@inproceedings{xiao2020mvp,
+  title={$\{$MVP$\}$: Detecting Vulnerabilities using Patch-Enhanced Vulnerability Signatures},
+  author={Xiao, Yang and Chen, Bihuan and Yu, Chendong and Xu, Zhengzi and Yuan, Zimu and Li, Feng and Liu, Binghong and Liu, Yang and Huo, Wei and Zou, Wei and others},
+  booktitle={Proceedings of the 29th USENIX Security Symposium},
+  pages={1165--1182},
+  year={2020},
+}
+
+@inproceedings{jang2012redebug,
+  title={ReDeBug: finding unpatched code clones in entire os distributions},
+  author={Jang, Jiyong and Agrawal, Abeer and Brumley, David},
+  booktitle={Proceedings of the IEEE Symposium on Security and Privacy},
+  pages={48--62},
+  year={2012},
+}
+
+@article{cui2020vuldetector,
+  title={VulDetector: Detecting Vulnerabilities using Weighted Feature Graph Comparison},
+  author={Cui, Lei and Hao, Zhiyu and Jiao, Yang and Fei, Haiqiang and Yun, Xiaochun},
+  journal={IEEE Transactions on Information Forensics and Security},
+  volume={16},
+  pages={2004--2017},
+  year={2021},
+}
