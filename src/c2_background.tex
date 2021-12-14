@@ -1,4 +1,4 @@
-\chapter{背景知识及相关工作}
+\chapter{背景知识及相关工作【v1-doing】}
 本文的研究重点是开源软件漏洞的补丁定位问题，本章将首先介绍漏洞相关的背景知识，包括：通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）；然后，从漏洞披露信息的质量、漏洞补丁的分析及应用三个方面介绍相关的研究工作。
 
 
@@ -56,7 +56,7 @@ Nguyen和Massacci\cite{nguyen2013reliability}最早揭示了NVD数据库中漏�
 \subsection{漏洞补丁分析}
 当前，有多中补丁分析相关的任务可用于提高软件安全性，如：补丁的生成和部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁的存在性测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}以及秘密补丁识别\cite{xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine}。
 
-此外，研究人员也已为Java\cite{ponta2019manually}、C/C++\cite{fan2020ac}以及特定开源项目\cite{jimenez2018enabling}构建安全补丁数据集。基于这些数据集，研究人员已开展实证研究以表征漏洞及其补丁\cite{zaman2011security,li2017large,liu2020large,antal2020exploring}。在这些工作中，补丁信息多由人工识别\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine,ponta2019manually,zaman2011security}，或通过启发式规则识别，例如：在CVE的引用链接中查找补丁提交信息\cite{duan2019automating,fan2020ac,jimenez2018enabling,li2017large,liu2020large}，以及在提交信息（commitmessage）中搜索CVE标识符\cite{fan2020ac, jimenez2018enabling, antal2020exploring}。这些工作存在的问题为：通过人工收集成本过高，且耗时较长；然而，启发式规则的方法又不足以找到或是找全补丁。
+此外，研究人员也已为Java\cite{ponta2019manually}、C/C++\cite{fan2020ac}以及特定开源项目\cite{jimenez2018enabling}构建安全补丁数据集。基于这些数据集，研究人员已开展实证研究以表征漏洞及其补丁\cite{zaman2011security,li2017large,liu2020large,antal2020exploring}。在这些工作中，补丁信息多由人工识别\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine,ponta2019manually,zaman2011security}，或通过启发式规则识别，例如：在CVE的引用链接中查找补丁提交信息\cite{duan2019automating,fan2020ac,jimenez2018enabling,li2017large,liu2020large}，以及在提交信息（commit message）中搜索CVE标识符\cite{fan2020ac, jimenez2018enabling, antal2020exploring}。这些工作存在的问题为：通过人工收集成本过高，且耗时较长；然而，启发式规则的方法又不足以找到或是找全补丁。
 
 
 \subsection{漏洞补丁应用}
