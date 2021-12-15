@@ -41,7 +41,7 @@ precision、recall。。。
 
 
 \subsection{广度数据集构建}
-为了量化分析漏洞数据库中补丁的缺失程度以及不同数据库间补丁的不一致性（即：RQ1和RQ2），本文从$DB_A$和$DB_B$中获取了所有开源软件漏洞，构建了一个开源软件漏洞的广度数据集。截至2020年4月7日，分别从$DB_A$和$DB_B$中获取了\tocheck{8,630}和\tocheck{5,858}个CVE漏洞。
+为了量化分析漏洞数据库中补丁的缺失程度以及不同数据库间补丁的不一致性（即：RQ1和RQ2），本文基于$DB_A$和$DB_B$构建了一个开源软件漏洞的广度数据集用以实验分析。截至2020年4月7日，分别从$DB_A$和$DB_B$中获取了\tocheck{8,630}和\tocheck{5,858}个CVE漏洞。
 
 \subsection{深度数据集构建}
 为了准确地量化分析漏洞补丁的类型、映射关系和准确性（即：RQ3、RQ4和RQ5），本文还构建了开源软件漏洞的深度数据集。该数据集的漏洞数量少于广度数据集，但每个漏洞都包含补丁信息。为了确保漏洞补丁信息完整性和准确性，其中所有漏洞的补丁信息都是由人工识别。
@@ -68,9 +68,65 @@ precision、recall。。。
     \caption{数据集中漏洞年份及程序语言分布统计}\label{fig:dataset}
 \end{figure*}
 
+
+本文进一步分析了深度数据集中\tocheck{1,295}个CVE开源软件漏洞的年份和程序语言分布情况，以评估该数据集是否具有代表性。如图\ref{fig:rq0-year}所示，CVE的数量逐年增加，这与Snyk的报告\cite{Snyk-report}一致。此外，本文通过分析补丁中更改的源文件类型来确定CVE的编程语言。如图\ref{fig:rq0-language}所示，深度数据集中的CVE漏洞涵盖了七种较为常用的程序语言，具有较好的语言多样性。因此，可以认为该深度数据集对于开源软件漏洞具有较好的代表性。
+
+
 \section{RQ1：覆盖率分析}\label{sec:coverage}
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.98]{res/rq1-CVE-IDs-VS.pdf}
+    %\vspace{-5pt}
+    \caption{开源软件漏洞}\label{fig:rq1-cves}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.98]{res/rq1-CVE-IDs-Patches-VS.pdf}
+    %\vspace{-5pt}
+    \caption{含补丁信息的开源软件漏洞}\label{fig:rq1-cves-with-patches}
+    \end{subfigure}
+    %\vspace{-10pt}
+    \caption{$DB_A$与$DB_B$间数据交集}\label{fig:intersection}
+\end{figure}
+
+
+如图\ref{fig:rq1-cves}所示，$DB_A$和$DB_B$数据库中共有的CVE漏洞为\tocheck{4,418}个，同时$DB_A$和$DB_B$分别包含\tocheck{4,212}和\tocheck{1,440}个特有的CVE漏洞。如图\ref{fig:rq1-cves-with-patches}所示，$DB_A$中\tocheck{3,607(41.8\%)}个CVE漏洞含有补丁信息，$DB_B$中\tocheck{2,412(41.2\%)}个CVE漏洞含有补丁信息。总体而言，$DB_A$和$DB_B$数据库共有\tocheck{10,070}个开源软件CVE漏洞，其中\tocheck{4,602(45.7\%)}个漏洞至少有一个数据库提供了补丁信息。
+
+
+由此可见，数据库$DB_A$和$DB_B$中漏洞的补丁覆盖率都较低（41.8\%和41.2\%），漏洞补丁缺失的情况较为普遍。%而且可以看出，不同的漏洞数据库对\congyingEdit{OSS}漏洞的覆盖范围不同。
+同时，这也体现出自动化补丁查找方法的必要性，用以填补缺失的补丁信息。
+
 
 \section{RQ2：一致性分析}\label{sec:consistency}
+
+\begin{table}[!t]
+    \centering
+    \footnotesize
+    \caption{补丁一致性结果}\label{table:consistency}
+    %\vspace{-10pt}
+    % \begin{tabular}{|*{1}{p{2.4em}}|*{1}{p{2.0em}}*{1}{p{3.8em}}*{1}{p{4.1em}}|*{1}{p{2.0em}}*{1}{p{3.1em}}*{1}{p{3.6em}}|}
+    \begin{tabular}{|c|ccc|ccc|}
+    \noalign{\hrule height 1pt}
+    \multirow{2}{*}{补丁一致} & \multicolumn{3}{c|}{存在性不一致} & \multicolumn{3}{c|}{内容不一致} \\\cline{2-4}\cline{5-7}
+     & 总数 & 无漏洞信息 & 无补丁信息 & 总数 & 包含关系 & 非包含关系 \\\noalign{\hrule height 1pt}
+    % \multirow{2}{*}{Cons.} & \multicolumn{3}{c|}{Existence Inconsistency} & \multicolumn{3}{c|}{Content Inconsistency} \\\cline{2-4}\cline{5-7}
+    % & Total & No CVE & No Patch & Total & Inclusion & Difference \\\noalign{\hrule height 1pt}
+    907 （19.7\%） & 3,185 （69.2\%） & 1,392 （30.2\%） & 1,793 （39.0\%） & 510 （11.1\%） & 176 （3.8\%） & 334 （7.3\%）\\
+    % $DB_{A}$ vs. $DB_{C}$ & 3,659 & 73 (2.0\%) & 3,540 (96.7\%) & 2,523 (69.0\%) & 1,017 (27.8\%) & 46 (1.3\%) & 15 (0.4\%) & 31 (0.8\%) \\
+    % $DB_{B}$ vs. $DB_{C}$ & 2,490 & 75 (3.0\%) & 2,397 (96.3\%) & 1,687 (67.8\%) & 710 (28.5\%) & 18 (0.7\%) & 7 (0.3\%) & 11 (0.4\%)\\
+    \noalign{\hrule height 1pt}
+    \end{tabular}
+\end{table}
+
+为了分析两个数据库之间的补丁一致性情况，本节主要关注带有补丁的CVE漏洞，即：图\ref{fig:rq1-cves-with-patches}中的CVE漏洞。考虑到漏洞补丁的个数可能不唯一，可能为一组补丁信息，当两个数据库针对同一漏洞提供的补丁集完全相同时，判定为补丁信息一致。本文将补丁信息不一致分为存在性不一致和内容不一致。前者是指某一个数据库为该CVE漏洞提供了补丁信息，而另一个数据库不存在该CVE，或是存在该CVE但不存在补丁信息，这反映了出数据库$DB_A$和$DB_B$中开源软件漏洞及其补丁信息的不完整性。后者是指两个数据库都存在该CVE的补丁信息，但它们的补丁集并不一致，是包含关系或非包含关系的不一致情况，这反映了出数据库$DB_A$和$DB_B$中漏洞补丁信息可能是不准确的。
+
+
+表\ref{table:consistency}中展示了补丁一致性的分析结果。其中，第一列为在$DB_A$和$DB_B$中具有一致补丁集的CVE的数量（907，19.7\%），第二到第四列为补丁存在性不一致的CVE数量，最后三列为补丁集内容不一致的CVE数量。可以发现：\tocheck{4,602}个CVE中，（1）只有\tocheck{907(19.7\%)}的漏洞在$DB_A$和$DB_B$中有一致的补丁信息；（2）超过三分之二（即：\tocheck{3,185(69.2\%)}）的CVE漏洞补丁信息存在不一致情况，其中\tocheck{1,392(30.2\%)}个CVE漏洞不在$DB_{A}$或$DB_{B}$中，\tocheck{1,793(39.0\%)}个CVE漏洞都存在于$DB_{A}$或$DB_{B}$但在没有补丁信息；（3）\tocheck{510(11.1\%)}个CVE漏洞补丁内容不一致，其中，\tocheck{176(3.8\%)}个CVE的来自于某一个数据库的补丁集包含来自另一个数据库的补丁集，\tocheck{334(7.3\%)}个CVE的来自$DB_{A}$和$DB_{B}$的补丁集即不同也不包含。
+
+这些结果表明，$DB_A$和$DB_B$间存在较多的信息不一致，
+
 
 \section{RQ3：补丁类型分析}\label{sec:type}
 
