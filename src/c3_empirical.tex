@@ -125,11 +125,66 @@ precision、recall。。。
 
 表\ref{table:consistency}中展示了补丁一致性的分析结果。其中，第一列为在$DB_A$和$DB_B$中具有一致补丁集的CVE的数量（907，19.7\%），第二到第四列为补丁存在性不一致的CVE数量，最后三列为补丁集内容不一致的CVE数量。可以发现：\tocheck{4,602}个CVE中，（1）只有\tocheck{907(19.7\%)}的漏洞在$DB_A$和$DB_B$中有一致的补丁信息；（2）超过三分之二（即：\tocheck{3,185(69.2\%)}）的CVE漏洞补丁信息存在不一致情况，其中\tocheck{1,392(30.2\%)}个CVE漏洞不在$DB_{A}$或$DB_{B}$中，\tocheck{1,793(39.0\%)}个CVE漏洞都存在于$DB_{A}$或$DB_{B}$但在没有补丁信息；（3）\tocheck{510(11.1\%)}个CVE漏洞补丁内容不一致，其中，\tocheck{176(3.8\%)}个CVE的来自于某一个数据库的补丁集包含来自另一个数据库的补丁集，\tocheck{334(7.3\%)}个CVE的来自$DB_{A}$和$DB_{B}$的补丁集即不同也不包含。
 
-这些结果表明，$DB_A$和$DB_B$间存在较多的信息不一致，
+这些结果表明，$DB_A$和$DB_B$间存在较多不一致的补丁信息，进而证明数据库中补丁信息的准确性也值得进一步研究。
 
 
 \section{RQ3：补丁类型分析}\label{sec:type}
 
+通过人工手动查找，深度数据集中\tocheck{1,295}个CVE漏洞共收集到\tocheck{3,043}个补丁。具体来说，可能是因为GitHub在开源软件中被广泛使用，\tocheck{2,852(93.7\%)}的补丁都是为GitHub commit形式，\tocheck{136(4.5\%)}的补丁为SVN commit形式，且仅有\tocheck{55(1.8\%)}的补丁为来自其他Git平台的commit形式。
+
+此外，从CVE的角度统计来看，\tocheck{1,295}个CVE中\tocheck{1,202(92.8\%)}的CVE有GitHub commit类型的补丁，\tocheck{4(0.3\%)}的CVE有SVN commit类型的补丁。由于由于很多项目是从SVN切换为Git管理，\tocheck{48(3.7\%)}的CVE即有GitHub commit又有SVN commit类型的补丁。只有\tocheck{30(2.3\%)}的CVE的补丁全为来自其他Git平台的commit形式。这些结果表明，开源软件漏洞的补丁类型主要为GitHub和SVN commit。
+
 \section{RQ4：补丁映射分析}\label{sec:cardinality}
+\begin{figure}[!t]
+\centering
+\includegraphics[scale=0.5]{res/rq4-cardinality.pdf}
+\vspace{-10pt}
+\caption{Mapping Cardinalities between CVEs and Patches}\label{fig:rq4-cardinality}
+\end{figure}
+
+基于深度数据集中\tocheck{1,295}个CVE漏洞及其补丁数据，本节将分析开源漏洞及其补丁间在数量上的映射关系。本文将CVE与其补丁之间的映射关系分为三种类型，即：一对一、\tocheck{一对一组}及一对多。
+
+一对一是指一个补丁来修复某个漏洞，后文中简记为：\textit{SP}（Single Patch）。如图\ref{fig:rq4-cardinality}所示。\tocheck{567(43.8\%)}的CVE与其补丁具有一对一的映射关系（\textit{SP}）
+
+\tocheck{一对一组}是指CVE与其补丁在数量上非一对一关系，一个漏洞有多个commit信息，然而，这些commit都是等效的，任何一个补丁都足以修补漏洞，后文中简记为：\textit{MEP}（Multiple Equivalent Patch）。等效的补丁是指代码变更完全一样的两个commit，主要有两个原因：（1）通过GitHub中的Pull Request功能修补CVE，此时拉取请求提交（requested commit）和合并提交（merged commits）是该漏洞的等效补丁集。例如，python-jose@89b463\cite{python-jose-1}是拉取请求提交（requested commit），python-jose@73007d\cite{python-jose-2}是用于修复CVE-2016-7036的合并提交（merged commits），这两个commit是等效的。（2）一些开源软件的仓库是由SVN迁移到GitHub，因此，在同一软件的SVN和GitHub的代码仓库中分别有用于修补该CVE的commit，且这两处的commit中代码变更完全一样且完全等效的。例如，james-hupa代码仓库从SVN迁移到了GitHub，SVN commit james-hupa@1373762\cite{james-hupa-1}与GitHub commit james-hupa@aff28a\cite{james-hupa-2}是等效的。
+如图\ref{fig:rq4-cardinality}所示，\tocheck{567(43.8\%)}的CVE与其补丁具有一对一的映射关系（\textit{SP}），\tocheck{195(15.1\%)}的CVE与其补丁为一对一组映射关系（\textit{MEP}）
+
+一对多是指CVE与其补丁在数量上为一对多的关系，即：多个非等效的补丁用来修复某个漏洞。如图\ref{fig:rq4-cardinality}所示，\tocheck{533(41.2\%)}的CVE与其补丁为一对多的映射关系，可以进一步分为三种类型: 
+
+\begin{itemize}[leftmargin=*]
+\item 一个CVE是通过一个分支中的多个独立commit来修复的。这是因为该CVE较难修复需多次提交，或是后期发现初始的补丁不足以修复漏洞便追加了补丁。后文中简记为：\textit{MP}（Multiple Patch），占比\tocheck{7.8\%（101）}。例如，CVE-2017-17837由三个commit deltaspike@4e2502\cite{deltaspike-1}、deltaspike@72e607\cite{deltaspike-2}和deltaspike@d95abe\cite{deltaspike-3}修复。
+\item 一个CVE由多个分支中的多个补丁集修复。这是因为该漏洞影响开源软件的多个版本，每个版本又都在单独的分支上维护。后文中简记为：\textit{MB}（Multiple Branches），占比\tocheck{ 28.7\%（372)}。例如，CVE-2019-19118影响了django框架的2.1.x、2.2.x、3.0.x和3.2.x版本，commit django@103ebe\cite{django-1}、django@36f580\cite{django-2}、django@092cd6\cite{django-3}和django@11c5e0\cite{django-4}分别修复了受影响的四个版本分支中，其中，commit django@103ebe与其他commit的代码变更并不相同。
+\item 一个CVE由多个存储库中的多个补丁集修复。这是因为CVE影响了多个开源软件或一个开源库的多个版本，而这些版本是分布在独立的代码仓库中维护。文中简记为：\textit{MR}（Multiple Repositories ），占比\tocheck{ 4.6\%（60)}。例如，CVE-2016-5104影响了libimobiledevice和libusbmuxd两个开源软件，commit libimobiledevice@df1f5c\cite{libimobiledevice}和libusbmuxd@4397b3\cite{libusbmuxd}分修复了受影响的两个开源库。
+
+\end{itemize}
+
+这些结果展示了CVE及其补丁之间映射关系的多样性。在后文设计自动化补丁查找方法时，应充分考虑该特征。
 
 \section{RQ5：补丁准确性分析}\label{sec:accuracy}
+\begin{table}[!t]
+    \centering
+    \footnotesize
+    \caption{$DB_A$和$DB_B$补丁准确性评估结果}\label{table:accuracy}
+    %\vspace{-10pt} 
+    % \begin{tabular}{|*{1}{C{4.6em}}|*{1}{C{3.4em}}|*{3}{C{2.0em}}|*{3}{C{2.0em}}|}
+    \begin{tabular}{|c|c|ccc|ccc|}
+    \noalign{\hrule height 1pt}
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} &  \multicolumn{3}{c|}{$DB_A$} & \multicolumn{3}{c|}{$DB_B$} \\\cline{3-8}
+    & & Pre. & Rec. & F1 & Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567       & 0.908 & 0.915 & 0.910   & 0.900 & 0.921 & 0.906   \\
+    1:$i$ (MEP) & 195    & 0.935 & 0.898 & 0.902  & 0.924 & 0.909  & 0.906   \\
+    1:$n$ (MP) & 101     & 0.923 & 0.483 & 0.616  & 0.911 & 0.520 & 0.638    \\
+    1:$n$ (MB) & 372     & 0.941 & 0.510 & 0.620  & 0.932 & 0.436 & 0.555    \\
+    1:$n$ (MR) & 60      & 0.913 & 0.610 & 0.695  & 0.964 & 0.526 & 0.636   \\\hline
+    Total & 1,295       & 0.923 & 0.748 & 0.793  & 0.917 & 0.730 & 0.771     \\
+    \noalign{\hrule height 1pt}
+    \end{tabular}
+\end{table}
+
+本文使用精度（precision）、召回率（recall）和F1值（F1-score）作为评估补丁准确性的指标。对于具有两个等效补丁的CVE，报告两个等效补丁之一的数据库的精度和召回率都为1，而报告两个等效补丁之一和另一个不相关补丁的数据库的精度为1和召回率为0.5。
+
+如表\ref{table:accuracy}所示，分解了两个数据库在映射基数方面的准确性结果。
+第一列为CVE与补丁的映射类型，第二列为每种映射类型的CVE数量，最后六列分别为数据库$DB_A$和$DB_B$中CVE补丁的准确率、召回率和F1值。其中，$DB_A$和$DB_B$对于\textit{SP}和\textit{MEP}类型的CVE可实现约90\%的精度和召回率。同时，对于\textit{MP}、\textit{MB}和\textit{MR}类型的CVE，可达到90\%以上的高精度，但约50\%的召回率。例如，对于漏洞CVE-2017-17837，$DB_A$和$DB_B$仅报告三个补丁中的一个；对于漏洞CVE-2019-19118，$DB_A$报告四个补丁中的两个，而$DB_B$仅报告四个补丁中的一个。
+
+这些结果表明，漏洞数据库$DB_A$和$DB_B$经常会遗漏一些漏洞的补丁信息，尤其是对于具有多个补丁的CVE漏洞。对于安全服务用户来说，这会给漏洞的及时检测和修复带来较大挑战，这也反映出自动化补丁查找方法的必要性。
