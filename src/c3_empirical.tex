@@ -1,54 +1,54 @@
 \chapter{经验研究}
 
-
-
-为了了解已有漏洞数据库中开源软件漏洞补丁的质量和特征，本文开展了一项针对当前\tocheck{高质量}漏洞数据库的经验研究。本章节将介绍经验研究的设计、\tocheck{数据收集与解析}以及经验研究的结果分析。
+本章将主要介绍为了了解当前漏洞数据库现状，考察其中漏洞补丁的质量和特征所开展的经验研究工作，包括：经验研究的设计、数据准备以及经验研究的结果分析。
 
 
 \section{研究设计}
 \subsection{研究问题}
+为了了解已有漏洞数据库中开源软件漏洞补丁的质量和特征，本文所开展的针对当前\tocheck{高质量}漏洞数据库的经验研究包含以下研究问题：
+
 \begin{itemize}[leftmargin=*]
-    \item \textbf{RQ1 覆盖率分析：}漏洞库中，漏洞补丁信息的覆盖度如何？即：有多少漏洞包含补丁信息？(Sec. \ref{sec:coverage})
-    \item \textbf{RQ2 一致性分析：}不用漏洞库间，漏洞补丁信息的一直性如何？即：有多少漏洞在漏洞数据库中具有相同的补丁？(Sec. \ref{sec:consistency})
-    \item \textbf{RQ3 补丁类型分析：}漏洞补丁的类型有哪些？ (Sec. \ref{sec:type})
-    \item \textbf{RQ4 补丁映射分析：}漏洞与其补丁在数量上的映射关系是怎样的？ (Sec. \ref{sec:cardinality})
-    \item \textbf{RQ5 补丁准确性分析：}漏洞库中，漏洞的补丁信息准确度如何？ (Sec. \ref{sec:accuracy})
+    \item \textbf{RQ1 覆盖率分析：}当前\tocheck{高质量}漏洞数据库中，漏洞补丁信息的覆盖度如何？即：有多少漏洞包含补丁信息？(Sec. \ref{sec:coverage})
+    \item \textbf{RQ2 一致性分析：}不用漏洞库间，漏洞补丁信息的一致性如何？即：有多少漏洞在漏洞数据库中具有相同的补丁信息？(Sec. \ref{sec:consistency})
+    \item \textbf{RQ3 补丁类型分析：}开源漏洞补丁的类型有哪些？ (Sec. \ref{sec:type})
+    \item \textbf{RQ4 补丁映射分析：}开源漏洞与其补丁在数量上的映射关系是怎样的？ (Sec. \ref{sec:cardinality})
+    \item \textbf{RQ5 补丁准确性分析：}当前\tocheck{高质量}漏洞数据库中，漏洞的补丁信息准确度如何？ (Sec. \ref{sec:accuracy})
 \end{itemize}
     
-其中，RQ1可用来衡量不同漏洞数据库中开源软件漏洞的补丁缺失程度，RQ2用来量化不同漏洞数据库中漏洞补丁的不一致程度，RQ3和RQ4用来统计常见的补丁类型以及开源漏洞及其补丁之间的映射关系，RQ5用以评估不同漏洞数据库中漏洞补丁信息的准确性。总的来说，RQ1、RQ2和RQ5的结果旨在从不同的角度评估补丁质量，并挖掘出对自动化补丁\tocheck{识别}方法的需求；RQ3和RQ4旨在从不同角度捕捉开源软件漏洞补丁的特征，并为自动化补丁\tocheck{识别}方法的设计提供\tocheck{启发}。
+其中，RQ1可用来评估漏洞数据库中开源软件漏洞的补丁缺失程度，RQ2用来评估不同漏洞数据库中漏洞补丁的不一致程度，RQ3和RQ4用来表征常见的补丁类型以及开源漏洞及其补丁之间的映射关系，RQ5可用来评估不同漏洞数据库中漏洞补丁信息的准确性。总的来说，RQ1、RQ2和RQ5的结果旨在从不同的角度评估补丁质量，并挖掘出对自动化补丁\tocheck{识别}方法的需求；RQ3和RQ4旨在从不同角度捕捉开源软件漏洞补丁的特征，并为自动化补丁\tocheck{识别}方法的设计提供\tocheck{启发}。
 
 \subsection{评估标准【todo】}
 precision、recall。。。
 
 \section{数据准备}\label{sec:preparation}
 \subsection{漏洞数据库选择}
-本文前期调研了来自安全社区、工业界和学术界的漏洞数据库。在该章节的经验研究中，本文首先排除了来自安全社区的数据库（例如，CVE和NVD）。因为它们没有结构化的补丁信息，而补丁信息多是隐藏在参考链接中；此外，CVE和NVD数据库不仅仅包含开源软件漏洞，还包括闭源软件、系统及硬件相关的漏洞。
-本文还排除了来自学术界的数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul,li2017large,liu2020large,antal2020exploring}，这是因为这些数据集中的漏洞通常限定于特定程序语言（例如：Python、Java）而非面向所有开源软件，此外，由于长期缺乏维护，这些漏洞数据集缺失较新的漏洞数据。
+为挑选高质量的、具有代表性的漏洞数据库作为研究对象，本文前期调研了来自安全领域的社区、工业界和学术界的漏洞数据库。在该章节的经验研究工作中，本文首先排除了来自安全社区的数据库（例如，CVE List和NVD）。因为这两个数据库不提供结构化的补丁信息，而补丁链接多是隐藏在参考链接中；此外，CVE List和NVD数据库中不仅仅包含开源软件漏洞，还包括闭源软件、系统及硬件相关的漏洞。本文还排除了来自学术界的数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul,li2017large,liu2020large,antal2020exploring}，这是因为这些数据集中的漏洞通常限定于特定的一两种程序语言（例如：Python、Java），而非面向所有开源软件，缺乏多样性不具有代表性；此外，由于长期缺乏维护，这些漏洞数据集缺失较新的漏洞数据。
 
 
-本文关注到BlackDuck\cite{blackduck}、WhiteSource\cite{whitesource}、Veracode\cite{veracode}和Snyk\cite{snyk}四家公司提供软件成分分析（Software Composition Analysis）服务，该服务识别当前软件系统中使用的开源成本（即：第三方库），并报告开源成分相关的漏洞。因此，这四家公司需要构建尽可能完整且包含详细漏洞信息的漏洞库作为基础，本文便首先将这四家公司的漏洞数据库作为研究对象。进一步调研发现，某些公司并未公开漏洞数据库，或是公开的信息中不包含漏洞的补丁信息。最终，本文选定Veracode和Snyk的漏洞数据库作为研究对象，下文中简称为：$DB_A$和$DB_B$。
-
+对于工业界的数据库，本文首先关注到BlackDuck\cite{blackduck}、WhiteSource\cite{whitesource}、Veracode\cite{veracode}和Snyk\cite{snyk}四家安全公司提供软件成分分析（Software Composition Analysis）服务，这种服务通过识别并分析当前软件系统中使用的开源成本（即：第三方库），报告所使用的开源成分中的漏洞。因此，这四家公司需要先构建尽可能完整且包含详细漏洞信息的漏洞库作为服务基础，本文便首先将这四家公司的漏洞数据库作为研究对象。截至2021年4月5日，收集的信息为：
 
 \begin{itemize}[leftmargin=*]
-\item\textbf{Black Duck：}该公司的安全公告中共包含157,000多个漏洞，涵盖90多种编程语言。其中，数千个漏洞尚未被NVD收录。这些漏洞信息有特定的专家团队进行维护，以确保漏洞数据的完整性和准确性。然而，157,000多个漏洞中开源漏洞的具体数量并未公开，且具体的漏洞信息也并未公开。
-\item\textbf{Sonatype：} 该公司声称：\textit{"OSS Index is a free catalogue of open source components and scanning tools to help developers identify vulnerabilities, understand risk, and keep their software safe."} Sonatype的OSS索引支持20多个生态系统（即：Maven、npm、Go、PyPI等）。该公司的漏洞公告包含：漏洞描述、受漏洞影响的组件和版本、CVSS向量和参考链接等信息\footnote{https://ossindex.sonatype.org}。
-\item\textbf{WhiteSource：}该公司从NVD及其他安全公告平台和问题追踪系统（issue tracking system）中收集的漏洞超过175,000个，涵盖200多种编程语言。
-\item\textbf{Veracode：}该公司的漏洞数据库涵盖10多种编程语言相关的18,000多个漏洞\tocheck{链接}，公开的漏洞信息包括：受漏洞影响的组件和版本范围、库修复说明、参考资料等。
-\item\textbf{Snyk：}该公司的漏洞数据库\footnote{https://snyk.io/product/vulnerability-database/}是由经验丰富的安全研究团队持续维护，通过关注安全公告、Jira issue报告，Github commits等方式自动识别安全漏洞相关的报告。该公司的数据库涵盖超过10个编程语言生态系统，如：Maven、npm、Go、Composer等。该数据库提供漏洞的详细信息，包括：受漏洞影响的组件、版本范围、修复方法、参考链接等\footnote{https://snyk.io/vuln}。
+\item\textbf{Black Duck，}该公司的报告显示：该公司的安全公告中共包含157,000多个漏洞，涵盖90多种编程语言，其中，数千个漏洞尚未被NVD收录。该公司的漏洞数据库由特定的专家团队进行维护，以确保漏洞数据的完整性和准确性，然而，该公司的漏洞数据信息并未对外公开。
+\item\textbf{Sonatype\footnote{https://ossindex.sonatype.org}，} 该公司声称：\textit{“OSS Index是一个免费的开源组件目录，其中的扫描工具可帮助开发人员识别漏洞、了解风险并确保其软件安全。”}\footnote{英文原文为："OSS Index is a free catalogue of open source components and scanning tools to help developers identify vulnerabilities, understand risk, and keep their software safe."} Sonatype的OSS Index支持20多个生态系统（如：Maven、npm、Go、PyPI等）。该公司公开的漏洞信息包括：漏洞描述、受漏洞影响的组件和版本、CVSS向量和参考链接等信息。
+\item\textbf{WhiteSource\tocheck{链接}，}该公司从NVD及其他安全公告平台和问题追踪系统（issue tracking system）中共收集的漏洞超过175,000个，涵盖200多种编程语言。
+\item\textbf{Veracode\tocheck{链接}，}该公司的漏洞数据库涵盖10多种编程语言相关的18,000多个漏洞，公开的漏洞信息包括：受漏洞影响的组件和版本范围、库修复说明、参考资料等。
+\item\textbf{Snyk\footnote{https://snyk.io/vuln}，}该公司声称：漏洞数据库\footnote{https://snyk.io/product/vulnerability-database/}是由经验丰富的安全研究团队持续维护，通过关注安全公告、Jira issue报告，Github commits等方式自动识别安全漏洞相关的报告。该公司的数据库涵盖超过10个编程语言生态系统，如：Maven、npm、Go、Composer等。该数据库提供漏洞的详细信息，包括：受漏洞影响的组件、版本范围、修复方法、参考链接等。
 % \item \textbf{Gitlab Security} GitLab 咨询数据库是 Gitlab 依赖扫描器\footnote{https://docs.gitlab.com/ee/user/application\_security/dependency\_scanning/index.html} 的基础。目前涵盖了 6000 多个 CVE 条目和 8 个生态系统（即 Nuget、Conan、Maven 等）。提供了详细信息，例如描述、受影响的组件和版本、解决方案和参考。
 \end{itemize}
 
+进一步调研后发现，这四家公司中某些公司并未公开漏洞数据库，或是公开的漏洞信息中不包含用于修复漏洞的补丁信息，这将无法达成研究目标。最终，本文选定Veracode和Snyk的漏洞数据库作为研究对象，下文中简称为：$DB_A$和$DB_B$。
 
 
 \subsection{广度数据集构建}
-为了量化分析漏洞数据库中补丁的缺失程度以及不同数据库间补丁的不一致性（即：RQ1和RQ2），本文基于$DB_A$和$DB_B$构建了一个开源软件漏洞的广度数据集用以实验分析。截至2020年4月7日，分别从$DB_A$和$DB_B$中获取了\tocheck{8,630}和\tocheck{5,858}个CVE漏洞。
+为了评估漏洞数据库中补丁的缺失程度以及不同数据库间补丁的不一致性（即：RQ1和RQ2），本文基于$DB_A$和$DB_B$构建了一个开源软件漏洞的广度数据集用以实验分析。截至2020年4月7日，分别从$DB_A$和$DB_B$中分别获取了\tocheck{8,630}和\tocheck{5,858}个CVE漏洞。
 
 \subsection{深度数据集构建}
-为了准确地量化分析漏洞补丁的类型、映射关系和准确性（即：RQ3、RQ4和RQ5），本文还构建了开源软件漏洞的深度数据集。该数据集的漏洞数量少于广度数据集，但每个漏洞都包含补丁信息。为了确保漏洞补丁信息完整性和准确性，其中所有漏洞的补丁信息都是由人工识别。
+为了表征漏洞补丁的类型、映射关系以及尽可能准确地评估补丁信息的准确性（即：RQ3、RQ4和RQ5），本文还基于$DB_A$和$DB_B$的数据，构建了一个开源软件漏洞的深度数据集。该数据集的漏洞数量少于广度数据集，但每个漏洞都包含由人工确认的补丁信息。%为了确保漏洞补丁信息完整性和准确性，其中所有漏洞的补丁信息都是由人工识别。
 
-在构建过程中，为了确保数据集能够涵盖足够多的漏洞且不至于在人工手动识别补丁的环节中产生难以完成的工作量，本文将在$DB_A$和$DB_B$都含有补丁信息的漏洞作为研究对象，最终挑选了\tocheck{1,417}个CVE漏洞。对于每个CVE漏洞，首先，两位研究人员通过分析$DB_A$和$DB_B$数据库报告的补丁、查看NVD中的漏洞描述和参考链接信息以及搜索GitHub代码仓库的提交历史和其他网络资源，分别找到了其补丁；然后，两位研究人员再一起分析补丁结果不一致的漏洞数据直到达成共识。由于公开的信息有限，\tocheck{1,417}个CVE漏洞中的\tocheck{122}个CVE漏洞无法找到补丁信息，最终，深度数据集共包含了\tocheck{1,295}个CVE漏洞。 
+在该深度数据集的构建过程中，为了确保数据集能够涵盖足够多的漏洞用以实验评估，但又不至于在人工识别补丁的阶段产生难以完成的工作量，本文仅将在$DB_A$和$DB_B$都含有补丁信息的漏洞列入该深度数据集，最终，该深度数据集共包含\tocheck{1,417}个CVE漏洞。
 
-%例如CVE-2016-3942在NVD中没有漏洞报告。 \congyingEdit{$DB_A$ 和 $DB_B$} 将 jsrender@f984e1 \cite{jsrender} 标识为其补丁。我们很难确保其正确性\chenhao{'ensure' 在这里不准确，我更喜欢提交消息中的 'confirm' 或 'determine'}。
+然后，对于该深度数据集中的每个CVE漏洞，首先分别由两位研究人员通过分析$DB_A$和$DB_B$数据库报告的补丁、查看NVD中的漏洞描述和参考链接信息以及搜索GitHub代码仓库的提交历史和其他网络资源等方式，独立得找到其补丁信息；之后，对比由两位研究人员独立查找得到得补丁信息，对于补丁结果不一致的漏洞，两位研究人员再一起分析讨论直到达成共识。这两位研究人员分别是本文作者和与本文作者同课题组的学生。由于公开的信息有限，\tocheck{1,417}个CVE漏洞中的\tocheck{122}个CVE漏洞无法找到补丁信息，比如：漏洞CVE-2016-3942在NVD中没有漏洞报告，但$DB_A$和$DB_B$将 jsrender@f984e1\cite{jsrender}标识为其补丁，两位研究人员无法确认该补丁信息的准确性。最终，该深度数据集共包含了\tocheck{1,295}个CVE漏洞。
+
 
 \begin{figure*}[!t]
     \centering
@@ -69,7 +69,7 @@ precision、recall。。。
 \end{figure*}
 
 
-本文进一步分析了深度数据集中\tocheck{1,295}个CVE开源软件漏洞的年份和程序语言分布情况，以评估该数据集是否具有代表性。如图\ref{fig:rq0-year}所示，CVE的数量逐年增加，这与Snyk的报告\cite{Snyk-report}一致。此外，本文通过分析补丁中更改的源文件类型来确定CVE的编程语言。如图\ref{fig:rq0-language}所示，深度数据集中的CVE漏洞涵盖了七种较为常用的程序语言，具有较好的语言多样性。因此，可以认为该深度数据集对于开源软件漏洞具有较好的代表性。
+本文还进一步分析了该深度数据集中\tocheck{1,295}个CVE开源软件漏洞的年份和程序语言分布情况，以评估该数据集是否具有代表性。如图\ref{fig:rq0-year}所示，CVE的数量逐年增加，这与Snyk的报告\cite{Snyk-report}一致。此外，本文通过分析补丁中更改的源文件类型来确定CVE的编程语言。如图\ref{fig:rq0-language}所示，深度数据集中的CVE漏洞涵盖了七种较为常用的程序语言，具有较好的语言多样性。因此，可以认为该深度数据集对于开源软件漏洞数据库具有较好的代表性。
 
 
 \section{RQ1：覆盖率分析}\label{sec:coverage}
@@ -92,11 +92,10 @@ precision、recall。。。
 \end{figure}
 
 
-如图\ref{fig:rq1-cves}所示，$DB_A$和$DB_B$数据库中共有的CVE漏洞为\tocheck{4,418}个，同时$DB_A$和$DB_B$分别包含\tocheck{4,212}和\tocheck{1,440}个特有的CVE漏洞。如图\ref{fig:rq1-cves-with-patches}所示，$DB_A$中\tocheck{3,607(41.8\%)}个CVE漏洞含有补丁信息，$DB_B$中\tocheck{2,412(41.2\%)}个CVE漏洞含有补丁信息。总体而言，$DB_A$和$DB_B$数据库共有\tocheck{10,070}个开源软件CVE漏洞，其中\tocheck{4,602(45.7\%)}个漏洞至少有一个数据库提供了补丁信息。
+如图\ref{fig:rq1-cves}所示，$DB_A$和$DB_B$数据库中共有的CVE漏洞为\tocheck{4,418}个，同时$DB_A$和$DB_B$分别包含\tocheck{4,212}和\tocheck{1,440}个特有的CVE漏洞；如图\ref{fig:rq1-cves-with-patches}所示，$DB_A$中\tocheck{3,607(41.8\%)}的CVE漏洞含有补丁信息，$DB_B$中\tocheck{2,412(41.2\%)}的CVE漏洞含有补丁信息；$DB_A$和$DB_B$数据库共有\tocheck{10,070}个开源软件CVE漏洞，而其中仅有\tocheck{4,602(45.7\%)}的漏洞提供了补丁信息。
 
-
-由此可见，数据库$DB_A$和$DB_B$中漏洞的补丁覆盖率都较低（41.8\%和41.2\%），漏洞补丁缺失的情况较为普遍。%而且可以看出，不同的漏洞数据库对\congyingEdit{OSS}漏洞的覆盖范围不同。
-同时，这也体现出自动化补丁查找方法的必要性，用以填补缺失的补丁信息。
+由此可见，数据库$DB_A$和$DB_B$中开源软件漏洞的补丁覆盖率都较低，分别为41.8\%和41.2\%，漏洞补丁缺失的情况较为普遍。%而且可以看出，不同的漏洞数据库对\congyingEdit{OSS}漏洞的覆盖范围不同。
+同时，这也体现出自动化补丁查找方法的必要性，可用于填补数据库中缺失的补丁信息。
 
 
 \section{RQ2：一致性分析}\label{sec:consistency}
@@ -106,8 +105,7 @@ precision、recall。。。
     \footnotesize
     \caption{补丁一致性结果}\label{table:consistency}
     %\vspace{-10pt}
-    % \begin{tabular}{|*{1}{p{2.4em}}|*{1}{p{2.0em}}*{1}{p{3.8em}}*{1}{p{4.1em}}|*{1}{p{2.0em}}*{1}{p{3.1em}}*{1}{p{3.6em}}|}
-    \begin{tabular}{|c|ccc|ccc|}
+    \begin{tabular}{|*{1}{C{5.0em}}|*{1}{C{5.0em}}*{1}{C{5.5em}}*{1}{C{5.5em}}|*{1}{C{5.0em}}*{1}{C{5.0em}}*{1}{C{5.0em}}|}
     \noalign{\hrule height 1pt}
     \multirow{2}{*}{补丁一致} & \multicolumn{3}{c|}{存在性不一致} & \multicolumn{3}{c|}{内容不一致} \\\cline{2-4}\cline{5-7}
      & 总数 & 无漏洞信息 & 无补丁信息 & 总数 & 包含关系 & 非包含关系 \\\noalign{\hrule height 1pt}
@@ -120,12 +118,12 @@ precision、recall。。。
     \end{tabular}
 \end{table}
 
-为了分析两个数据库之间的补丁一致性情况，本节主要关注带有补丁的CVE漏洞，即：图\ref{fig:rq1-cves-with-patches}中的CVE漏洞。考虑到漏洞补丁的个数可能不唯一，可能为一组补丁信息，当两个数据库针对同一漏洞提供的补丁集完全相同时，判定为补丁信息一致。本文将补丁信息不一致分为存在性不一致和内容不一致。前者是指某一个数据库为该CVE漏洞提供了补丁信息，而另一个数据库不存在该CVE，或是存在该CVE但不存在补丁信息，这反映了出数据库$DB_A$和$DB_B$中开源软件漏洞及其补丁信息的不完整性。后者是指两个数据库都存在该CVE的补丁信息，但它们的补丁集并不一致，是包含关系或非包含关系的不一致情况，这反映了出数据库$DB_A$和$DB_B$中漏洞补丁信息可能是不准确的。
+为了分析两个数据库之间的补丁信息一致性情况，本节主要关注带有补丁的CVE漏洞，即：图\ref{fig:rq1-cves-with-patches}中的CVE漏洞。考虑到漏洞补丁的个数可能不唯一（即：可能为一组补丁集），所以仅当两个数据库针对同一漏洞提供的补丁集完全相同时，才判定为补丁信息一致。本节将补丁信息不一致分为存在性不一致和内容不一致两种情况。前者是指某一个数据库为该CVE漏洞提供了补丁信息，而另一个数据库却不存在该CVE信息，或是存在该CVE却不存在相关补丁信息；后者是指两个数据库都存在该CVE的补丁信息，但它们的补丁集并不完全一致，分为包含关系或非包含关系的不一致。这两种情况分别反映了出数据库$DB_A$和$DB_B$中开源软件漏洞及其补丁信息的不完整性，以及漏洞补丁信息可能是不准确的
 
 
-表\ref{table:consistency}中展示了补丁一致性的分析结果。其中，第一列为在$DB_A$和$DB_B$中具有一致补丁集的CVE的数量（907，19.7\%），第二到第四列为补丁存在性不一致的CVE数量，最后三列为补丁集内容不一致的CVE数量。可以发现：\tocheck{4,602}个CVE中，（1）只有\tocheck{907(19.7\%)}的漏洞在$DB_A$和$DB_B$中有一致的补丁信息；（2）超过三分之二（即：\tocheck{3,185(69.2\%)}）的CVE漏洞补丁信息存在不一致情况，其中\tocheck{1,392(30.2\%)}个CVE漏洞不在$DB_{A}$或$DB_{B}$中，\tocheck{1,793(39.0\%)}个CVE漏洞都存在于$DB_{A}$或$DB_{B}$但在没有补丁信息；（3）\tocheck{510(11.1\%)}个CVE漏洞补丁内容不一致，其中，\tocheck{176(3.8\%)}个CVE的来自于某一个数据库的补丁集包含来自另一个数据库的补丁集，\tocheck{334(7.3\%)}个CVE的来自$DB_{A}$和$DB_{B}$的补丁集即不同也不包含。
+表\ref{table:consistency}中展示了补丁一致性分析的结果。其中，第一列为在$DB_A$和$DB_B$中具有一致补丁集的CVE数量（907，19.7\%），第二至四列为补丁存在性不一致的CVE数量（3,185，69.2\%），最后三列为都存在补丁信息但补丁集内容不一致的CVE数量（510，11.1\%）。可以发现：\tocheck{4,602}个CVE中，（1）只有\tocheck{907(19.7\%)}的漏洞在$DB_A$和$DB_B$中有一致的补丁信息；（2）超过三分之二（即：\tocheck{3,185(69.2\%)}）的CVE漏洞在数据库$DB_A$和$DB_B$中存在补丁信息不一致的情况，其中\tocheck{1,392(30.2\%)}的CVE漏洞不在$DB_{A}$或$DB_{B}$中，\tocheck{1,793(39.0\%)}的CVE漏洞都存在于$DB_{A}$和$DB_{B}$中但在某一数据库中无补丁信息；（3）\tocheck{510(11.1\%)}的CVE漏洞补丁信息都存在于$DB_{A}$和$DB_{B}$中补丁集内容不一致，其中，\tocheck{176(3.8\%)}CVE的来自于某一个数据库的补丁集包含来自另一个数据库的补丁集，\tocheck{334(7.3\%)}CVE的来自$DB_{A}$和$DB_{B}$的补丁集即不同也不包含。
 
-这些结果表明，$DB_A$和$DB_B$间存在较多不一致的补丁信息，进而证明数据库中补丁信息的准确性也值得进一步研究。
+这些结果表明，$DB_A$和$DB_B$间存在较多的补丁信息不一致情况，进而表明数据库中补丁信息的准确性也需要进一步评估。
 
 
 \section{RQ3：补丁类型分析}\label{sec:type}
