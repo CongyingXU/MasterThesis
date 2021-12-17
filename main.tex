@@ -264,6 +264,10 @@
 }
 
 % 需要的宏包可以自行调用
+% \usepackage{amsthm}
+\usepackage{amsmath,bm}
+% \theoremstyle{acmdefinition}
+\newtheorem{exmp}{Example} %这个地方贼麻烦，解决了老半天
 \usepackage{booktabs}
 \usepackage[labelsep=quad]{caption}
 \usepackage{diagbox}
@@ -281,6 +285,8 @@
 \usepackage{graphicx}
 \usepackage{multirow}
 \usepackage{url}
+
+
 
 
 \setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
@@ -317,7 +323,13 @@
 \newcommand{\ee}{\symrm{e}}
 \newcommand{\ii}{\symrm{i}}
 \newcommand{\ds}{\,\cdot\,}
+
 \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+\makeatletter
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\makeatother
+
 
 \includeonly{
   src/a1_abstract.tex, src/a2_abstract_en.tex,

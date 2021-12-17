@@ -14,8 +14,11 @@
 * 如：Requested Commit VS. Merged Commits , 英语单词首字母大写
 * 【前后逻辑是否顺承？上一句和下一句之间是否逻辑通顺？】
 * 【文章章节直接，逻辑是否通顺？由绪论打头，章节间增加过渡语句】
+* “分析发现：”这个冒号能这么用？
 
 #### 措辞:
 * 广度数据集构建 / 深度数据集构建 ?
 * 在\tocheck{\ref{sec:preparation}小节}中? sec的引用咋写？参考下
 * 三种类型：一对一、\tocheck{一对一组}及一对多
+* advisory analysis 公告分析？，reference analysis引用分析？，reference Augment信息增强？
+* \tool 将引用链接节点分为三种类型：补丁节点（Patch Node）、\tocheck{Issue 节点}（Issue Node）和\tocheck{混合节点}（Hybrid Node）。

@@ -50,7 +50,7 @@ precision、recall。。。
 然后，对于该深度数据集中的每个CVE漏洞，首先分别由两位研究人员通过分析$DB_A$和$DB_B$数据库报告的补丁、查看NVD中的漏洞描述和参考链接信息以及搜索GitHub代码仓库的提交历史和其他网络资源等方式，独立得找到其补丁信息；之后，对比由两位研究人员独立查找得到得补丁信息，对于补丁结果不一致的漏洞，两位研究人员再一起分析讨论直到达成共识。这两位研究人员分别是本文作者和与本文作者同课题组的学生。由于公开的信息有限，\tocheck{1,417}个CVE漏洞中的\tocheck{122}个CVE漏洞无法找到补丁信息，比如：漏洞CVE-2016-3942在NVD中没有漏洞报告，但$DB_A$和$DB_B$将 jsrender@f984e1\cite{jsrender}标识为其补丁，两位研究人员无法确认该补丁信息的准确性。最终，该深度数据集共包含了\tocheck{1,295}个CVE漏洞。
 
 
-\begin{figure*}[!t]
+\begin{figure*}[h]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
     \centering
@@ -100,7 +100,7 @@ precision、recall。。。
 
 \section{RQ2：一致性分析}\label{sec:consistency}
 
-\begin{table}[!t]
+\begin{table}[h]
     \centering
     \footnotesize
     \caption{补丁一致性结果}\label{table:consistency}
@@ -133,7 +133,7 @@ precision、recall。。。
 此外，从CVE的角度来看，\tocheck{1,295}个CVE中\tocheck{1,202(92.8\%)}的CVE有GitHub commit类型的补丁，\tocheck{4(0.3\%)}的CVE有SVN commit类型的补丁。由于很多项目是从SVN切换为Git管理，\tocheck{48(3.7\%)}的CVE既有GitHub commit又有SVN commit类型的补丁。只有\tocheck{30(2.3\%)}的CVE的补丁都为来自其他Git平台的commit形式。以上分析结果表明，开源软件漏洞的补丁类型主要为GitHub commit，少部分为SVN commit，而极小部分为其他Git平台的commit。
 
 \section{RQ4：补丁映射分析}\label{sec:cardinality}
-\begin{figure}[!t]
+\begin{figure}[h]
 \centering
 \includegraphics[scale=0.5]{res/rq4-cardinality.pdf}
 \vspace{-10pt}
