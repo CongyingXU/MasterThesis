@@ -17,6 +17,7 @@
 * “分析发现：”这个冒号能这么用？
 * 引号check：“引用分析” ？ ``bugzilla"？
 * 多余空格的check
+* 统一的命名，如：会确保commit message中包含该漏洞的CVE ID、 Advisory ID或Issue ID
 
 #### 措辞:
 * 广度数据集构建 / 深度数据集构建 ?
@@ -24,3 +25,4 @@
 * 三种类型：一对一、\tocheck{一对一组}及一对多
 * advisory analysis 公告分析？，reference analysis引用分析？，reference Augment信息增强？\subsection{信息源扩增}？
 * \tool 将引用链接节点分为三种类型：补丁节点（Patch Node）、\tocheck{Issue 节点}（Issue Node）和\tocheck{混合节点}（Hybrid Node）。
+* 到底是写：commit？还是写：提交？
