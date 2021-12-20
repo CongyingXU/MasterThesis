@@ -19,10 +19,15 @@
 * 多余空格的check
 * 统一的命名，如：会确保commit message中包含该漏洞的CVE ID、 Advisory ID或Issue ID
 
+* 先根据chen老师发的ppt，自查一遍问题
+
 #### 措辞:
 * 广度数据集构建 / 深度数据集构建 ?
 * 在\tocheck{\ref{sec:preparation}小节}中? sec的引用咋写？参考下
 * 三种类型：一对一、\tocheck{一对一组}及一对多
-* advisory analysis 公告分析？，reference analysis引用分析？，reference Augment信息增强？\subsection{信息源扩增}？
+* advisory analysis ，reference analysis，reference Augment: 公告节点分析和引用节点分析, 知识源扩增?
 * \tool 将引用链接节点分为三种类型：补丁节点（Patch Node）、\tocheck{Issue 节点}（Issue Node）和\tocheck{混合节点}（Hybrid Node）。
 * 到底是写：commit？还是写：提交？
+* 漏洞知识源？从多个\tocheck{漏洞知识源}（即：NVD、Debian\cite{debian}、RedHat\cite{redhat}和GitHub）
+
+* title：不太敢定为“知识”感觉太大了。。先统一改为信息把。
