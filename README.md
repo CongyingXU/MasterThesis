@@ -18,6 +18,7 @@
 * 引号check：“引用分析” ？ ``bugzilla"？
 * 多余空格的check
 * 统一的命名，如：会确保commit message中包含该漏洞的CVE ID、 Advisory ID或Issue ID
+* sec的引用，全部统一 （Sec. \ref{sec:study}）？ 看下Kaifeng的论文？
 
 * 先根据chen老师发的ppt，自查一遍问题
 

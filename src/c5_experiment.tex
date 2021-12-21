@@ -1,12 +1,174 @@
 \chapter{实验验证及结果分析}
 
-本章节实验评估。
+本章将详细阐述为评估\tool 所设计的实验验证及其结果分析。
+
 
 \section{实验设计}
+为了全面评估\tool ，本章设计了以下四个研究问题。
 
-\section{RQ6：准确性验证}
+\begin{itemize}[leftmargin=*]
+\item \textbf{RQ6 准确性验证：}与基于启发式的方法和两个工业漏洞数据库相比，\tool 在查找漏洞补丁方面的准确性如何？ （Sec. \ref{sec:accuracy-evaluation}）
+\item \textbf{RQ7 削弱性分析：}\tool 中各步骤的必要性和贡献度如何？ (Sec.\ref{sec:ablation})%\congyingEdit{以及变种Pre\tool和Com\tool的效果如何？}
+\item \textbf{RQ8 敏感度分析：}\tool 的精度对\tool 中参数的敏感性如何？ (Sec. \ref{sec:sensitivity})
+%\congyingEdit{\textbf{RQ8 Sensitivity Analysis:} \tool 对里面每个参数的灵敏度如何？} (Sec. \ref{sec:sensitive})
+\item \textbf{RQ9 通用性分析：}\tool 对更大范围的开源软件漏洞的通用性如何？ (Sec. \ref{sec:sensitivity})
+\item \textbf{RQ10 实用性能分析：}\tool 在实际使用中的实用性如何？(Sec. \ref{sec:generality})
+\end{itemize}
+
+
+本文在经验研究（Sec. \ref{sec:study}）中构建了深度数据集，本章的实验验证中将继续使用该深度数据集来验证\textbf{RQ6}、\textbf{RQ7}和\textbf{RQ8}。 对于\textbf{RQ9}，本章将构造另外两个数据集来进行验证。实验验证中采用了经验研究（Sec. \ref{sec:accuracy}）中相同的评估指标来衡量准确性，即：Not Found、Precision（精度）、Recall（召回率）和 F1-Score\tocheck{（F1值）}。
+此外，本章还进行了用户研究以验证\textbf{RQ10}，通过评估用户在有无\tool 辅助下查找补丁的用时和准确性。\congyingEdit{英文版，这里有问题}
+
+
+\section{RQ6：准确性验证}\label{sec:accuracy-evaluation}
+
+\begin{table*}[h]
+    \centering
+    \footnotesize
+    \caption{Accuracy of Existing Heuristic-Based Approaches}\label{table:heuristic}
+    %\vspace{-10pt}
+    % \begin{tabular}{|*{1}{C{4.2em}}|*{1}{C{2.0em}}|*{1}{C{4.9em}}*{3}{C{1.6em}}|*{1}{C{4.9em}}*{3}{C{1.6em}}|*{1}{C{4.9em}}*{3}{C{1.6em}}|}
+    \begin{tabular}{|c|c|cccc|cccc|}
+    \noalign{\hrule height 1pt}
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} &  \multicolumn{4}{c|}{检索NVD References} & \multicolumn{4}{c|}{检索GitHub Commits}\\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	285 (50.3\%) & 0.973 & 0.986 & 0.977 &	472 (83.2\%) & 0.416 & 0.642 & 0.471 	 \\
+    1:$i$ (MEP) &195 &	125 (64.1\%) & 0.932 & 0.925 & 0.921 &	162 (83.1\%) & 0.472 & 0.490 & 0.452 	 \\
+    1:$n$ (MP) & 101 &	68 (67.3\%) & 0.980 & 0.552 & 0.683 &	73 (72.3\%) & 0.536 & 0.445 & 0.461 	 \\
+    1:$n$ (MB) & 372 &	244 (65.6\%) & 0.979 & 0.416 & 0.546 &	246 (66.1\%) & 0.445 & 0.236 & 0.284 	 \\
+    1:$n$ (MR) & 60 &	46 (76.7\%) & 1.000 & 0.708 & 0.794 &	37 (61.7\%) & 0.627 & 0.345 & 0.413 	 \\\hline
+    Total & 1,295 &	    768 (59.3\%) & 0.970 & 0.805 & 0.842 &	990 (76.4\%) & 0.461 & 0.417 & 0.386 	 \\
+    \noalign{\hrule height 1pt}
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} &  \multicolumn{4}{c|}{检索NVD以及GitHub} & \multicolumn{4}{c|}{\tool}\\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	222 (39.2\%) & 0.839 & 0.930 & 0.864 & 102 (18.0\%) & 0.860 & 0.951 & 0.881 \\
+    1:$i$ (MEP) &195 &	104 (53.3\%) & 0.821 & 0.867 & 0.820 & 6 (3.1\%) & 0.886 & 0.918 & 0.888 \\
+    1:$n$ (MP) & 101 &	52 (51.5\%) & 0.779 & 0.605 & 0.647  & 20 (19.8\%) & 0.872 & 0.741 & 0.761\\
+    1:$n$ (MB) & 372 &	171 (46.0\%) & 0.704 & 0.393 & 0.465 & 23 (6.2\%) & 0.861 & 0.788 & 0.795\\
+    1:$n$ (MR) & 60 &	27 (45.0\%) & 0.801 & 0.539 & 0.604  & 4 (6.7\%) & 0.831 & 0.620 & 0.659 \\\hline
+    Total & 1,295 &	    576 (44.5\%) & 0.793 & 0.732 & 0.720 & 155 (12.0\%) & 0.864 & 0.864 & 0.837\\
+    \noalign{\hrule height 1pt}
+    \end{tabular}
+\end{table*}
+
+
+为了评估\tool 的准确性，本小节将\tool 与基于启发式的方法和两个工业漏洞数据库（$DB_A$和$DB_B$）进行比较，并通过人工进一步分析\tool 中的误报和误报。
+
+\subsection{与基于启发式方法对比}
+本节选择两种广泛使用的启发式方法：（1）检索该漏洞的NVD中“Reference”字段中引用信息以获取补丁提交\cite{duan2019automating,li2016vulpecker,li2018vuldeepecker}，（2）在GitHub中检索带有CVE标识符的代码提交\cite{you2017semfuzz,Wang2020empirical}。%考虑到第二种启发式方法通常用于搜索已知开源软件的补丁，我们通过进一步考虑所有者和存储库是否与CPE中的供应商和产品匹配（即我们的参考增强策略）将其调整为搜索CVE的补丁.
+此外，本节将这两种启发式方法结合为第三种启发式方法，即：检索NVD References和GitHub Commits。
+
+表\ref{table:heuristic}显示了三种启发式方法与\tool 的准确率对比结果\congyingEdit{英文版，这里有问题}，可以发现，对于很大一部分CVE（\tocheck{59.3\%、76.4\%和44.5\%}），三种启发式方法都无法找到其补丁信息，而仅\tocheck{12.0\%}CVE的补丁无法被\tool 找到。此外，由于NVD引用信息的高置信度，第一种启发式方法找到的补丁具有较高的精度，但对于一对多映射关系的CVE，召回率较低；第二种启发式方法具有较低的精度和召回率，第三种启发式方式中和了前两种方法的精度和召回率。对比下来，\tool 的精度比第一种启发式方法更低，但拥有更高的召回率和相似的F1值；对于\textit{MP}和\textit{MB}类型的CVE，\tool 的召回率明显更高。%我们认为考虑到\tocheck{116.3\%}更多的CVE\tool找到补丁但第一个启发式没有找到补丁，这是可以接受的。
+考虑到\tool 找到补丁的漏洞数比第一种启发式方法多出\tocheck{116.3\%}，\tool 中轻微的准确率降低是可以接受的。此外，对比于第二和第三种启发式方法，\tool 分别将F1值提高了\tocheck{116.8\%}和\tocheck{16.3\%}。
+
+\begin{tcolorbox}[size=title,opacityfill=0.15]
+Highlight：与现有的基于启发式的方法相比，\tool 将能找到补丁的漏洞数提高\tocheck{58.6\%}到\tocheck{273.8\%}，同时，将F1值提高\tocheck{116.8\%}。
+\end{tcolorbox}
+
+
+\subsection{与工业漏洞数据库对比}
+与工业漏洞数据库$DB_A$和$DB_B$进行比较的并非为了证明\tool 或是$DB_A$和$DB_B$的优劣，因为在构建漏洞数据库$DB_A$和$DB_B$的过程中涉及的人工工作量并不可知且无法量化，无法进行公平的比较。本节设计的对比是为了评估\tool 可以达到的准确性水平和\tool 的实用价值，并探索\tool 是否可以帮助工作改进或补充现有的工业漏洞数据库。
+
+从表\ref{table:accuracy}和\ref{table:heuristic}可以看出，\tool 为找到补丁的漏洞数比$DB_A$和$DB_B$少\tocheck{12.0\%}，且精度也分别低了\tocheck{6.4\%}和\tocheck{5.8\%}。这是因为漏洞数据库$DB_A$和$DB_B$构建过程中涉及了安全专家的人工工作，也因此比自动化技术拥有更高的准确率。
+此外，\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回率（尤其是对于一对多映射的CVE，\tool 具有更高的召回率），以及比$DB_A$和$DB_B$高\tocheck{5.5\%和8.6\%}的F1值。结果表明，\tool 以较低的精度和较少数量未找到补丁的CVE为代价，却拥有更为显着召回率。这也说明，\tool 可用于补充现有漏洞数据库缺失的漏洞数据。
+
+\begin{tcolorbox}[size=title,opacityfill=0.15]
+Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回率和\tocheck{5.5\%到8.6\%}的F1值，同时牺牲了\tocheck{6.4\%}的精度和\tocheck{12.0\%}CVE的补丁信息。
+\end{tcolorbox}
+
+\subsection{\tool 漏报和误报分析}
+
+\textbf{漏报分析，}
+通过人工分析\tool 找不到补丁或遗漏补丁的CVE数据，本节共总结出\tool 漏报的五个主要原因：（1）对于一些年代久远的CVE，NVD、Debian和Red Hat中包含的引用信息比较少，有的引用信息甚至是失效的。这种情况下，\tool 无法构建完整的参考网络。例如，漏洞CVE-2011-1950，在NVD\cite{CVE-2011-1950}中标记为“补丁（Patch）”和“供应商咨询（Vendor Advisory）”的关键引用链接已经失效。（2）NVD、Debian和Red Hat平台中缺少CVE的一些关键引用信息（例如，问题链接（Issue URL）），\tool 便难以选出正确的补丁。例如，漏洞CVE-2018-14642，其问题报告\cite{UNDERTOW-1430}不包含在三个咨询来源中的任何一个中，但是，根据此问题报告，我们可以找到补丁\cite{undertow}。（3）补丁的提交消息与CVE描述具有语义相似性，可通过人工识别，但不包含CVE标识符，工具难以辨别。因此，\tool 的\tocheck{知识源扩增}步骤也未能捕捉到它。例如，漏洞CVE-2019-10077\cite{CVE-2019-10077}，代码提交\cite{jspwiki}修复了该漏洞，但没有再提交信息种指明CVE标识符。（4）GitHub平台用于检索代码提交的REST API仅返回1,000个结果，这会使\tool 在\tocheck{知识源扩增}步骤种错失正确的补丁提交。（5）\tool 的补丁精选步骤中，只选择了一个具有最高连通度的补丁，其他已包含在引用信息网络中的正确补丁将会被\tool 错失。
+
+\textbf{误报分析，}
+本节还人工分析了\tool 找错补丁的CVE数据，并总结了两个主要原因：（1）在讨论和解决漏洞时，相关人员也会引用引入漏洞的代码提交。由于\tool 缺乏对引用链接的上下文语义理解，\tool 错误地将其识别为补丁提交。例如，漏洞CVE-2020-5249，引入漏洞的代码提交\cite{go-ethereum-1}和修复漏洞的代码提交\cite{go-ethereum-2}在同一问题报告（Issue Report）的评论中被引用。（2）被引用的页面上列出了多对CVE及其问题和补丁信息。由于\tool 缺乏语义理解，其他CVE的补丁也可能会被\tool 错误地识别。例如，漏洞CVE-2018-15750，其补丁维护在发行说明（Release Note）\cite{release-note}中，CVE-2018-15751的发行说明均被NVD、Debian和RedHat引用。
+
+
+\begin{tcolorbox}[size=title,opacityfill=0.15]
+Highlight：通过人工分析总结出的五个漏报和两个误报原因，可以用来进一步提高\tool 的准确性。
+\end{tcolorbox}
 
 \section{RQ7：削弱性分析}
+
+\begin{table*}[!t]
+    \centering
+    \footnotesize
+    \caption{Contribution of Each Component in \tool}\label{table:contribution}
+    %\vspace{-10pt}
+    % \begin{tabular}{|*{1}{C{4.4em}}|*{1}{C{3.2em}}|*{1}{C{5.1em}}*{3}{C{2.3em}}|*{1}{C{5.1em}}*{3}{C{2.3em}}|*{1}{C{5.1em}}*{3}{C{2.3em}}|}
+    \begin{tabular}{|c|c|cccc|cccc|}
+    \noalign{\hrule height 1pt}
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} &  \multicolumn{4}{c|}{ \tool } & \multicolumn{4}{c|}{$v_1^1$: \tool w/o NVD} \\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1  \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	102 (18.0\%) & 0.860 & 0.951 & 0.881 &	286 (50.4\%) & 0.820 & 0.936 & 0.846  \\
+    1:$i$ (MEP) &195 &	6 (3.1\%) & 0.886 & 0.918 & 0.888 &	    79 (40.5\%) & 0.882 & 0.935 & 0.886 	 \\
+    1:$n$ (MP) & 101 &	20 (19.8\%) & 0.872 & 0.741 & 0.761 &	41 (40.6\%) & 0.881 & 0.728 & 0.766 	 \\
+    1:$n$ (MB) & 372 &	23 (6.2\%) & 0.861 & 0.788 & 0.795 &	84 (22.6\%) & 0.876 & 0.780 & 0.800 	 \\
+    1:$n$ (MR) & 60 &	4 (6.7\%) & 0.831 & 0.620 & 0.659 &	    8 (13.3\%) & 0.848 & 0.551 & 0.624 	 \\\hline
+    Total & 1,295 &	    155 (12.0\%) & 0.864 & 0.864 & 0.837 &	498 (38.5\%) & 0.856 & 0.839 & 0.815 	 \\
+    \noalign{\hrule height 1pt}
+
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} &  \multicolumn{4}{c|}{$v_1^2$: \tool w/o Debian} & \multicolumn{4}{c|}{$v_1^3$: \tool w/o Red Hat} \\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1   \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	110 (19.4\%) & 0.847 & 0.943 & 0.869 &	113 (19.9\%) & 0.853 & 0.943 & 0.874 \\
+    1:$i$ (MEP) &195 &	8 (4.1\%) & 0.880 & 0.912 & 0.882 &	    7 (3.6\%) & 0.883 & 0.918 & 0.886 \\
+    1:$n$ (MP) & 101 &	22 (21.8\%) & 0.851 & 0.716 & 0.739 &	21 (20.8\%) & 0.880 & 0.736 & 0.760 \\
+    1:$n$ (MB) & 372 &	28 (7.5\%) & 0.838 & 0.760 & 0.771 &	35 (9.4\%) & 0.844 & 0.761 & 0.767 \\
+    1:$n$ (MR) & 60 &	5 (8.3\%) & 0.819 & 0.613 & 0.651 &	    4 (6.7\%) & 0.738 & 0.640 & 0.618 \\\hline
+    Total & 1,295 &	    173 (13.4\%) & 0.848 & 0.849 & 0.821 &	180 (13.9\%) & 0.851 & 0.853 & 0.823 \\
+    \noalign{\hrule height 1pt}
+    
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量}  & \multicolumn{4}{c|}{$v_1^4$: \tool w/o GitHub} & \multicolumn{4}{c|}{$v_1^5$: \congyingEdit{\tool w/o Network}} \\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1  \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	149 (26.3\%) & 0.898 & 0.943 & 0.908 &	177 (31.2\%) & 0.910 & 0.972 & 0.925 \\
+    1:$i$ (MEP) &195 &	19 (9.7\%) & 0.887 & 0.921 & 0.892 &	78 (40.0\%) & 0.956 & 0.959 & 0.941 \\
+    1:$n$ (MP) & 101 &	28 (27.7\%) & 0.873 & 0.690 & 0.726 &	40 (39.6\%) & 0.943 & 0.669 & 0.743 \\
+    1:$n$ (MB) & 372 &	39 (10.5\%) & 0.874 & 0.752 & 0.773 &	109 (29.3\%) & 0.908 & 0.575 & 0.659 \\
+    1:$n$ (MR) & 60 &	7 (11.7\%) & 0.816 & 0.545 & 0.604 &	10 (16.7\%) & 0.920 & 0.641 & 0.712 \\\hline
+    Total & 1,295 &	    242 (18.7\%) & 0.883 & 0.841 & 0.835 &	414 (32.0\%) & 0.918 & 0.812 & 0.823 \\
+    \noalign{\hrule height 1pt}
+    
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} &  \multicolumn{4}{c|}{$v_2^1$: \congyingEdit{\tool w/o Selection}} & \multicolumn{4}{c|}{$v_2^2$: \tool w/o Connectivity} \\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	102 (18.0\%) & 0.632 & 0.961 & 0.680 &	245 (43.2\%) & 0.892 & 0.978 & 0.913  \\
+    1:$i$ (MEP) &195 &	6 (3.1\%) & 0.622 & 0.976 & 0.682 &	    111 (56.9\%) & 0.929 & 0.939 & 0.915  \\
+    1:$n$ (MP) & 101 &	20 (19.8\%) & 0.615 & 0.933 & 0.656 &	56 (55.4\%) & 0.953 & 0.685 & 0.764  \\
+    1:$n$ (MB) & 372 &	23 (6.2\%) & 0.616 & 0.903 & 0.657 &	191 (51.3\%) & 0.927 & 0.787 & 0.821  \\
+    1:$n$ (MR) & 60 &	4 (6.7\%) & 0.368 & 0.891 & 0.394 &	    27 (45.0\%) & 0.885 & 0.722 & 0.772  \\\hline
+    Total & 1,295 &	155 (12.0\%) & 0.611 & 0.940 & 0.658 &	    630 (48.6\%) & 0.910 & 0.889 & 0.871  \\
+    \noalign{\hrule height 1pt}
+
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} & \multicolumn{4}{c|}{$v_2^3$: \tool w/o Confidence} &  \multicolumn{4}{c|}{$v_2^4$: \tool with Path Length} \\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	102 (18.0\%) & 0.860 & 0.942 & 0.879  & 102 (18.0\%) & 0.833 & 0.957 & 0.859\\
+    1:$i$ (MEP) &195 &	6 (3.1\%) & 0.888 & 0.913 & 0.889 &     6 (3.1\%) & 0.848 & 0.945 & 0.867 \\
+    1:$n$ (MP) & 101 &	20 (19.8\%) & 0.880 & 0.722 & 0.751 &   20 (19.8\%) & 0.849 & 0.760 & 0.742\\
+    1:$n$ (MB) & 372 &	23 (6.2\%) & 0.871 & 0.765 & 0.784 &    23 (6.2\%) & 0.830 & 0.798 & 0.770\\
+    1:$n$ (MR) & 60 &	4 (6.7\%) & 0.849 & 0.462 & 0.550 &     4 (6.7\%) & 0.652 & 0.747 & 0.590 \\\hline
+    Total & 1,295 &	    155 (12.0\%) & 0.869 & 0.844 & 0.826 &  155 (12.0\%) & 0.827 & 0.882 & 0.812 \\
+    \noalign{\hrule height 1pt}
+
+    
+    \multirow{2}{*}{映射类型} & \multirow{2}{*}{数量} &   \multicolumn{4}{c|}{$v_2^5$: \tool with Path Number} & \multicolumn{4}{c|}{$v_3$: \tool w/o Expansion} \\\cline{3-10}
+    & & Not Found & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    1:1 (SP) & 567 &	102 (18.0\%) & 0.805 & 0.951 & 0.837 &  102 (18.0\%) & 0.871 & 0.948 & 0.889\\
+    1:$i$ (MEP) &195 &	6 (3.1\%) & 0.849 & 0.920 & 0.858 &     6 (3.1\%) & 0.910 & 0.914 & 0.902\\
+    1:$n$ (MP) & 101 &	20 (19.8\%) & 0.801 & 0.756 & 0.726 &   20 (19.8\%) & 0.873 & 0.696 & 0.732\\
+    1:$n$ (MB) & 372 &	23 (6.2\%) & 0.833 & 0.811 & 0.791 &    23 (6.2\%) & 0.860 & 0.506 & 0.590\\
+    1:$n$ (MR) & 60 &	4 (6.7\%) & 0.789 & 0.630 & 0.644 &     4 (6.7\%) & 0.847 & 0.567 & 0.629\\\hline
+    Total & 1,295 &	    155 (12.0\%) & 0.819 & 0.873 & 0.809 &  155 (12.0\%) & 0.873 & 0.771 & 0.776\\
+    \noalign{\hrule height 1pt}
+    \end{tabular}
+    \end{table*}
 
 \section{RQ8：敏感度分析}
 
