@@ -8,7 +8,7 @@
 
 \begin{itemize}[leftmargin=*]
 \item \textbf{RQ6 准确性验证：}与基于启发式的方法和两个工业漏洞数据库相比，\tool 在查找漏洞补丁方面的准确性如何？ （Sec. \ref{sec:accuracy-evaluation}）
-\item \textbf{RQ7 削弱性分析：}\tool 中各步骤的必要性和贡献度如何？ (Sec.\ref{sec:ablation})%\congyingEdit{以及变种Pre\tool和Com\tool的效果如何？}
+\item \textbf{RQ7 削弱性分析：}\tool 中各步骤和设置的必要性和贡献度如何？ (Sec.\ref{sec:ablation})%\congyingEdit{以及变种Pre\tool和Com\tool的效果如何？}
 \item \textbf{RQ8 敏感度分析：}\tool 的精度对\tool 中参数的敏感性如何？ (Sec. \ref{sec:sensitivity})
 %\congyingEdit{\textbf{RQ8 Sensitivity Analysis:} \tool 对里面每个参数的灵敏度如何？} (Sec. \ref{sec:sensitive})
 \item \textbf{RQ9 通用性分析：}\tool 对更大范围的开源软件漏洞的通用性如何？ (Sec. \ref{sec:sensitivity})
@@ -25,7 +25,7 @@
 \begin{table*}[h]
     \centering
     \footnotesize
-    \caption{Accuracy of Existing Heuristic-Based Approaches}\label{table:heuristic}
+    \caption{\tool VS. 已有的基于启发式的方法}\label{table:heuristic}
     %\vspace{-10pt}
     % \begin{tabular}{|*{1}{C{4.2em}}|*{1}{C{2.0em}}|*{1}{C{4.9em}}*{3}{C{1.6em}}|*{1}{C{4.9em}}*{3}{C{1.6em}}|*{1}{C{4.9em}}*{3}{C{1.6em}}|}
     \begin{tabular}{|c|c|cccc|cccc|}
@@ -91,12 +91,10 @@ Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回�
 Highlight：通过人工分析总结出的五个漏报和两个误报原因，可以用来进一步提高\tool 的准确性。
 \end{tcolorbox}
 
-\section{RQ7：削弱性分析}
-
-\begin{table*}[!t]
+\begin{table*}[h]
     \centering
     \footnotesize
-    \caption{Contribution of Each Component in \tool}\label{table:contribution}
+    \caption{\tool VS. 削弱变体}\label{table:contribution}
     %\vspace{-10pt}
     % \begin{tabular}{|*{1}{C{4.4em}}|*{1}{C{3.2em}}|*{1}{C{5.1em}}*{3}{C{2.3em}}|*{1}{C{5.1em}}*{3}{C{2.3em}}|*{1}{C{5.1em}}*{3}{C{2.3em}}|}
     \begin{tabular}{|c|c|cccc|cccc|}
@@ -168,12 +166,130 @@ Highlight：通过人工分析总结出的五个漏报和两个误报原因，�
     Total & 1,295 &	    155 (12.0\%) & 0.819 & 0.873 & 0.809 &  155 (12.0\%) & 0.873 & 0.771 & 0.776\\
     \noalign{\hrule height 1pt}
     \end{tabular}
-    \end{table*}
+\end{table*}
 
-\section{RQ8：敏感度分析}
+\section{RQ7：削弱性分析}\label{sec:ablation}
 
-\section{RQ9：通用性分析}
+表\ref{table:contribution}展示了削弱性分析的结果，以衡量\tool 中的各种设置对于准确性的贡献度。
 
-\section{RQ10: 实用性能分析}
+\subsection{去除某一知识源} 
+在\tool 的步骤一（多源信息网络构建）中，分别删除了四个知识源NVD、Debian、Red Hat和GitHub中的一个，生成变体$v_1^1$、$v_1^2$、$v_1^3$和$v_1^4$。可以从表\ref{table:contribution}中观察到，这四个变体没有找到补丁的CVE数量都在增加。值得注意的是，在精度、召回率和F1值相当的情况下，$v_1^1$、$v_1^2$、$v_1^3$和$v_1^4$找到补丁的漏洞数分别比\tool 少了\tocheck{30.1\%、1.6\%、2.2\%和7.6\%}。这表明，构建更完整的信息网络，也将取得更好的补丁查找结果。\tool 中选取的四个知识源都有助于为更多的漏洞找到补丁信息，同时，显然NVD和GitHub的贡献度最高，重要性也最高。
+
+\subsection{去除网络构建步骤}
+在\tool 的步骤一（多源信息网络构建）中，不以分层的方式构建信息网络，而是简单地使用包含在四个知识源公告中的直接引用信息。具体实现为：在\tool 的步骤一中省略“引用节点分析”步骤，实验结果为表\ref{table:contribution}中的变体$v_1^5$。可以看到$v_1^5$没有找到补丁的CVE数量都在增加。在数值上，$v_1^5$找到补丁的漏洞数比\tool 少了\tocheck{22.7\%}，但同时精度高出了\tocheck{6.3\%}，召回率低了\tocheck{6.0\%}，F1值较为相似。这些结果表明，补丁并不总是在NVD、Debian和Red Hat中直接引用，而是可能隐藏在间接引用信息中，本文构建的信息网络有助于用户以可接受的精度降低为代价而找到隐藏的补丁信息。
+
+\subsection{去除补丁精选步骤}
+\textbf{去除基于连通度和置信度的补丁选择方法}
+在\tool 的步骤二（补丁节点精选）中，并非选择具有高置信度和连通度的补丁，而是选择网络中的所有补丁。实验结果为表\ref{table:contribution}中的变体$v_2^1$，可以看到该变体显着提高了工具的召回率。$v_2^1$找到补丁的漏洞数比\tool 多了\tocheck{8.8\%}，特别是对于一对多映射类型的CVE；同时精度大幅下降\tocheck{29.3\%}和F1下降了\tocheck{21.4\%}。该结果表明，引用信息网络中确实包含了大部分正确的补丁，基于启发式的补丁选择方法有助于实现精度和召回之间的平衡。
+
+\textbf{去除基于连通度或置信度的补丁选择方法}
+在\tool 的步骤二（补丁节点精选）中，并非选择具有高置信度和连通度的补丁，而是采用的两个启发式方法之一，即：选择具有高置信度或连通度的补丁，生成两个变体$v_2^2$和$v_2^3$。在不使用基于连通度的启发式方法时，$v_2^2$找到补丁的漏洞数比\tool 少了\tocheck{41.7\%}，但同时精度提升了\tocheck{5.3\%}，召回率提高了\tocheck{2.9\%}，F1值提高了\tocheck{4.1\%}。这些结果表明，基于连通度的启发式有助于为更多CVE找到补丁信息，但同时也会引入少部分噪声。
+
+如果没有基于置信度的启发式方法，$v_2^3$的召回率和F1值会略有下降，尤其是对于\textit{MR}类型的CVE影响较大。这些结果表明，基于置信度的启发式方法有助于在所有基数之间实现平衡的准确性。
+
+\textbf{变更基于连通度的方法设置}
+通过仅考虑路径长度（即：选择到根节点的路径最短的补丁）和仅考虑路径数量（即：选择具有最多路径数的补丁）来削弱基于连通度的启发式方法，分别生成变体$v_2^4$和$v_2^5$。$v_2^4$和$v_2^5$的精度分别比\tool 低了\tocheck{4.3\%}和\tocheck{5.2\%}，召回率高了\tocheck{2.1\%}和\tocheck{1.0\%}，F1值降低了\tocheck{3.0\%}和\tocheck{3.3\%}。这些结果表明，基于连通性的启发式方法考虑的补丁节点到根节点的路径长度和路径数都有助于提高\tool 的精度。
+
+\subsection{去除补丁扩增步骤}
+去除\tool 的步骤三（候选补丁扩增），为表\ref{table:contribution}中的变体$v_3$。可以发现，$v_3$比\tool 的召回率下降了\tocheck{10.8\%}，F1值下降了\tocheck{7.3\%}，尤其是对于一对多映射类型的CVE，下降更显著。这表明补丁扩增步骤有助于更完整地为漏洞找到多个补丁信息。
+
+\begin{tcolorbox}[size=title,opacityfill=0.15]
+Highlight：\tool 中的知识源、网络构建、补丁选择和补丁扩增步骤都具有一定的重要性，都对\tool  补丁查找的准确性做出了贡献。
+\end{tcolorbox}
+
+\section{RQ8：敏感度分析}\label{sec:sensitivity}
+\begin{figure*}[h]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.55]{res/rq8-sensitivity-depth.pdf}
+    %\vspace{-5pt}
+    \caption{网络深度限制}\label{fig:depth}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.55]{res/rq8-sensitivity-span.pdf}
+    %\vspace{-5pt}
+    \caption{提交时间跨度}\label{fig:span}
+    \end{subfigure}
+    %\vspace{-20pt}
+    \caption{网络深度限制和提交时间跨度的敏感性分析结果}\label{fig:sensitivity}
+\end{figure*}
+
+\tool 中有两个可配置的参数，分别是：\tool 步骤一网络构建时网络深度限制的设置，以及步骤三补丁扩增时的相关代码提交时间跨度的设定。验证\textbf{RQ6}、\textbf{RQ7}、\textbf{RQ9}和\textbf{RQ10}时，网络深度限制默认设置为5层，代码提交时间跨度默认设置为30层。为了评估\tool 对这两个参数的敏感性，该小节将先固定一个参数为默认设置，在改变另一个参数的设置，并在深度数据集上重新运行\tool 。网络深度限制具体设置为3到6层，步长为1，提交时间跨度具体设置为0到60天，步长为10。
+
+图\ref{fig:depth}和\ref{fig:span}分别显示了两个参数对\tool 精度的影响，其中$x$-axis表示参数的值，$y$-axis表示\tool 的精度。总体来看，随着网络深度限制的增加，网络中包含了将更多的潜在补丁。\tool 未发现补丁的漏洞数量和精度都在降低，而召回率和F1-score先增加后降低。
+因此，可以认为网络深度限制设置为5层时最优。随着代码提交时间跨度的增加，\tool 会搜索更广的代码提交。\tool 的精度降低，召回率提高，F1-score先升后降。其中，\tool 未找到补丁的漏洞数量不会改变，所以没有出现在图\ref{fig:span}中。因此，可以认为提交时间跨度设置为30天时最优。
+
+\begin{tcolorbox}[size=title,opacityfill=0.15]
+Highlight：总的来说，\tool 的精度对两个可配置参数的敏感性是可以接受的。
+\end{tcolorbox}
+
+\section{RQ9：通用性分析}\label{sec:generality}
+
+\begin{table*}[h]
+    \centering
+    \footnotesize
+    \caption{Generality of \tool over Two Additional Datasets}\label{table:generality}
+    %\vspace{-10pt}
+    % \begin{tabular}{|c|*{1}{C{5.1em}}|*{3}{C{2.6em}}|*{1}{C{5.1em}}*{3}{C{2.5em}}|*{1}{C{5.1em}}*{3}{C{2.5em}}|}
+    \begin{tabular}{|c|c|ccc|cccc|cccc|}   
+    \noalign{\hrule height 1pt}
+    \multirow{2}{*}{Dataset} & \multirow{2}{*}{Number} &  \multicolumn{3}{c|}{\tool} & \multicolumn{4}{c|}{$DB_A$} & \multicolumn{4}{c|}{$DB_B$} \\\cline{3-13}
+    & & Pre. & Rec. & F1 & Not Found & Pre. & Rec. & F1  & Not Found &  Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    First Dataset & 91 & 0.823 & 0.845 & 0.784  & 29 (31.8\%) &  0.935 & 0.827 & 0.858  & 62 (68.1\%) & 0.885 & 0.664 & 0.725\\\hline
+    Second Dataset & 89 & 0.888 & 0.899 & 0.867 & --& -- & -- & -- & -- & -- & -- & -- \\\hline
+    \noalign{\hrule height 1pt}
+    \end{tabular}
+\end{table*}
+
+为了进一步评估\tool 的通用性，本节还构建了两个漏洞数据集。第一个数据集为：两个漏洞数据库$DB_A$和$DB_B$中只有一个数据库提供补丁的CVE（图\ref{fig:rq1-cves-with-patches}），共有\tocheck{3,185}个CVE。第二个数据集为：两个漏洞数据库都没有提供补丁的CVE（图\ref{fig:intersection}），共有\tocheck{5,468}个CVE。对于第一个数据集中的\tocheck{3,185}个CVE，\tool 找到了\tocheck{2,155(67.7\%)}漏洞的补丁，而两个漏洞数据库$DB_A$和$DB_B$仅分别提供了\tocheck{2,190(68.8\%)}和\tocheck{995(31.2\%)}漏洞的补丁。在\tool 找到补丁的\tocheck{2,155}CVE中，$DB_A$和$DB_B$仅提供了其中的\tocheck{1,455}和\tocheck{700}个CVE的补丁。对于第二个数据集中的\tocheck{5,468}个CVE，\tool 找到了\tocheck{2,816(51.5\%)}漏洞的补丁，而两个漏洞数据库$DB_A$和$DB_B$没有提供补丁信息。这些结果表明，\tool 可以通过查找CVE的补丁来极大地补充或增强现有的工业漏洞数据库。
+
+
+此外，本节还从\tool 在第一个和第二个数据集上能找到补丁的CVE中分别采样了\tocheck{100}个，并采用“数据准备”（Sec. \ref{sec:preparation}）中同样的方式手动找到它们的补丁信息以测量\tool 的准确性，表\ref{table:generality}为评估结果。由于公开的信息有限，人工分析的两份数据集中分别有\tocheck{9}和\tocheck{11}不能确定补丁的CVE。在第一个数据集取样的\tocheck{91}个CVE中，\tool 的F1值为\tocheck{0.784}，而$DB_A$的F1值较高，而$DB_B$的F1值较低。与Sec. \ref{sec:accuracy-evaluation}中的结果类似，漏洞数据库$DB_A$和$DB_B$拥有更高的精度，但召回率也更低。在第二个数据集取样的\tocheck{89}CVE中，$DB_A$和$DB_B$不提供补丁信息，而\tool 可取得达到\tocheck{0.867}的F1值。这些结果表明，在更大范围的开源漏洞中，\tool 都能取得不错的效果，通用性较好。
+
+
+\begin{tcolorbox}[size=title,opacityfill=0.15]
+Highlight：\tool 在两个附加数据集上可查找到\tocheck{67.7\%}和\tocheck{51.5\%}CVE的补丁，通过采样评估，精度分别为\tocheck{0.823}和\tocheck{0.888}，召回率分别为\tocheck{0.845}和\tocheck{0.899}，体现出\tool 在查找补丁方面具有较好的通用性。
+%\congyingEdit{此外，它还表明\tool可以帮助补充现有的漏洞数据库。}
+\end{tcolorbox}
+
+\section{RQ10: 实用性能分析}\label{sec:usefulness}
+在实践中，为了确保补丁的准确性，即使使用了较准确的自动工具查找补丁，安全专家仍然需要对漏洞补丁进行确认。为了评估\tool 在这种使用场景中的实用性，本节邀请了10名参与者进行了一项用户研究，他们将分别在有和没有\tool 的辅助下找到10个CVE的补丁。
+
+本文作者从多所大学和科技公司的安全实验室中招募了10名参与者，他们中有软件安全方向的博士后、博士生、硕士研究人员以及工程师。本节从深度数据集中随机选择10个CVE作为实验任务，其中，2个CVE属于\textit{SP}类型，3个CVE属于\textit{MEP}类型，1个CVE属于\textit{MP}类型，4个CVE属于\textit{MB}类型。为了公平比较，该用户研究将参与者分为两组（即：A组和B组）。A组人员需要在不使用\tool 的情况下完成前五项任务，并使用\tool 完成剩余的任务。反之，B组人员需要在\tool 的辅助下完成前5个任务，并不用\tool 完成剩余的任务。
+
+\begin{table*}[h]
+    \centering
+    \footnotesize
+    \caption{用户研究中10个任务的用时和准确率对比结果}\label{table:usefulness}
+    %\vspace{-10pt}
+    \begin{tabular}{|c|*{1}{C{5.3em}}|*{3}{C{2.4em}}|*{1}{C{5.3em}}|*{3}{C{2.4em}}|*{1}{C{5.3em}}|*{3}{C{2.4em}}|}
+    \noalign{\hrule height 1pt}
+    \multirow{2}{*}{Approach} &  \multicolumn{4}{c|}{{All 10 Tasks}} & \multicolumn{4}{c|}{5 Single-Patch Tasks} & \multicolumn{4}{c|}{5 Multiple-Patches Tasks} \\\cline{2-13}
+    & Time (mins) & Pre. & Rec. & F1 & Time (mins) & Pre. & Rec. & F1 & Time (mins) &  Pre. & Rec. & F1 \\
+    \noalign{\hrule height 1pt}
+    w/o \tool & 5.66 & 0.880 & 0.677 & 0.765      & 5.60 & 0.960 & 0.960 & 0.960        & 5.72 & 0.800 & 0.393 & 0.527 \\\hline
+    with \tool  & 4.66 & 0.983 & 0.920 & 0.951      & 3.84 & 1.000 & 1.000 & 1.000        & 5.48 & 0.967 & 0.840 & 0.899 \\\hline
+    \noalign{\hrule height 1pt}
+    \end{tabular}
+\end{table*}
+
+表\ref{table:usefulness}显示了10个任务的平均时间消耗和补丁准确性。本节将属于\textit{SP}和\textit{MEP}的5个CVE归类为\textit{单补丁}任务，将属于\textit{MP}和\textit{MB}的5个CVE归类为\textit{多补丁}任务。总体而言，在\tool 的帮助下，参与者在完成每个任务中约节省了\tocheck{17.7\%}时间，并提高了将补丁的准确率在precision、recall和F1-score方面分别提高了\tocheck{11.7\%}，\tocheck{35.9\%}和\tocheck{24.3\%}。对于5个\textit{单补丁}任务而言，节省的时间较为显著，但对于5个\textit{多补丁}任务来说则不显着。这是因为\tool 为\textit{多补丁}任务返回的信息网络和补丁比\textit{单补丁}任务更复杂，参与者需要花费更多的时间以理解信息网络以及验证补丁。此外，对于5个\textit{多补丁}任务而言，准确度的提高较为显着，但对于5个\textit{单补丁}任务则并不显着。从这个意义上说，\tool 对于具有多个补丁的CVE的作用更为明显。
+
+本文作者还采访了每位参与者以获取他们对\tool 的使用感受。总的来说，他们都认为漏洞的信息网络具有较高的价值，因为它总结了来自多个知识源的信息，其中不同类型的节点和关系有助于人工定位和验证补丁信息。其中，一家高科技公司的安全工程师评论：\textit{``信息网络作为一个证据链，有助于定位和验证补丁"}\footnote{原文为：the network graph, as a chain of evidence, is helpful to localize and verify patches}。此外，他们还建议\tool 添加更多的知识源以及提供更多补丁节点的信息，例如，提交消息和代码差异，这些信息有助于人工审查补丁信息。
+
+\begin{tcolorbox}[size=title,opacityfill=0.15]
+Highlight：在实际使用中，\tool 有助于安全专家更准确、更快速地查找到补丁信息。
+\end{tcolorbox}
 
 \section{讨论}
+本节将主要讨论\tool 的局限性和重要性。
+\subsection{\tool 的局限性}
+首先，\tool 以CVE-ID作为输入，因此该方法可能不适用于没有CVE-ID的开源漏洞（即：不在CVE List中的开源漏洞），比如一些秘密修补的漏洞\cite{xu2017spain}。对此，一种可能的解决错失是将Advisory-ID作为\tool 的输入，因为某些第三方漏洞平台（例如，WhiteSource）可能具有比NVD更多的漏洞。
+
+其次，\tool 仅将Debian和Red Hat视为次级知识源，但\tool 具有较好的可扩展性，它可以在轻松地囊括其他知识源（例如，SecurityFocus\cite{SecurityFocus}）。此外，正如（Sec. xxx）\tool 漏报和误报分析中所阐述的，缺失CVE与补丁间的语义理解和分析将会限制\tool 的准确性。%我们计划在CVE（例如描述）和补丁（例如，更改的代码和补丁引用的上下文）中使用语义来增强补丁选择和扩展。
+
+\subsection{\tool 的重要性}
+\tool 将会有益于安全社区、学术界和工业界的用户。对于安全社区而言，\tool 可以发现并向NVD管理员报告缺少补丁信息的CVE漏洞，以提高CVE的信息质量并加速CVE条目的更新，使得NVD平台的用户受益。对于学术界而言，\tool 可以为大规模数据驱动的安全分析工作（例如，基于学习的漏洞检测\cite{li2018vuldeepecker,zhou2019devign}）和经验研究工作提供补丁数据。它还可以帮助通过分析漏洞补丁信息以确定受影响的库的工作\cite{dong2019towards}。对于工业界来说，\tool 可以帮助安全工程师提高工业漏洞数据库的补丁覆盖率和准确性，从而提高软件成分分析的准确性。值得一提的是，\tool 已经部署到一家高科技公司。但是，由于保密协议，本文不便分享相关数据。
