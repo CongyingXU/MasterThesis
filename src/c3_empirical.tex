@@ -1,6 +1,6 @@
 \chapter{经验研究}\label{sec:study}
 
-本章将主要介绍为了了解当前漏洞数据库现状，考察其中漏洞补丁的质量和特征所开展的经验研究工作，包括：经验研究的设计、数据准备以及经验研究的结果分析。
+本章将主要介绍为了解当前漏洞数据库现状，考察其中漏洞补丁的质量和特征所开展的经验研究工作，包括：经验研究的设计、数据准备以及经验研究的结果分析。
 
 
 \section{研究设计}
@@ -17,8 +17,31 @@
     
 其中，RQ1可用来评估漏洞数据库中开源软件漏洞的补丁缺失程度，RQ2用来评估不同漏洞数据库中漏洞补丁的不一致程度，RQ3和RQ4用来表征常见的补丁类型以及开源漏洞及其补丁之间的映射关系，RQ5可用来评估不同漏洞数据库中漏洞补丁信息的准确性。总的来说，RQ1、RQ2和RQ5的结果旨在从不同的角度评估补丁质量，并挖掘出对自动化补丁\tocheck{识别}方法的需求；RQ3和RQ4旨在从不同角度捕捉开源软件漏洞补丁的特征，并为自动化补丁\tocheck{识别}方法的设计提供\tocheck{启发}。
 
-\subsection{评估标准【todo】}
-precision、recall。。。
+\subsection{评估标准}\label{sec:metric}
+本章经验研究使用了信息检索中常用的评估标准---Precision（精确率）、Recall（召回率）和F1-Score（F1值）。
+
+对于一个搜索或分类问题来说，样本分为“Positive（正）”和“Negative（负）”两个类别。那么，模型搜索或分类的结果就会有四种情况：
+\begin{itemize}
+    \item True Positive（真阳性），表示：将正样本预测为正样本，即数据库提供的或工具返回的正确补丁信息。
+    \item True Negative（真阴性），表示：将负样本预测为负样本，即数据库未提供的或工具未返回的错误补丁信息。
+    \item False Positive（假阳性），表示：将负样本预测为正样本，即数据库提供的或工具返回的错误补丁信息。
+    \item False Negative（假阴性），表示：将正样本预测为负样本，即数据库未提供的或工具未返回的正确补丁信息。
+\end{itemize}
+
+\textbf{Precision（精确率），}用于衡量数据库提供的补丁中正确补丁的比率，或是工具返回结果中正确补丁的比率，计算公式如下：
+\begin{equation}\label{eq:precision}
+    Precision=\frac{True\ Positive}{True\ Positive + False\ Positive} 
+\end{equation}
+
+\textbf{Recall（召回率），}用于衡量正确补丁在数据库中被提供的比率，或是正确补丁被工具返回的比率，计算公式如下：
+\begin{equation}\label{eq:recall}
+    Recall=\frac{True\ Positive}{True\ Positive + False\ Negative} 
+\end{equation}
+
+\textbf{F1-Score（F1值），}用以中和表示Precision及Recall的结果；因为Precision仅仅反映精确率，Recall仅仅反映召回率，无法反映总体评估结果，F1-Score计算公式如下：
+\begin{equation}\label{eq:f1}
+    F1-Score=2*\frac{Precision*Recall}{Precision + Recall} 
+\end{equation}
 
 \section{数据准备}\label{sec:preparation}
 \subsection{漏洞数据库选择}
