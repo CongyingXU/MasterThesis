@@ -1,53 +1,81 @@
-\chapter{背景知识及相关工作【v1-doing】}
+\chapter{背景知识及相关工作}
 本文的研究重点是开源软件漏洞的补丁定位问题，本章将首先介绍漏洞相关的背景知识，包括：通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）；然后，从漏洞披露信息的质量、漏洞补丁的分析及应用三个方面介绍相关的研究工作。
 
 
 \section{背景知识}
 % 本小节主要介绍本文工作中的背景知识，包括：通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）。
 
-\subsection{通用漏洞披露(CVE)} 
+\subsection{CVE及NVD} 
 % 重平台
 % 是什么? 有哪些信息?举个例子？ 
 % 作为community的source，还有其他的third party db、sources？
 % 有什么作用? 被哪些其他 official、third-party report引用
-通用漏洞披露(Common Vulnerabilities and Exposures，CVE)\cite{mitre2021:cve}，是一个与网络安全有关的漏洞字典，收集各种信息安全漏洞并给予唯一编号以便于公众查阅及引用。
+通用漏洞披露(Common Vulnerabilities and Exposures，CVE)\cite{mitre2021:cve}，是一个与网络安全有关的漏洞字典，收集各种信息安全漏洞并给予唯一编号以便于公众查阅及引用\footnote{https://cve.mitre.org/cve/}。在实际使用中，当人们提及某个CVE时，他们其实是在说某个被分配了CVE-ID的安全漏洞\footnote{https://www.redhat.com/en/topics/security/what-is-cve}。
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.88\textwidth]{res/CVE-2021-44228-2}
+    \caption{CVE平台中漏洞CVE-2021-44228信息}
+    \label{fig:CVE-2021-44228}
+\end{figure}
 
-如图例\ref{fig:CVE-2017-11428}所示，每一个CVE条目都有唯一通用标识符（即：CVE-ID）、一段漏洞描述（即：Description）以及至少一个参考链接（即：References），该参考链接多为外部网站且包含与该漏洞相关的更详细的描述信息。
+每一个CVE条目（CVE Entry）都有唯一通用标识符（即：CVE-ID）、一段漏洞描述（即：Description）以及至少一个引用链接（即：References），该引用链接多为外部网站且包含与该漏洞相关的更详细的描述信息。如图例\ref{fig:CVE-2021-44228}所示为CVE-2021-44228\footnote{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228}，漏洞的描述信息为：“Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features used in configuration, ...... Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects.”，且包含多个引用链接，如：“https://www.kb.cert.org/vuls/id/930724”等URL。
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.88\textwidth]{res/CVE-2017-11428.png}
-    \caption{CVE-2017-11428}
-    \label{fig:CVE-2017-11428}
+    \includegraphics[width=1.0\textwidth]{res/NVD-2021-44228}
+    \includegraphics[width=1.0\textwidth]{res/NVD-2021-44228-2}
+    \caption{NVD平台中漏洞CVE-2021-44228信息}
+    \label{fig:NVD-2021-44228}
 \end{figure}
 
-基于CVE收录的漏洞条目信息，美国国家漏洞数据库（NVD）、中国国家信息安全漏洞库（CNNVD）等与CVE数据完全同步的漏洞数据库被构建，用于为每个CVE条目提供更丰富的信息，如：修复信息、严重性评分、影响评级等。
-
-
-% 指。。。被广泛关注和参考。
-
-% 官方或第三方平台？再顺路引出相关的sources，作为例子。
+CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中漏洞信息过于精简，仅有一段漏洞描述和引用链接信息。基于CVE平台收录的漏洞条目信息，美国国家漏洞数据库（NVD）\footnote{https://nvd.nist.gov/}、中国国家信息安全漏洞库（CNNVD）\footnote{http://www.cnnvd.org.cn/}等漏洞数据库被构建，与CVE平台数据完全同步，并为每个漏洞条目（CVE Entry）提供更丰富的信息，如：影响的软件名及版本、修复信息、严重性评分、影响评级等。如图\ref{fig:NVD-2021-44228}所示为NVD平台中漏洞CVE-2021-44228\footnote{https://nvd.nist.gov/vuln/detail/CVE-2021-44228}信息。
 
 
 
-\subsection{漏洞公告【todo】} 
-% 重信息
+\subsection{漏洞公告} 
 % 是什么? 有哪些信息? 有哪些种（official、third-party）？举个例子？
-漏洞公告（Advisory），也称漏洞通告，是由含漏洞的软件的厂商（Vendor）对外发布的安全漏洞警报，一般包含：漏洞触发描述、漏洞影响结果、漏洞软件名、软件版本等漏洞描述信息，有时也会包含漏洞发现者、漏洞修复记录、漏洞补丁等信息。
+漏洞公告（Advisory），也称漏洞通告，是由一般是由受漏洞影响的软件的厂商（Vendor）对外发布的安全漏洞警报，一般包含：漏洞触发描述、漏洞影响结果、漏洞软件名、软件版本等漏洞描述信息，有时也会包含漏洞发现者、漏洞修复记录、漏洞补丁等信息。
 
-如图（log4j的漏洞所示，）啥啥啥分分别是啥啥信息。
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.88\textwidth]{res/Vendor-2021-44228}
+    \includegraphics[width=0.88\textwidth]{res/Vendor-2021-44228-2}
+    \caption{Apache Log4j发布的漏洞公告（CVE-2021-44228）}
+    \label{fig:Vendor-2021-44228}
+\end{figure}
 
-以上由厂商发布的漏洞公告，也常被称为：厂商公告（Vendor Advisory）；但由于某一厂商只会维护与该厂商相关的软件漏洞通告，开源社区的开发人员难以一一关注所有厂商的公告信息，所以，便出现了第三方平台收集并维护所有。称为：第三方公告（Third-party Library）。
+如图\ref{fig:Vendor-2021-44228}所示为厂商Apache发布的关于CVE-2021-44228的漏洞公告\footnote{https://logging.apache.org/log4j/2.x/security.html}，其中包含：修复方式“Log4j 2.x mitigation ...... Upgrade to Log4j 2.3.1 (for Java 6), 2.12.3 (for Java 7), or 2.17.0 (for Java 8 and later)”、漏洞发现者“Credit：This issue was discovered by Chen Zhaojun of Alibaba Cloud Security Team.”、引用链接“https://issues.apache.org/jira/browse/LOG4J2-3198”等信息。
 
-官方或第三方？再顺路引出相关的sources，作为例子。
 
-Vender advisory， official advisory：CVE NVD，third-party advisory：Redhat debian 啥啥
+以上由厂商发布的漏洞公告，也常被称为：厂商公告（Vendor Advisory）；但由于某一厂商只会维护与该厂商相关的软件漏洞通告，开源社区的开发人员难以一一关注所有厂商的公告信息。因此，出现了许多第三方平台收集并维护所有漏洞公告信息，被称为：第三方公告（Third-party Advisory），例如：Red Hat\footnote{https://access.redhat.com/errata/}、Debian\footnote{https://www.debian.org/security/}、Gentoo\footnote{https://security.gentoo.org/}等。
+
+% 官方或第三方？再顺路引出相关的sources，作为例子。
+
+% Vender advisory， official advisory：CVE NVD，third-party advisory：Redhat debian 啥啥
 % 是什么? 有哪些信息? 有哪些种（official、third-party：权威或非权威啥啥啥。。。社区、工业啥啥、、、）？举个例子？
 
-\subsection{漏洞补丁【todo】}
-是指。。。。
-.Patch
-Git, SVN commit 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.88\textwidth]{res/debian-2021-44228}
+    \includegraphics[width=0.88\textwidth]{res/debian-2021-44228-2}
+    \caption{Debian平台中漏洞CVE-2021-44228信息}
+    \label{fig:debian-2021-44228}
+\end{figure}
+如图\ref{fig:debian-2021-44228}所示为Debian平台中漏洞CVE-2021-44228信息\footnote{https://security-tracker.debian.org/tracker/CVE-2021-44228}，其中还甚至包括了该漏洞的补丁提交信息\footnote{https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3}（图中“Note”中的URL引用链接），这在NVD以及Vendor Advisory中都未出现。
+
+
+\subsection{漏洞补丁}
+补丁（Patch），也称：补丁程序，是指对计算机程序进行的一组更改，旨在更新其功能或修复其缺陷。漏洞补丁（Vulnerability Patch）则指为修复程序中的安全漏洞所开发的补丁，通常以代码提交（Git和SVN Commit），或文本文件（.patch文件）等形式。
+
+如图\ref{fig:debian-2021-44228}中的URL引用链接“https://github.com/apache/logging-log4j2/commit/\\c77b3cb39312b83b053d23a2158b99ac7de44dd3” （Github Commit），即为漏洞CVE-2021-44228的补丁，补丁内容见图\ref{fig:debian-2021-44228}。
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.88\textwidth]{res/commit-2021-44228}
+    \caption{漏洞CVE-2021-44228的Github Commit补丁}
+    \label{fig:commit-2021-44228}
+\end{figure}
+
 
 
 \section{相关工作}
