@@ -14,7 +14,7 @@
 
 基于上一章经验研究的发现，本章设计了一种名为\tool 的自动化方法来查找开源软件漏洞的补丁。该方法的核心思想是：漏洞的补丁信息（即：Commit URL）会在与该漏洞相关的各种来源的漏洞公告、分析报告、讨论和解决的过程中被频繁提及和引用；因此，本文首先设计了一种基于多知识源的漏洞引用信息网络，再从该网络中选出具有最高置信度和连通度的补丁节点作为结果返回。
 
-图\ref{fig:overview}为\tool 的方法概览，其中，\tool 以漏洞的CVE-ID作为输入，主要经过三个步骤，最终返回其补丁信息。步骤一：构建多源信息网络，该步骤的目的是将该CVE在被报告、讨论和解决阶段的引用链接信息进行建模。\tool 从多个\tocheck{漏洞知识源}（即：NVD、Debian\cite{debian}、RedHat\cite{redhat}和GitHub）中提取与该CVE相关的引用链接信息并构建一个信息网络，这里将NVD视为主知识源，将Debian、RedHat和GitHub视为次知识源，次级知识源列表可以灵活扩展。步骤二：精选补丁节点，\tool 从构建的引用信息网络中选择中具有高连通性和高置信度的补丁节点作为该CVE的补丁。步骤三：候选补丁扩增， 经验研究中发现CVE与其补丁之间存在一对多的映射关系，对此，基于步骤二中选定的补丁，\tool 通过搜索同一代码库所有分支中的相关提交（Commit）来扩展候选补丁集。最终，\tool 将该CVE的候选补丁集返回给用户，用户可基于\tool 提供的信息选定确认正确的补丁。%在本章的其他小节中，将详细阐述每个步骤。
+图\ref{fig:overview}为\tool 的方法概览，其中，\tool 以漏洞的CVE-ID作为输入，主要经过三个步骤，最终返回其补丁信息。步骤一：构建多源信息网络，该步骤的目的是将该CVE在被报告、讨论和解决阶段的引用链接信息进行建模。\tool 从多个\tocheck{漏洞知识源}（即：NVD、Debian\footnote{https://security-tracker.debian.org/tracker/}、Red Hat\footnote{https://bugzilla.redhat.com/}和GitHub）中提取与该CVE相关的引用链接信息并构建一个信息网络，这里将NVD视为主知识源，将Debian、RedHat和GitHub视为次知识源，次级知识源列表可以灵活扩展。步骤二：精选补丁节点，\tool 从构建的引用信息网络中选择中具有高连通性和高置信度的补丁节点作为该CVE的补丁。步骤三：候选补丁扩增， 经验研究中发现CVE与其补丁之间存在一对多的映射关系，对此，基于步骤二中选定的补丁，\tool 通过搜索同一代码库所有分支中的相关提交（Commit）来扩展候选补丁集。最终，\tool 将该CVE的候选补丁集返回给用户，用户可基于\tool 提供的信息选定确认正确的补丁。%在本章的其他小节中，将详细阐述每个步骤。
 三个步骤的具体设计和实现将在下文中详细阐述。
 
 % \begin{itemize}[leftmargin=*]
@@ -70,12 +70,12 @@
 图\ref{fig:example}为样例CVE-2017-11428的多源引用信息网络。 其中，最顶层为根节点（即：CVE-ID，第二层为公告节点（即：知识源）。
 \end{exmp}
 
-然后，\tool 通过网络请求分别获取NVD、Debian和Red Hat平台中该CVE的漏洞公告。NVD平台中，漏洞公告以JSON形式按年份存储于结构化数据\cite{nvd-feed}中，\tool 通过下载并解析相应的JSON文件即可获得NVD中该CVE的公告信息。Debian平台中，漏洞公告也以结构化数据的形式存储在仓库\cite{debian-repo}中，\tool 可直接从中解析得Debian提供的该CVE公告信息。Red Hat平台提供了 WebService API\cite{redhat-api}服务，\tool 可以直接使用该服务来检索Red Hat平台的漏洞公告。值得注意的是，分析发现：Debian会跟踪NVD上的所有CVE漏洞，而Red Hat并非跟踪所有CVE漏洞。
+然后，\tool 通过网络请求分别获取NVD、Debian和Red Hat平台中该CVE的漏洞公告。NVD平台中，漏洞公告以JSON形式按年份存储于结构化数据\footnote{https://nvd.nist.gov/vuln/data-feeds}中，\tool 通过下载并解析相应的JSON文件即可获得NVD中该CVE的公告信息。Debian平台中，漏洞公告也以结构化数据的形式存储在仓库\footnote{https://salsa.debian.org/security-tracker-team/security-tracker/-/tree/master/data/CVE}中，\tool 可直接从中解析得Debian提供的该CVE公告信息。Red Hat平台提供了 WebService API\footnote{https://bugzilla.redhat.com/docs/en/html/api/index.html}服务，\tool 可以直接使用该服务来检索Red Hat平台的漏洞公告。值得注意的是，分析发现：Debian会跟踪NVD上的所有CVE漏洞，而Red Hat并非跟踪所有CVE漏洞。
 
 \tool 从每个知识源的漏洞公告中提取引用的链接信息（即：URL），并将它们添加为相应公告节点的子节点。对于NVD公告，\tool 从“references”字段中直接获取取出相关URL；类似地，对于Debian公告，\tool 直接从“Notes”字段中提取出相关URL；而对于Red Hat公告，\tool 使用正则表达式从评论区（“comments”字段）中提取出相关URL，这是因为开发人员常常会在评论区讨论和记录漏洞的解决过程并列出对补丁信息，但NVD和Debian平台尚未开发评论区模块。
 
 \begin{exmp}
-如图\ref{fig:example}中的第三层所示，对于CVE-2017-11428，NVD公告中包含了两个引用链接。链接一\footnote{https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations}是对描述此漏洞细节的博客的引用，链接二\footnote{https://www.kb.cert.org/vuls/id/475445}是对该漏洞的第三方公告的引用。同时，这两个引用链接也包含在Debian公告中，不过Debian公告还包含修复此漏洞的GitHub提交链接ruby-saml@048a54\cite{ruby-saml-1}。此外，Red Hat平台并未收录该CVE，所以也无引用链接信息。
+如图\ref{fig:example}中的第三层所示，对于CVE-2017-11428，NVD公告中包含了两个引用链接。链接一\footnote{https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations}是对描述此漏洞细节的博客的引用，链接二\footnote{https://www.kb.cert.org/vuls/id/475445}是对该漏洞的第三方公告的引用。同时，这两个引用链接也包含在Debian公告中，不过Debian公告还包含修复此漏洞的GitHub提交链接ruby-saml@048a54\footnote{https://github.com/onelogin/ruby-saml/commit/048a544730930f86e46804387a6b6fad50d8176f}。此外，Red Hat平台并未收录该CVE，所以也无引用链接信息。
 \end{exmp}
 
 \tool 基于引用链接信息的内容，将引用节点分为三种类型：补丁节点（Patch Node）、\tocheck{问题节点}（Issue Node）和\tocheck{混合节点}（Hybrid Node）。这里区分出补丁节点，是因为该方法的根本目的就是在多个知识源中找到所引用的补丁信息。识别补丁节点的方法为：如果URL链接中包含“git”字段且可通过正则表达式匹配到Commit-ID，则该链接为Git Commit形式的补丁节点；如果URL链接中包含“svn”字段且可通过正则表达式匹配到Commit-ID，则该链接为SVN Commit形式的补丁节点。区分出问题节点是因为开发人员常常会在问题追踪系统（Issue Tracker）中讨论该issue的解决方案并引用补丁链接信息，所以，问题报告（Issue Report）是一种较为特殊且重要的引用信息；此外，问题追踪系统（Issue Tracker）中CVE相关的问题报告会有一个标识符（Issue-ID），开发人员常常会将Issue-ID写入代码提交信息（即：commit message）中。识别问题节点的方法为：如果URL链接中包含``/github.com/''和``/issues/''，则该链接为GitHub issue形式的问题节点；如果URL链接中包含``/github.com/''和``/pull/''，则该链接为GitHub pull request形式的问题节点；如果URL链接中包含``bugzilla"、``jira"、``issues"、``bugs"、``tickets"和``tracker"中的某一个字段且可通过正则表达式匹配到issue-id，\tocheck{则该链接为通常issue tracker形式的问题节点}。对于所有未识别为补丁或问题节点的引用链接信息将被视为混合节点，它们多为博客、第三方漏洞公告等。
@@ -105,9 +105,9 @@
 \subsection{\tocheck{知识源扩增}}
 除了NVD、Debian和Red Hat等漏洞公告平台可作为漏洞知识来源之外，代码托管平台也可以被视为隐含的知识来源，因为补丁信息通常隐藏在代码仓的代码提交历史中。因此，在此子步骤中，\tool 将搜索代码托管平台以获取CVE漏洞的补丁（Github Commit形式），\tocheck{通过扩增知识来源的方式以进一步扩增该CVE的信息网络。}
 
-受经验研究中补丁类型分析（Sec.\ref{sec:type}）的启发，93.7\%的都为 GitHub Commit的形式，所以在该步骤中\tool 只搜索GitHub平台的提交。此外，问题跟踪系统（Issue Tracker）通常还会为CVE漏洞相关的问题分配一个问题标识符（Issue—ID）；同样，软件厂商通常也会为该CVE分配一个漏洞公告标识符（Advisory-ID）。例如，受漏洞CVE-2019-10426影响的软件厂商为漏洞分配的标识符为SECURITY-1573\cite{SECURITY-1573}，问题跟踪系统为该漏洞分配的问题标识符为THRIFT-4647\cite{THRIFT-4647}。对此，\tool 可使用正则表达式\footnote{add 表达式}分别从已有的网络节点中提取问题和公告标识符。
+受经验研究中补丁类型分析（Sec.\ref{sec:type}）的启发，93.7\%的都为 GitHub Commit的形式，所以在该步骤中\tool 只搜索GitHub平台的提交。此外，问题跟踪系统（Issue Tracker）通常还会为CVE漏洞相关的问题分配一个问题标识符（Issue—ID）；同样，软件厂商通常也会为该CVE分配一个漏洞公告标识符（Advisory-ID）。例如，受漏洞CVE-2019-10426影响的软件厂商为漏洞分配的标识符为SECURITY-1573\footnote{https://www.jenkins.io/security/advisory/2019-09-25/\#SECURITY-1573}，问题跟踪系统为该漏洞分配的问题标识符为THRIFT-4647\footnote{https://issues.apache.org/jira/browse/THRIFT-4647}。对此，\tool 可使用正则表达式\footnote{add 表达式}分别从已有的网络节点中提取问题和公告标识符。
 
-然后，\tool 使用CVE标识符和提取出的问题和公告标识符作为关键字，通过GitHub提供的REST API\cite{github-api-1}接口全站搜索相关的代码提交。%针对一次搜索，该API最多返回 1,000个搜索结果。
+然后，\tool 使用CVE标识符和提取出的问题和公告标识符作为关键字，通过GitHub提供的REST API\footnote{https://docs.github.com/en/rest/reference/search\#search-commits}接口全站搜索相关的代码提交。%针对一次搜索，该API最多返回 1,000个搜索结果。
 为了减少噪音，对于API返回的提交，\tool 首先会检查该代码提交的仓库信息是否与CVE漏洞的CPE信息匹配。其中，CPE是针对受漏洞影响软件的结构化命名方案，包括：供应商和产品名称信息，可以直接从NVD的JSON文件中解析得到。
 对于代码提交的仓库信息与CPE信息匹配的判定，\tool 沿用了Dong 等人的匹配准则\cite{dong2019towards}，该准则可灵活地应对同一个软件名称存在不同别名的情况。具体来说，给定两个软件的名称，如果匹配的单词数不小于不匹配的单词数，则这两个软件的名称匹配成功，视为同一软件\tocheck{add example}。此外，\tool 仍会检查该提交是否为测试代码或非源代码文件的更改。如果这两个检查都通过，\tool 会将其作为GitHub节点的子节点加入网络。
 
@@ -151,11 +151,11 @@
 受经验研究中映射分析（Sec.\ref{sec:cardinality}）的启发，CVE与其补丁之间存在一对多的映射关系。对此，\tool 的步骤三通过搜索同一代码库所有分支中的相关提交（Commit）来扩展候选补丁集。映射分析结果表明，超过\tocheck{40\%}的CVE与其补丁具有一对多的映射关系，且这些补丁通常是位于同一代码库的某一个或多个分支。对于这些多补丁的情况，\tool 在前两个步骤中构建的网络通常不能够完整地包含所有补丁。此外，补丁类型分析（Sec.\ref{sec:type}）表明绝大多数的补丁都以GitHub Commit形式。因此，\tool 的步骤三设计如下：对于每个已在步骤二中选定的GitHub Commit形式的补丁，\tool 将首先获取其Github代码仓库信息，并获取该仓库中的所有分支信息，在每个分支的特定时间范围内搜索相关的代码提交（Commit）。
 
 具体来说，对于GitHub Commit形式的选定补丁，\tool 从补丁URL中提取出仓库信息，即：所有者（Owner）和存储库（Repository）信息。\congyingEdit{英文版中，这里貌似写的有问题.}
-基于提交的所有者和仓库名信息，首先，\tool 使用GitHub的REST API\cite{github-api-2}获取存储库中的所有分支信息，对于每个分支，\tool 会通过GitHub的REST API\cite{github-api-3}检索在选定补丁之前和之后特定时间跨度（默认情况下为\tocheck{30天}）内创建的提交。这里设置了时间跨度，是考虑到工具时间性能和准确性的平衡；当项目历史较长且不设置时间限制时，\tool 运行时长也会无限增长。然后，对于REST API返回的提交，\tool 使用以下两个标准来确定该提交是否与选定补丁具有相关性：一是检索返回的提交的提交消息（Commit Message）与已选补丁的提交消息（Commit Message）相同或是包含关系；二是检索返回的提交的提交消息（Commit Message）包含CVE ID、 Advisory ID或Issue ID。如果检索返回的提交满足两个条件之一，\tool 会将其作为扩展补丁节点添加为选定补丁的子节点。
+基于提交的所有者和仓库名信息，首先，\tool 使用GitHub的REST API\footnote{https://docs.github.com/en/rest/reference/repos\#list-branches}获取存储库中的所有分支信息，对于每个分支，\tool 会通过GitHub的REST API\footnote{https://docs.github.com/en/rest/reference/repos\#list-commits}检索在选定补丁之前和之后特定时间跨度（默认情况下为\tocheck{30天}）内创建的提交。这里设置了时间跨度，是考虑到工具时间性能和准确性的平衡；当项目历史较长且不设置时间限制时，\tool 运行时长也会无限增长。然后，对于REST API返回的提交，\tool 使用以下两个标准来确定该提交是否与选定补丁具有相关性：一是检索返回的提交的提交消息（Commit Message）与已选补丁的提交消息（Commit Message）相同或是包含关系；二是检索返回的提交的提交消息（Commit Message）包含CVE ID、 Advisory ID或Issue ID。如果检索返回的提交满足两个条件之一，\tool 会将其作为扩展补丁节点添加为选定补丁的子节点。
 
 最后，\tool 将返回步骤二中选定的补丁和步骤三中扩展的补丁作为候选补丁集返回给用户。此外，\tool 还返回该CVE的引用信息网络，以便于工作人员追溯补丁信息的来源及关系，从候选补丁集选定确认正确的补丁。
 
 
 \begin{exmp}
-在步骤二中为CVE-2017-11428选定的补丁为ruby-saml@048a54（位于主分支），\tool 通过步骤三查找到了另外三个提交：ruby-saml@d7ce60\cite{ruby-saml-2}、ruby-saml@a35f72\cite{ruby-saml-3}和ruby-saml@03af9e\cite{ruby-saml-4}。它们与选定补丁ruby-saml@048a54具有相同的提交信息（Commit Message）却具有并不完全相同的代码更改（Diff），且分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将它们添加为ruby-saml@048a54的子节点，而实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，但经验研究\ref{sec:study}中的数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54这一个补丁信息。
+在步骤二中为CVE-2017-11428选定的补丁为ruby-saml@048a54（位于主分支），\tool 通过步骤三查找到了另外三个提交：ruby-saml@d7ce60\footnote{https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280}、ruby-saml@a35f72\footnote{https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c}和ruby-saml@03af9e\footnote{https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8}。它们与选定补丁ruby-saml@048a54具有相同的提交信息（Commit Message）却具有并不完全相同的代码更改（Diff），且分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将它们添加为ruby-saml@048a54的子节点，而实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，但经验研究\ref{sec:study}中的数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54这一个补丁信息。
 \end{exmp}

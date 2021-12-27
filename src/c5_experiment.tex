@@ -81,10 +81,10 @@ Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回�
 \subsection{\tool 漏报和误报分析}
 
 \textbf{漏报分析，}
-通过人工分析\tool 找不到补丁或遗漏补丁的CVE数据，本节共总结出\tool 漏报的五个主要原因：（1）对于一些年代久远的CVE，NVD、Debian和Red Hat中包含的引用信息比较少，有的引用信息甚至是失效的。这种情况下，\tool 无法构建完整的参考网络。例如，漏洞CVE-2011-1950，在NVD\cite{CVE-2011-1950}中标记为“补丁（Patch）”和“供应商咨询（Vendor Advisory）”的关键引用链接已经失效。（2）NVD、Debian和Red Hat平台中缺少CVE的一些关键引用信息（例如，问题链接（Issue URL）），\tool 便难以选出正确的补丁。例如，漏洞CVE-2018-14642，其问题报告\cite{UNDERTOW-1430}不包含在三个咨询来源中的任何一个中，但是，根据此问题报告，我们可以找到补丁\cite{undertow}。（3）补丁的提交消息与CVE描述具有语义相似性，可通过人工识别，但不包含CVE标识符，工具难以辨别。因此，\tool 的\tocheck{知识源扩增}步骤也未能捕捉到它。例如，漏洞CVE-2019-10077\cite{CVE-2019-10077}，代码提交\cite{jspwiki}修复了该漏洞，但没有再提交信息种指明CVE标识符。（4）GitHub平台用于检索代码提交的REST API仅返回1,000个结果，这会使\tool 在\tocheck{知识源扩增}步骤种错失正确的补丁提交。（5）\tool 的补丁精选步骤中，只选择了一个具有最高连通度的补丁，其他已包含在引用信息网络中的正确补丁将会被\tool 错失。
+通过人工分析\tool 找不到补丁或遗漏补丁的CVE数据，本节共总结出\tool 漏报的五个主要原因：（1）对于一些年代久远的CVE，NVD、Debian和Red Hat中包含的引用信息比较少，有的引用信息甚至是失效的。这种情况下，\tool 无法构建完整的参考网络。例如，漏洞CVE-2011-1950，在NVD\footnote{https://nvd.nist.gov/vuln/detail/CVE-2011-1950}中标记为“补丁（Patch）”和“供应商咨询（Vendor Advisory）”的关键引用链接已经失效。（2）NVD、Debian和Red Hat平台中缺少CVE的一些关键引用信息（例如，问题链接（Issue URL）），\tool 便难以选出正确的补丁。例如，漏洞CVE-2018-14642，其问题报告\footnote{https://issues.redhat.com/browse/UNDERTOW-1430}不包含在三个咨询来源中的任何一个中，但是，根据此问题报告，我们可以找到补丁\footnote{https://github.com/undertow-io/undertow/commit/c46b7b49c5a561731c84a76ee52244369af1af8a}。（3）补丁的提交消息与CVE描述具有语义相似性，可通过人工识别，但不包含CVE标识符，工具难以辨别。因此，\tool 的\tocheck{知识源扩增}步骤也未能捕捉到它。例如，漏洞CVE-2019-10077\footnote{https://nvd.nist.gov/vuln/detail/CVE-2019-10077}，代码提交\footnote{https://github.com/apache/jspwiki/commit/87c89f0405d6b31fc165358ce5d5bc4536e32a8a}修复了该漏洞，但没有再提交信息种指明CVE标识符。（4）GitHub平台用于检索代码提交的REST API仅返回1,000个结果，这会使\tool 在\tocheck{知识源扩增}步骤种错失正确的补丁提交。（5）\tool 的补丁精选步骤中，只选择了一个具有最高连通度的补丁，其他已包含在引用信息网络中的正确补丁将会被\tool 错失。
 
 \textbf{误报分析，}
-本节还人工分析了\tool 找错补丁的CVE数据，并总结了两个主要原因：（1）在讨论和解决漏洞时，相关人员也会引用引入漏洞的代码提交。由于\tool 缺乏对引用链接的上下文语义理解，\tool 错误地将其识别为补丁提交。例如，漏洞CVE-2020-5249，引入漏洞的代码提交\cite{go-ethereum-1}和修复漏洞的代码提交\cite{go-ethereum-2}在同一问题报告（Issue Report）的评论中被引用。（2）被引用的页面上列出了多对CVE及其问题和补丁信息。由于\tool 缺乏语义理解，其他CVE的补丁也可能会被\tool 错误地识别。例如，漏洞CVE-2018-15750，其补丁维护在发行说明（Release Note）\cite{release-note}中，CVE-2018-15751的发行说明均被NVD、Debian和RedHat引用。
+本节还人工分析了\tool 找错补丁的CVE数据，并总结了两个主要原因：（1）在讨论和解决漏洞时，相关人员也会引用引入漏洞的代码提交。由于\tool 缺乏对引用链接的上下文语义理解，\tool 错误地将其识别为补丁提交。例如，漏洞CVE-2020-5249，引入漏洞的代码提交\footnote{https://github.com/ethereum/go-ethereum/commit/fb9f7261ec51e38eedb454594fc19f00de1a6834}和修复漏洞的代码提交\footnote{https://github.com/ethereum/go-ethereum/commit/83e2761c3a13524bd5d6597ac08994488cf872ef}在同一问题报告（Issue Report）的评论中被引用。（2）被引用的页面上列出了多对CVE及其问题和补丁信息。由于\tool 缺乏语义理解，其他CVE的补丁也可能会被\tool 错误地识别。例如，漏洞CVE-2018-15750，其补丁维护在发行说明（Release Note）\footnote{https://docs.saltstack.com/en/latest/topics/releases/2018.3.3.html}中，CVE-2018-15751的发行说明均被NVD、Debian和RedHat引用。
 
 
 \begin{tcolorbox}[size=title,opacityfill=0.15]
@@ -351,9 +351,9 @@ Highlight：在实际使用中，\tool 有助于安全专家更准确、更快�
 \section{讨论}
 本节将主要讨论\tool 的局限性和重要性。
 \subsection{\tool 的局限性}
-首先，\tool 以CVE-ID作为输入，因此该方法可能不适用于没有CVE-ID的开源漏洞（即：不在CVE List中的开源漏洞），比如一些秘密修补的漏洞\cite{xu2017spain}。对此，一种可能的解决错失是将Advisory-ID作为\tool 的输入，因为某些第三方漏洞平台（例如，WhiteSource）可能具有比NVD更多的漏洞。
+首先，\tool 以CVE-ID作为输入，因此该方法可能不适用于没有CVE-ID的开源漏洞（即：不在CVE List中的开源漏洞），比如一些秘密修补的漏洞\footnote{https://www.securityfocus.com}。对此，一种可能的解决错失是将Advisory-ID作为\tool 的输入，因为某些第三方漏洞平台（例如，WhiteSource）可能具有比NVD更多的漏洞。
 
-其次，\tool 仅将Debian和Red Hat视为次级知识源，但\tool 具有较好的可扩展性，它可以在轻松地囊括其他知识源（例如，SecurityFocus\cite{SecurityFocus}）。此外，正如（Sec. xxx）\tool 漏报和误报分析中所阐述的，缺失CVE与补丁间的语义理解和分析将会限制\tool 的准确性。%我们计划在CVE（例如描述）和补丁（例如，更改的代码和补丁引用的上下文）中使用语义来增强补丁选择和扩展。
+其次，\tool 仅将Debian和Red Hat视为次级知识源，但\tool 具有较好的可扩展性，它可以在轻松地囊括其他知识源（例如，SecurityFocus\footnote{https://www.securityfocus.com}）。此外，正如（Sec. xxx）\tool 漏报和误报分析中所阐述的，缺失CVE与补丁间的语义理解和分析将会限制\tool 的准确性。%我们计划在CVE（例如描述）和补丁（例如，更改的代码和补丁引用的上下文）中使用语义来增强补丁选择和扩展。
 
 \subsection{\tool 的重要性}
 \tool 将会有益于安全社区、学术界和工业界的用户。对于安全社区而言，\tool 可以发现并向NVD管理员报告缺少补丁信息的CVE漏洞，以提高CVE的信息质量并加速CVE条目的更新，使得NVD平台的用户受益。对于学术界而言，\tool 可以为大规模数据驱动的安全分析工作（例如，基于学习的漏洞检测\cite{li2018vuldeepecker,zhou2019devign}）和经验研究工作提供补丁数据。它还可以帮助通过分析漏洞补丁信息以确定受影响的库的工作\cite{dong2019towards}。对于工业界来说，\tool 可以帮助安全工程师提高工业漏洞数据库的补丁覆盖率和准确性，从而提高软件成分分析的准确性。值得一提的是，\tool 已经部署到一家高科技公司。但是，由于保密协议，本文不便分享相关数据。
