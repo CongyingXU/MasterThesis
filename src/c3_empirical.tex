@@ -70,25 +70,42 @@
 
 在该深度数据集的构建过程中，为了确保数据集能够涵盖足够多的漏洞用以实验评估，但又不至于在人工识别补丁的阶段产生难以完成的工作量，本文仅将在$DB_A$和$DB_B$都含有补丁信息的漏洞列入该深度数据集，最终，该深度数据集共包含\tocheck{1,417}个CVE漏洞。
 
+
+
 然后，对于该深度数据集中的每个CVE漏洞，首先分别由两位研究人员通过分析$DB_A$和$DB_B$数据库报告的补丁、查看NVD中的漏洞描述和参考链接信息以及搜索GitHub代码仓库的提交历史和其他网络资源等方式，独立得找到其补丁信息；之后，对比由两位研究人员独立查找得到得补丁信息，对于补丁结果不一致的漏洞，两位研究人员再一起分析讨论直到达成共识。这两位研究人员分别是本文作者和与本文作者同课题组的学生。由于公开的信息有限，\tocheck{1,417}个CVE漏洞中的\tocheck{122}个CVE漏洞无法找到补丁信息，比如：漏洞CVE-2016-3942在NVD中没有漏洞报告，但$DB_A$和$DB_B$将 jsrender@f984e1\cite{jsrender}标识为其补丁，两位研究人员无法确认该补丁信息的准确性。最终，该深度数据集共包含了\tocheck{1,295}个CVE漏洞。
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[scale=0.66]{res/rq0-year.pdf}
+    %\vspace{-5pt}
+    \caption{数据集中漏洞年份统计}\label{fig:rq0-year}
+\end{figure*}
+
+
+% \begin{figure*}[h]
+%     \centering
+%     \begin{subfigure}[b]{0.45\textwidth}
+%     \centering
+%     \includegraphics[scale=0.46]{res/rq0-year.pdf}
+%     %\vspace{-5pt}
+%     \caption{漏洞年份分布统计}\label{fig:rq0-year}
+%     \end{subfigure}
+%     \begin{subfigure}[b]{0.45\textwidth}
+%     \centering
+%     \includegraphics[scale=0.46]{res/rq0-language.pdf}
+%     %\vspace{-5pt}
+%     \caption{程序语言分布统计}\label{fig:rq0-language}
+%     \end{subfigure}
+%     %\vspace{-20pt}
+%     \caption{数据集中漏洞年份及程序语言分布统计}\label{fig:dataset}
+% \end{figure*}
+
 
 
 \begin{figure*}[h]
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[scale=0.46]{res/rq0-year.pdf}
-    %\vspace{-5pt}
-    \caption{漏洞年份分布统计}\label{fig:rq0-year}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[scale=0.46]{res/rq0-language.pdf}
-    %\vspace{-5pt}
-    \caption{程序语言分布统计}\label{fig:rq0-language}
-    \end{subfigure}
-    %\vspace{-20pt}
-    \caption{数据集中漏洞年份及程序语言分布统计}\label{fig:dataset}
+    \includegraphics[scale=0.68]{res/rq0-language.pdf}
+    \caption{数据集中漏洞程序语言分布统计}\label{fig:rq0-language}
 \end{figure*}
 
 
@@ -116,6 +133,18 @@
 
 
 如图\ref{fig:rq1-cves}所示，$DB_A$和$DB_B$数据库中共有的CVE漏洞为\tocheck{4,418}个，同时$DB_A$和$DB_B$分别包含\tocheck{4,212}和\tocheck{1,440}个特有的CVE漏洞；如图\ref{fig:rq1-cves-with-patches}所示，$DB_A$中\tocheck{3,607(41.8\%)}的CVE漏洞含有补丁信息，$DB_B$中\tocheck{2,412(41.2\%)}的CVE漏洞含有补丁信息；$DB_A$和$DB_B$数据库共有\tocheck{10,070}个开源软件CVE漏洞，而其中仅有\tocheck{4,602(45.7\%)}的漏洞提供了补丁信息。
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[scale=0.98]{res/rq1-CVE-IDs-VS.pdf}
+%     \caption{开源软件漏洞数据}\label{fig:rq1-cves}
+% \end{figure}
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[scale=0.98]{res/rq1-CVE-IDs-Patches-VS.pdf}
+%     \caption{补丁信息的开源软件漏洞数据}\label{fig:rq1-cves-with-patches}
+% \end{figure}
 
 由此可见，数据库$DB_A$和$DB_B$中开源软件漏洞的补丁覆盖率都较低，分别为41.8\%和41.2\%，漏洞补丁缺失的情况较为普遍。%而且可以看出，不同的漏洞数据库对\congyingEdit{OSS}漏洞的覆盖范围不同。
 同时，这也体现出自动化补丁查找方法的必要性，可用于填补数据库中缺失的补丁信息。
@@ -158,7 +187,7 @@
 \section{RQ4：补丁映射分析}\label{sec:cardinality}
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.5]{res/rq4-cardinality.pdf}
+\includegraphics[scale=0.68]{res/rq4-cardinality.pdf}
 \vspace{-10pt}
 \caption{Mapping Cardinalities between CVEs and Patches}\label{fig:rq4-cardinality}
 \end{figure}
