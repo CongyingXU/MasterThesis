@@ -8,7 +8,8 @@
 
 
 #### 成文后，需check
-* url的引用 -> 脚注引用(加字数)
+* 【Done】url的引用 -> 脚注引用(加字数)
+* 段首，统一用：，如\textbf{启发式方法一：}
 * 所有符号的中文化 如：括号
 * 中文语法check？断句及标点符号，想想办法？
 * 如：Requested Commit VS. Merged Commits , 英语单词首字母大写
