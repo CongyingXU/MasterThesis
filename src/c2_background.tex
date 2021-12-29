@@ -47,7 +47,7 @@ CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中�
 如图\ref{fig:Vendor-2021-44228}所示为厂商Apache发布的关于CVE-2021-44228的漏洞公告\footnote{https://logging.apache.org/log4j/2.x/security.html}，其中包含：修复方式“Log4j 2.x mitigation ...... Upgrade to Log4j 2.3.1 (for Java 6), 2.12.3 (for Java 7), or 2.17.0 (for Java 8 and later)”、漏洞发现者“Credit：This issue was discovered by Chen Zhaojun of Alibaba Cloud Security Team.”、引用链接“https://issues.apache.org/jira/browse/LOG4J2-3198”等信息。
 
 
-以上由厂商发布的漏洞公告，也常被称为：厂商公告（Vendor Advisory）；但由于某一厂商只会维护与该厂商相关的软件漏洞通告，开源社区的开发人员难以一一关注所有厂商的公告信息。因此，出现了许多第三方平台收集并维护所有漏洞公告信息，被称为：第三方公告（Third-party Advisory），例如：Red Hat\footnote{https://access.redhat.com/errata/}、Debian\footnote{https://www.debian.org/security/}、Gentoo\footnote{https://security.gentoo.org/}等。
+以上由厂商发布的漏洞公告，也常被称为：厂商公告（Vendor Advisory）；但由于某一厂商只会维护与该厂商相关的软件漏洞通告，开源社区的开发人员难以一一关注所有厂商的公告信息。因此，出现了许多第三方平台收集并维护所有漏洞公告信息，被称为：第三方公告（Third-Party Advisory），例如：Red Hat\footnote{https://access.redhat.com/errata/}、Debian\footnote{https://www.debian.org/security/}、Gentoo\footnote{https://security.gentoo.org/}等。
 
 % 官方或第三方？再顺路引出相关的sources，作为例子。
 
@@ -80,7 +80,7 @@ CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中�
 
 \section{相关工作}
 \subsection{漏洞信息质量}
-漏洞数据库（例如：CVE、NVD）被广泛关注，其中的漏洞信息也被广泛参考使用。随着漏洞数据库积累的漏洞数据越来越多，研究人员也越来越关注其中的漏洞信息的质量。
+漏洞数据库（例如：CVE和NVD）被广泛关注，其中的漏洞信息也被广泛参考使用。随着漏洞数据库积累的漏洞数据越来越多，研究人员也越来越关注其中的漏洞信息的质量。
 
 Nguyen和Massacci\cite{nguyen2013reliability}最早揭示了NVD数据库中漏洞所影响的软件版本信息的不可靠性。为了提高该信息的可靠性，Nguyen\cite{nguyen2016automatic}和Dashevskyi等人\cite{dashevskyi2018screening}开发了工具以确定某一旧软件版本是否会受到新披露的漏洞的影响。他们认为：如果旧版本包含修复漏洞所更改的源代码行，则该版本被视为受漏洞影响。Dong等人\cite{dong2019towards}从漏洞的描述信息中识别受漏洞影响的软件名称和版本，并与漏洞报告所提供的软件名称和版本信息进行对比。他们发现漏洞数据库中会遗漏真正受漏洞影响的版本，也会错误地包含了不受漏洞影响的版本。Chen等人\cite{chen2020automated}识别受漏洞影响的开源库信息。Chaparro等人的工作\cite{chaparro2017detecting}检测漏洞描述中是否缺少用于重现漏洞的关键步骤或预期效果信息。Mu等人的工作\cite{mu2018understanding}揭示了漏洞报告丢失重现漏洞信息的普遍性。以上工作已侧重于漏洞信息的多个方面，而本文的工作重点则是研究漏洞的补丁信息，并尝试自动化地从不同来源漏洞报告的综合信息中定位漏洞补丁。
 % \tocheck{jo等人}\cite{jo2020gapfinder}识别网络安全领域内的语义不一致。
@@ -92,7 +92,7 @@ Nguyen和Massacci\cite{nguyen2013reliability}最早揭示了NVD数据库中漏�
 \subsection{漏洞补丁分析}
 当前，有多中补丁分析相关的任务可用于提高软件安全性，如：补丁的生成和部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁的存在性测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}以及秘密补丁识别\cite{xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine}。
 
-此外，研究人员也已为Java\cite{ponta2019manually}、C/C++\cite{fan2020ac}以及特定开源项目\cite{jimenez2018enabling}构建安全补丁数据集。基于这些数据集，研究人员已开展实证研究以表征漏洞及其补丁\cite{zaman2011security,li2017large,liu2020large,antal2020exploring}。在这些工作中，补丁信息多由人工识别\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine,ponta2019manually,zaman2011security}，或通过启发式规则识别，例如：在CVE的引用链接中查找补丁提交信息\cite{duan2019automating,fan2020ac,jimenez2018enabling,li2017large,liu2020large}，以及在提交信息（commit message）中搜索CVE标识符\cite{fan2020ac, jimenez2018enabling, antal2020exploring}。这些工作存在的问题为：通过人工收集成本过高，且耗时较长；然而，启发式规则的方法又不足以找到或是找全补丁。
+此外，研究人员也已为Java\cite{ponta2019manually}、C/C++\cite{fan2020ac}以及特定开源项目\cite{jimenez2018enabling}构建安全补丁数据集。基于这些数据集，研究人员已开展实证研究以表征漏洞及其补丁\cite{zaman2011security,li2017large,liu2020large,antal2020exploring}。在这些工作中，补丁信息多由人工识别\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine,ponta2019manually,zaman2011security}，或通过启发式规则识别，例如：在CVE的引用链接中查找补丁提交信息\cite{duan2019automating,fan2020ac,jimenez2018enabling,li2017large,liu2020large}，以及在提交信息（Commit Message）中搜索CVE标识符\cite{fan2020ac, jimenez2018enabling, antal2020exploring}。这些工作存在的问题为：通过人工收集成本过高，且耗时较长；然而，启发式规则的方法又不足以找到或是找全补丁。
 
 
 \subsection{漏洞补丁应用}
