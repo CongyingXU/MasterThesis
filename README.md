@@ -32,3 +32,4 @@
 * advisory analysis ，reference analysis，reference Augment: 公告节点分析和引用节点分析, 知识源扩增?
 * \tool 将引用链接节点分为三种类型：补丁节点（Patch Node）、\tocheck{Issue 节点}（Issue Node）和\tocheck{混合节点}（Hybrid Node）。
 * 漏洞知识源？从多个\tocheck{漏洞知识源}（即：NVD、Debian\cite{debian}、RedHat\cite{redhat}和GitHub）
+
