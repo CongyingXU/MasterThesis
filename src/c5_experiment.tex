@@ -28,7 +28,7 @@
 \textbf{检索NVD References：}检索NVD平台上该漏洞“Reference”字段中的引用信息以获取补丁提交\cite{duan2019automating,li2016vulpecker,li2018vuldeepecker}。如图\ref{fig:CVE-2019-18841}所示为NVD平台上CVE-2019-18841的引用信息\footnote{https://nvd.nist.gov/vuln/detail/CVE-2019-18841}，可以从中提取出补丁提交“\url{https://github.com/ankane/chartkick/commit/b810936bbf687bc74c5b6dba72d2397a399885fa}”。
 \begin{figure*}[h]
     \centering
-    \includegraphics[scale=0.44]{res/NVD-2019-18841}
+    \includegraphics[scale=0.44]{fig/NVD-2019-18841}
     %\vspace{-10pt}
     \caption{NVD平台CVE-2019-18841的引用信息}\label{fig:CVE-2019-18841}
 \end{figure*}
@@ -36,7 +36,7 @@
 \textbf{检索GitHub Commits：}检索GitHub中，检索带有CVE标识符的代码提交\cite{you2017semfuzz,Wang2020empirical}。如图\ref{fig:commitmessage}所示，提交信息（Commit Message）\footnote{https://github.com/apache/tomcat80/commit/2c9d8433bd3247a2856d4b255}为“Fix \url{https://bz.apache.org/bugzilla/show_bug.cgi?id=62343} Make CORS filter defaults more secure. This is the fix for CVE-2018-8014.”，漏洞标识符“CVE-2018-8014”出现在该提交中。以“CVE-2018-8014”为输入，通过检索Github获取该提交，作为漏洞CVE-2018-8014的补丁信息。
 \begin{figure*}[h]
     \centering
-    \includegraphics[scale=0.45]{res/CVE in commit message.jpg}
+    \includegraphics[scale=0.45]{fig/CVE in commit message.jpg}
     %\vspace{-10pt}
     \caption{CVE-2018-8014标识符出现在提交中}\label{fig:commitmessage}
 \end{figure*}
@@ -259,13 +259,13 @@ Highlight：\tool 中的知识源、网络构建、补丁选择和补丁扩增�
 %     \centering
 %     \begin{subfigure}[b]{0.45\textwidth}
 %     \centering
-%     \includegraphics[scale=0.55]{res/rq8-sensitivity-depth.pdf}
+%     \includegraphics[scale=0.55]{fig/rq8-sensitivity-depth.pdf}
 %     %\vspace{-5pt}
 %     \caption{网络深度限制}\label{fig:depth}
 %     \end{subfigure}
 %     \begin{subfigure}[b]{0.45\textwidth}
 %     \centering
-%     \includegraphics[scale=0.55]{res/rq8-sensitivity-span.pdf}
+%     \includegraphics[scale=0.55]{fig/rq8-sensitivity-span.pdf}
 %     %\vspace{-5pt}
 %     \caption{提交时间跨度}\label{fig:span}
 %     \end{subfigure}
@@ -278,14 +278,14 @@ Highlight：\tool 中的知识源、网络构建、补丁选择和补丁扩增�
 验证\textbf{RQ6 准确性验证}、\textbf{RQ7 削弱性分析}、\textbf{RQ9 通用性分析}和\textbf{RQ10 实用性能分析}时，网络深度限制默认设置为\textbf{5}层，代码提交时间跨度默认设置为\textbf{30}天。为了评估\tool 对这两个参数的敏感性，该小节将分别固定两个参数中的一个为默认设置，改变另一个参数的设置，并在深度数据集上重新运行\tool 。网络深度限制具体设置为3、4、5和6层，提交时间跨度具体设置为0、10、20、30、40、50和60天。
 \begin{figure*}[h]
     \centering
-    \includegraphics[scale=1.0]{res/rq8-sensitivity-depth.pdf}
+    \includegraphics[scale=1.0]{fig/rq8-sensitivity-depth.pdf}
     %\vspace{-5pt}
     \caption{网络深度限制（层数）敏感性分析结果}\label{fig:depth}
 \end{figure*}
 
 \begin{figure*}[h]
     \centering
-    \includegraphics[scale=1.0]{res/rq8-sensitivity-span.pdf}
+    \includegraphics[scale=1.0]{fig/rq8-sensitivity-span.pdf}
     %\vspace{-20pt}
     \caption{提交时间跨度的敏感性分析结果}\label{fig:span}
 \end{figure*}
