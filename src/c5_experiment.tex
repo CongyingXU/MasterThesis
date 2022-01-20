@@ -1,28 +1,28 @@
-\chapter{实验验证及结果分析}
+\chapter{实验评估}
 
-本章将详细阐述为评估\tool 所进行的实验验证，并讨论分析实验的结果。本章将首先介绍所设计的五个实验问题，包括：准确性、削弱性、敏感度、通用性及实用性的验证；再逐一展示五个问题的实验结果，并讨论分析其原因及意义；最后，基于实验验证的结果，讨论\tool 的局限性以及实际价值。
+本章将详细阐述为评估\tool 所进行的实验验证，并讨论分析实验的结果。本章将首先介绍所设计的五个实验问题，包括准确性、削弱性、敏感度、通用性及实用性的验证；再逐一展示五个问题的实验结果，并讨论分析其原因及意义；最后，基于实验验证的结果，讨论\tool 的局限性以及实际价值。
 
 \section{实验问题设计}
 本文从准确性、削弱性、敏感度、通用性及实用性五个方面设计了以下五个研究问题，以尽可能全面地验证并评估\tool 。
 
 \begin{itemize}[leftmargin=*]
-\item \textbf{RQ6 准确性验证：}与已有的基于启发式的方法相比，\tool 查找漏洞补丁的准确性如何？与两个顶级工业漏洞数据库相比，\tool 提供的漏洞补丁的准确性又如何呢？这个问题旨在探究\tool 的准确性。（Sec. \ref{sec:accuracy-evaluation}）
+\item \textbf{RQ6 准确性评估：}与已有的基于启发式的方法相比，\tool 查找漏洞补丁的准确性如何？与两个商业漏洞数据库相比，\tool 提供的漏洞补丁的准确性又如何呢？这个问题旨在探究\tool 的准确性。（见章节\ref{sec:accuracy-evaluation}）
 \item \textbf{RQ7 削弱性分析：}\tool 中各个步骤及设计有着怎么样的效果或必要性？如果去除或削弱\tool 中的某些环节，对于\tool 的结果会有怎么样的影响？这个问题旨在评估\tool 中各个步骤及设计的实际效果及必要性。（Sec.\ref{sec:ablation}）
-\item \textbf{RQ8 敏感度分析：}\tool 的准确性对\tool 中参数的敏感性如何？这个问题旨在评估\tool 的健壮性及鲁棒性，探究tool 中的参数是否对\tool 的准确性有过大影响。 （Sec. \ref{sec:sensitivity}）
-\item \textbf{RQ9 通用性分析：}\tool 在更大范围的开源软件漏洞上表现如何？ 这个问题旨在评估\tool 的通用性。（Sec. \ref{sec:sensitivity}）
-\item \textbf{RQ10 实用性分析：}\tool 在实际使用中表现如何？这个问题旨在评估\tool 在实际使用中实用性。（Sec. \ref{sec:generality}）
+\item \textbf{RQ8 敏感度分析：}\tool 的准确性对\tool 中参数的敏感性如何？这个问题旨在评估\tool 的健壮性及鲁棒性，探究tool 中的参数是否对\tool 的准确性有过大影响。 （见章节\ref{sec:sensitivity}）
+\item \textbf{RQ9 通用性分析：}\tool 在更大范围的开源软件漏洞上表现如何？ 这个问题旨在评估\tool 的通用性。（见章节\ref{sec:sensitivity}）
+\item \textbf{RQ10 实用性分析：}\tool 在实际使用中表现如何？这个问题旨在评估\tool 在实际使用中实用性。（见章节\ref{sec:generality}）
 \end{itemize}
 
-为解答以上实验问题，本章的实验验证将继续采用经验研究（Sec. \ref{sec:accuracy}）中使用的评估指标，即：Not Found、Precision（精度）、Recall（召回率）和 F1-Score（F1值）。本章的实验验证还将继续使用在经验研究（Sec. \ref{sec:study}）中构建了深度数据集，以探究\textbf{RQ6 准确性验证}、\textbf{RQ7 削弱性分析}和\textbf{RQ8 敏感度分析}。
+为解答以上实验问题，本章的实验验证将继续采用经验研究（见章节\ref{sec:accuracy}）中使用的评估指标，即Not Found、Precision（精度）、Recall（召回率）和 F1-Score（F1值）。本章的实验验证还将继续使用在经验研究（见章节\ref{sec:study}）中构建了深度数据集，以探究\textbf{RQ6 准确性验证}、\textbf{RQ7 削弱性分析}和\textbf{RQ8 敏感度分析}。
 
 对于\textbf{RQ9 通用性分析}，本章将另外构造两个范围更大的数据集来进行验证。此外，本章还进行了用户研究，通过评估用户分别在有和没有\tool 辅助下查找补丁的用时和准确性，并收集用户反馈以探究\textbf{RQ10 实用性分析}。
 
 
 \section{RQ6：准确性验证}\label{sec:accuracy-evaluation}
 
-为了评估\tool 的准确性，本节将\tool 分别与三种基于启发式的方法和两个工业漏洞数据库（$DB_A$和$DB_B$）进行比较，并通过人工进一步分析了\tool 中误报和漏报的原因。
+为了评估\tool 的准确性，本节将\tool 分别与三种基于启发式的方法和两个商业漏洞数据库（$DB_A$和$DB_B$）进行比较，并通过人工进一步分析了\tool 中误报和漏报的原因。
 
-\subsection{与基于启发式方法对比}
+\subsection{与基于启发式规则的方法对比}
 本节首先选择了两种被广泛使用的启发式方法（\textbf{检索NVD References}和\textbf{检索GitHub Commits}），此外，还将这前种启发式方法结合为第三种启发式方法（\textbf{检索NVD以及GitHub}）。
 
 \textbf{检索NVD References：}检索NVD平台上该漏洞“Reference”字段中的引用信息以获取补丁提交\cite{duan2019automating,li2016vulpecker,li2018vuldeepecker}。如图\ref{fig:CVE-2019-18841}所示为NVD平台上CVE-2019-18841的引用信息\footnote{https://nvd.nist.gov/vuln/detail/CVE-2019-18841}，可以从中提取出补丁提交“\url{https://github.com/ankane/chartkick/commit/b810936bbf687bc74c5b6dba72d2397a399885fa}”。
@@ -41,7 +41,7 @@
     \caption{CVE-2018-8014标识符出现在提交中}\label{fig:commitmessage}
 \end{figure*}
 
-\textbf{检索NVD 以及GitHub：}将前两种启发式方法结合为第三种启发式方法，即：检索NVD References以及GitHub Commits。
+\textbf{检索NVD 以及GitHub：}将前两种启发式方法结合为第三种启发式方法，即检索NVD References以及GitHub Commits。
 
 \begin{table*}[h]
     \centering
@@ -88,11 +88,11 @@ Highlight：与现有的基于启发式的方法相比，\tool 将能找到补�
 \end{tcolorbox}
 
 
-\subsection{与工业漏洞数据库对比}
+\subsection{与商业漏洞数据库对比}
 % 考虑到漏洞数据库$DB_A$和$DB_B$并非由工具自动化构建，构建的过程涉及了大量人工工作，并不可知且无法量化，无法进行公平的比较。
-% 本节与工业漏洞数据库$DB_A$和$DB_B$进行比较的并非为了证明\tool 或是$DB_A$和$DB_B$的优劣，因为
+% 本节与商业漏洞数据库$DB_A$和$DB_B$进行比较的并非为了证明\tool 或是$DB_A$和$DB_B$的优劣，因为
 
-考虑到漏洞数据库$DB_A$和$DB_B$并非由工具自动化构建，构建的过程涉及了大量人工工作，因此，漏洞数据库$DB_A$和$DB_B$中漏洞信息具有较高的质量。本节将\tool 与数据库$DB_A$和$DB_B$进行对比，可以评估\tool 所达到的准确性水平。如果\tool 可以帮助改进或补充现有的工业漏洞数据库，也能体现\tool 的实用价值。
+考虑到漏洞数据库$DB_A$和$DB_B$并非由工具自动化构建，构建的过程涉及了大量人工工作，因此，漏洞数据库$DB_A$和$DB_B$中漏洞信息具有较高的质量。本节将\tool 与数据库$DB_A$和$DB_B$进行对比，可以评估\tool 所达到的准确性水平。如果\tool 可以帮助改进或补充现有的商业漏洞数据库，也能体现\tool 的实用价值。
 
 从表\ref{table:accuracy}和\ref{table:heuristic}可以看出，\tool 能找到补丁的漏洞数比$DB_A$和$DB_B$少了\tocheck{12.0\%}，且精度也分别低了\tocheck{6.4\%}和\tocheck{5.8\%}。这是因为漏洞数据库$DB_A$和$DB_B$构建过程中涉及了安全专家的人工工作，许多补丁信息由人工收集得来，难以被自动化工具找到。此外，收集的补丁信息还会经过安全专家验证，因此$DB_A$和$DB_B$也比自动化工具更高的准确率。
 
@@ -106,12 +106,12 @@ Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回�
 
 \subsection{\tool 漏报和误报分析}\label{sec:fpfn}
 
-基于前两小节的实验结果，本小节旨在分析造成\tool 漏报和误报的原因，即：\tool 未找到补丁或返回的补丁信息不正确的情形。
+基于前两小节的实验结果，本小节旨在分析造成\tool 漏报和误报的原因，即\tool 未找到补丁或返回的补丁信息不正确的情形。
 
 \textbf{漏报分析：} 漏报是指\tool 未能找到补丁或找全补丁信息，体现在召回率（Recall）小于1，以及Not Found不为0。通过人工分析\tool 未能找到补丁或找全补丁的CVE数据，本小节共总结出\tool 漏报的五个主要原因：
 \begin{enumerate}
-    \item [（1）] 对于一些年代久远的CVE，NVD、Debian和Red Hat中包含的引用信息比较少，有的引用信息甚至是失效的。这种情况下，\tool 无法构建完整的参考网络。例如，\tool 未能找到补丁的漏洞CVE-2011-1950，该漏洞在NVD\footnote{https://nvd.nist.gov/vuln/detail/CVE-2011-1950}中标记为“补丁（Patch）”和“供应商咨询（Vendor Advisory）”的关键引用链接已经失效，而这个链接中很有可能含有补丁信息。
-    \item [（2）] NVD、Debian和Red Hat平台缺失关键引用链接（例如，问题链接（Issue URL）），\tool 便难以选出正确的补丁。例如，\tool 未能找到补丁的漏洞CVE-2018-14642，其问题报告\footnote{https://issues.redhat.com/browse/UNDERTOW-1430}不包含在任何一个知识源中，人工分析发现，基于此问题报告可以找到该漏洞的补丁\footnote{https://github.com/undertow-io/undertow/commit/c46b7b49c5a561731c84a76ee52244369af1af8a}。
+    \item [（1）] 对于一些年代久远的CVE，NVD、Debian和Red Hat中包含的引用信息比较少，有的引用信息甚至是失效的。这种情况下，\tool 无法构建完整的参考网络。例如，\tool 未能找到补丁的漏洞CVE-2011-1950，该漏洞在NVD\footnote{https://nvd.nist.gov/vuln/detail/CVE-2011-1950}中标记为“补丁（Patch）”和“供应商咨询（Vendor Advisory）”的关键参考链接已经失效，而这个链接中很有可能含有补丁信息。
+    \item [（2）] NVD、Debian和Red Hat平台缺失关键参考链接（例如，问题链接（Issue URL）），\tool 便难以选出正确的补丁。例如，\tool 未能找到补丁的漏洞CVE-2018-14642，其问题报告\footnote{https://issues.redhat.com/browse/UNDERTOW-1430}不包含在任何一个知识源中，人工分析发现，基于此问题报告可以找到该漏洞的补丁\footnote{https://github.com/undertow-io/undertow/commit/c46b7b49c5a561731c84a76ee52244369af1af8a}。
     \item [（3）] 补丁的提交信息不包含CVE标识符，但与CVE描述具有语义相似性，自动化工具难以识别，但可通过人工识别。因此，\tool 的\tocheck{知识源扩增}步骤也未能找到这类型的补丁。例如，漏洞CVE-2019-10077\footnote{https://nvd.nist.gov/vuln/detail/CVE-2019-10077}，代码提交\footnote{https://github.com/apache/jspwiki/commit/87c89f0405d6b31fc165358ce5d5bc4536e32a8a}为该漏洞的补丁，但提交信息中未提及CVE标识符，\tool 也未能找到该补丁。
     \item [（4）] GitHub平台用于检索代码提交的REST API仅返回1,000个结果，这会使\tool 在\tocheck{知识源扩增}步骤种错失一些补丁提交。
     \item [（5）] \tool 的补丁精选步骤中，只选择了一个具有最高连通度的补丁节点，其他已包含在引用信息网络中的正确补丁会被遗漏掉，这也造成了漏报。
@@ -121,7 +121,7 @@ Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回�
 \textbf{误报分析：}漏报是指\tool 返回的结果非该漏洞的补丁信息，体现在精确率（Precision）小于1。通过人工分析\tool 返回错误补丁的CVE数据，本小节共总结出\tool 误报的两个主要原因：
 
 \begin{enumerate}
-    \item [（1）] 在讨论和解决漏洞时，相关人员也会引用引入漏洞的代码提交。由于\tool 缺乏对引用链接的上下文语义理解，\tool 错误地将其识别为补丁提交。例如，漏洞CVE-2020-5249，引入漏洞的代码提交\footnote{https://github.com/ethereum/go-ethereum/commit/fb9f7261ec51e38eedb454594fc19f00de1a6834}和修复漏洞的代码提交\footnote{https://github.com/ethereum/go-ethereum/commit/83e2761c3a13524bd5d6597ac08994488cf872ef}在同一问题报告（Issue Report）的评论中被引用。
+    \item [（1）] 在讨论和解决漏洞时，相关人员也会引用引入漏洞的代码提交。由于\tool 缺乏对参考链接的上下文语义理解，\tool 错误地将其识别为补丁提交。例如，漏洞CVE-2020-5249，引入漏洞的代码提交\footnote{https://github.com/ethereum/go-ethereum/commit/fb9f7261ec51e38eedb454594fc19f00de1a6834}和修复漏洞的代码提交\footnote{https://github.com/ethereum/go-ethereum/commit/83e2761c3a13524bd5d6597ac08994488cf872ef}在同一问题报告（Issue Report）的评论中被引用。
     \item [（2）] 被引用的页面上列出了多对CVE及其问题和补丁信息。由于\tool 缺乏语义理解，其他CVE的补丁也可能会被\tool 错误地识别。例如，漏洞CVE-2018-15750，其补丁维护在发行说明（Release Note）\footnote{https://docs.saltstack.com/en/latest/topics/releases/2018.3.3.html}中，CVE-2018-15751的发行说明均被NVD、Debian和Red Hat引用。
 \end{enumerate}  
 
@@ -235,7 +235,7 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 在\tool 的步骤二（补丁节点精选）中，并非选择具有高置信度和连通度的补丁，而是选择网络中的所有补丁。生成的变体为表\ref{table:contribution}中的$v_2^1$，可以看到该变体显着提高了\tool 的召回率，由0.864提高到了0.940多了\tocheck{8.8\%}，尤其是对于一对多映射类型的CVE。但同时精度大幅下降\tocheck{29.3\%}，由0.864降到了0.611；F1值也大幅下降了\tocheck{21.4\%}，由0.837降到了0.658。该结果表明，引用信息网络中确实包含了大部分漏洞的正确补丁，且基于启发式的补丁选择方法有助于实现精度和召回之间的平衡。
 
 \textbf{去除基于连通度或置信度的补丁选择方法：}
-在\tool 的步骤二（补丁节点精选）中，并非选择具有高置信度和连通度的补丁，而是采用的两个启发式方法之一，即：选择具有高置信度或连通度的补丁，生成两个变体$v_2^2$和$v_2^3$。
+在\tool 的步骤二（补丁节点精选）中，并非选择具有高置信度和连通度的补丁，而是采用两个启发式方法之一，即选择具有高置信度或连通度的补丁，生成两个变体$v_2^2$和$v_2^3$。
 
 在不使用基于连通度的启发式方法时，$v_2^2$找到补丁的漏洞数比\tool 少了\tocheck{41.7\%}，但同时精度提升了\tocheck{5.3\%}，召回率提高了\tocheck{2.9\%}，F1值提高了\tocheck{4.1\%}。这些结果表明，基于连通度的启发式有助于为更多CVE找到补丁信息，但同时也会引入少部分噪声。
 在不使用基于置信度的启发式方法时，$v_2^3$的召回率和F1值会略有下降，分别由0.864和0.837降到了0.844和0.826；尤其是对于\textit{MR}类型的CVE，影响更为明显，召回率由0.620下降到0.462。
@@ -243,7 +243,7 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 这些结果表明，基于置信度的启发式方法有助于在所有评估标准（Not Found、Precision、Recall和F1-Score）之间实现平衡的准确性。
 
 \textbf{变更基于连通度的方法设置：}
-在\tool 的步骤二（补丁节点精选）基于连通度的方法中，通过仅考虑路径长度（即：选择到根节点的路径最短的补丁）和仅考虑路径数量（即：选择具有最多路径数的补丁）来削弱基于连通度的启发式方法，分别生成了变体$v_2^4$和$v_2^5$。
+在\tool 的步骤二（补丁节点精选）基于连通度的方法中，通过仅考虑路径长度（即选择到根节点的路径最短的补丁）和仅考虑路径数量（即选择具有最多路径数的补丁）来削弱基于连通度的启发式方法，分别生成了变体$v_2^4$和$v_2^5$。
 
 $v_2^4$和$v_2^5$的精度分别比\tool 低了\tocheck{4.3\%}和\tocheck{5.2\%}，召回率分别高了\tocheck{2.1\%}和\tocheck{1.0\%}，F1值分别降低了\tocheck{3.0\%}和\tocheck{3.3\%}。这些结果表明，基于连通度的启发式方法中所设计的补丁节点到根节点的路径长度和路径数都有助于提高\tool 的准确率。
 
@@ -319,7 +319,7 @@ Highlight：总的来说，\tool 的精度对两个可配置参数的变化不�
 %     \end{tabular}
 % \end{table*}
 
-为了评估\tool 在更大范围的开源软件漏洞上表现，即：\tool 的通用性，本节还另外构建了两个更大的漏洞数据集。第一个数据集为：漏洞数据库$DB_A$和$DB_B$中只有一个数据库提供补丁的CVE（图\ref{fig:rq1-cves-with-patches}中的橙色和蓝色部分），共有\tocheck{3,185}个CVE。第二个数据集为：两个漏洞数据库都没有提供补丁的CVE（图\ref{fig:intersection}），共有\tocheck{5,468}个CVE。
+为了评估\tool 在更大范围的开源软件漏洞上表现，即\tool 的通用性，本节还另外构建了两个更大的漏洞数据集。第一个数据集为：漏洞数据库$DB_A$和$DB_B$中只有一个数据库提供补丁的CVE（图\ref{fig:rq1-cves-with-patches}中的橙色和蓝色部分），共有\tocheck{3,185}个CVE。第二个数据集为：两个漏洞数据库都没有提供补丁的CVE（图\ref{fig:intersection}），共有\tocheck{5,468}个CVE。
 
 对于第一个数据集中的\tocheck{3,185}个CVE，\tool 找到了\tocheck{2,155（67.7\%）}漏洞的补丁，而两个漏洞数据库$DB_A$和$DB_B$仅分别提供了\tocheck{2,190（68.8\%）}和\tocheck{995（31.2\%）}漏洞的补丁。在\tool 找到补丁的\tocheck{2,155}个漏洞中，$DB_A$和$DB_B$仅提供了其中的\tocheck{1,455}和\tocheck{700}个漏洞的补丁。对于第二个数据集中的\tocheck{5,468}个CVE，\tool 找到了\tocheck{2,816（51.5\%）}漏洞的补丁，而两个漏洞数据库$DB_A$和$DB_B$没有提供补丁信息。
 
@@ -341,11 +341,11 @@ Highlight：总的来说，\tool 的精度对两个可配置参数的变化不�
     \end{tabular}
 \end{table*}
 
-此外，本节还从\tool 在第一个和第二个数据集上能找到补丁的CVE中分别采样了\tocheck{100}个，并采用“数据准备”（Sec. \ref{sec:preparation}）中同样的方式手动找到它们的补丁信息以评估\tool 的准确性，表\ref{table:generality}为评估结果。由于公开的信息有限，人工分析的两份数据集中分别有\tocheck{9}和\tocheck{11}个CVE不能确定其补丁信息。
+此外，本节还从\tool 在第一个和第二个数据集上能找到补丁的CVE中分别采样了\tocheck{100}个，并采用“数据准备”（见章节\ref{sec:preparation}）中同样的方式手动找到它们的补丁信息以评估\tool 的准确性，表\ref{table:generality}为评估结果。由于公开的信息有限，人工分析的两份数据集中分别有\tocheck{9}和\tocheck{11}个CVE不能确定其补丁信息。
 
 在第一个数据集取样的\tocheck{91}个CVE中，\tool 的F1值为\tocheck{0.784}，$DB_A$的F1值较高为0.858，$DB_B$的F1值较低为0.725。与小节\ref{sec:accuracy-evaluation}中的结果类似，漏洞数据库$DB_A$和$DB_B$都拥有更高的精度（0.935和0.885），但召回率也更低（0.827和0.664）。在第二个数据集取样的\tocheck{89}CVE中，$DB_A$和$DB_B$中没有任何漏洞的补丁信息，而\tool 可取得达到\tocheck{0.867}的F1值，0.888的精度和0.899的召回率。
 
-这些结果表明，即使对于更大范围的开源软件漏洞，\tool 的准确率也基本稳定，对于开源软件漏洞的补丁定位，\tool 具有较好的通用性。尤其在第二个数据集上的结果，漏洞数据库$DB_A$和$DB_B$没有提供补丁信息时，\tool 仍可以找到大量漏洞的补丁信息，可以极大地补充或增强现有的工业漏洞数据库
+这些结果表明，即使对于更大范围的开源软件漏洞，\tool 的准确率也基本稳定，对于开源软件漏洞的补丁定位，\tool 具有较好的通用性。尤其在第二个数据集上的结果，漏洞数据库$DB_A$和$DB_B$没有提供补丁信息时，\tool 仍可以找到大量漏洞的补丁信息，可以极大地补充或增强现有的商业漏洞数据库
 
 
 \begin{tcolorbox}[size=title,opacityfill=0.15]
@@ -409,12 +409,12 @@ Highlight：在实际使用中，\tool 有助于用户更准确、更快速地�
 
 基于上文实验验证的结果，以及\tool 的设计，本节将主要讨论\tool 存在的短板和潜在的价值。
 \subsection{\tool 的局限性}
-\tool 以CVE-ID作为输入，因此该方法不适用于没有CVE-ID的开源漏洞（即：不在CVE平台中的开源漏洞），比如一些秘密修补的漏洞并没有收录在CVE平台中，也没有CVE-ID。一种可能的解决方案是将Advisory-ID作为\tool 的输入。
+\tool 以CVE-ID作为输入，因此该方法不适用于没有CVE-ID的开源漏洞（即不在CVE平台中的开源漏洞），比如一些秘密修补的漏洞并没有收录在CVE平台中，也没有CVE-ID。一种可能的解决方案是将Advisory-ID作为\tool 的输入。
 
 \tool 仅仅包含Debian和Red Hat两个次级知识源，也因此会遗漏在其他知识源中出现的补丁信息。但\tool 具有较好的可扩展性，它可以灵活地扩增其他知识源（例如，SecurityFocus\footnote{https://www.securityfocus.com}）。
 
-此外，小节（Sec. \ref{sec:fpfn}）中也阐述了造成\tool 漏报和误报的诸多原因。
+此外，小节（见章节\ref{sec:fpfn}）中也阐述了造成\tool 漏报和误报的诸多原因。
 
 \subsection{\tool 的价值}
 \tool 将会有益于软件安全领域相关的社区、学术界和工业界的研究人员。对于安全社区而言，\tool 可以发现缺少补丁信息的CVE漏洞，并向NVD管理员报告该情况，以提高CVE的信息质量并加速CVE条目的更新，使得NVD平台的用户受益。对于学术界而言，\tool 可以为大规模数据驱动的安全分析工作（例如，基于学习的漏洞检测\cite{li2018vuldeepecker,zhou2019devign}）和经验研究工作提供基础的补丁数据。%它还可以帮助通过分析漏洞补丁信息以确定受影响组件的工作\cite{dong2019towards}。
-对于工业界来说，\tool 可以帮助安全工程师提高工业漏洞数据库的补丁覆盖率和准确性，从而提高软件成分分析的准确性。值得一提的是，\tool 已经部署到一家高科技公司。但是，由于保密协议，本文不便分享相关数据。
+对于工业界来说，\tool 可以帮助安全工程师提高商业漏洞数据库的补丁覆盖率和准确性，从而提高软件成分分析的准确性。值得一提的是，\tool 已经部署到一家高科技公司。但是，由于保密协议，本文不便分享相关数据。

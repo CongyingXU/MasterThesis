@@ -1,9 +1,9 @@
 \chapter{背景知识及相关工作}
-本文的研究重点是开源软件漏洞的补丁定位问题，本章将首先介绍漏洞相关的背景知识，包括：通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）；然后，从漏洞披露信息的质量、漏洞补丁的分析及应用三个方面介绍相关的研究工作。
+本文的研究重点是开源软件漏洞的补丁定位问题，本章将首先介绍漏洞相关的背景知识，包括通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）；然后，从漏洞披露信息的质量、漏洞补丁的分析及应用三个方面介绍相关的研究工作。
 
 
 \section{背景知识}
-% 本小节主要介绍本文工作中的背景知识，包括：通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）。
+% 本小节主要介绍本文工作中的背景知识，包括通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）。
 
 \subsection{CVE及NVD} 
 % 重平台
@@ -18,7 +18,7 @@
     \label{fig:CVE-2021-44228}
 \end{figure}
 
-每一个CVE条目（CVE Entry）都有唯一通用标识符（即：CVE-ID）、一段漏洞描述（即：Description）以及至少一个引用链接（即：References），该引用链接多为外部网站且包含与该漏洞相关的更详细的描述信息。如图例\ref{fig:CVE-2021-44228}所示为CVE-2021-44228\footnote{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228}，漏洞的描述信息为：“Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features used in configuration, ...... Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects.”，且包含多个引用链接，如：“https://www.kb.cert.org/vuls/id/930724”等URL。
+每一个CVE条目（CVE Entry）都有唯一通用标识符（即CVE-ID）、一段漏洞描述（即Description）以及至少一个参考链接（即References），该参考链接多为外部网站且包含与该漏洞相关的更详细的描述信息。如图例\ref{fig:CVE-2021-44228}所示为CVE-2021-44228\footnote{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228}，漏洞的描述信息为：“Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features used in configuration, ...... Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects.”，且包含多个参考链接，如：“https://www.kb.cert.org/vuls/id/930724”等URL。
 
 \begin{figure}[h]
     \centering
@@ -28,7 +28,7 @@
     \label{fig:NVD-2021-44228}
 \end{figure}
 
-CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中漏洞信息过于精简，仅有一段漏洞描述和引用链接信息。基于CVE平台收录的漏洞条目信息，美国国家漏洞数据库（NVD）\footnote{https://nvd.nist.gov/}、中国国家信息安全漏洞库（CNNVD）\footnote{http://www.cnnvd.org.cn/}等漏洞数据库被构建，与CVE平台数据完全同步，并为每个漏洞条目（CVE Entry）提供更丰富的信息，如：影响的软件名及版本、修复信息、严重性评分、影响评级等。如图\ref{fig:NVD-2021-44228}所示为NVD平台中漏洞CVE-2021-44228\footnote{https://nvd.nist.gov/vuln/detail/CVE-2021-44228}信息。
+CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中漏洞信息过于精简，仅有一段漏洞描述和参考链接信息。基于CVE平台收录的漏洞条目信息，美国国家漏洞数据库（NVD）\footnote{https://nvd.nist.gov/}、中国国家信息安全漏洞库（CNNVD）\footnote{http://www.cnnvd.org.cn/}等漏洞数据库被构建，与CVE平台数据完全同步，并为每个漏洞条目（CVE Entry）提供更丰富的信息，如：影响的软件名及版本、修复信息、严重性评分、影响评级等。如图\ref{fig:NVD-2021-44228}所示为NVD平台中漏洞CVE-2021-44228\footnote{https://nvd.nist.gov/vuln/detail/CVE-2021-44228}信息。
 
 
 
@@ -44,7 +44,7 @@ CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中�
     \label{fig:Vendor-2021-44228}
 \end{figure}
 
-如图\ref{fig:Vendor-2021-44228}所示为厂商Apache发布的关于CVE-2021-44228的漏洞公告\footnote{https://logging.apache.org/log4j/2.x/security.html}，其中包含：修复方式“Log4j 2.x mitigation ...... Upgrade to Log4j 2.3.1 (for Java 6), 2.12.3 (for Java 7), or 2.17.0 (for Java 8 and later)”、漏洞发现者“Credit：This issue was discovered by Chen Zhaojun of Alibaba Cloud Security Team.”、引用链接“https://issues.apache.org/jira/browse/LOG4J2-3198”等信息。
+如图\ref{fig:Vendor-2021-44228}所示为厂商Apache发布的关于CVE-2021-44228的漏洞公告\footnote{https://logging.apache.org/log4j/2.x/security.html}，其中包含：修复方式“Log4j 2.x mitigation ...... Upgrade to Log4j 2.3.1 (for Java 6), 2.12.3 (for Java 7), or 2.17.0 (for Java 8 and later)”、漏洞发现者“Credit：This issue was discovered by Chen Zhaojun of Alibaba Cloud Security Team.”、参考链接“https://issues.apache.org/jira/browse/LOG4J2-3198”等信息。
 
 
 以上由厂商发布的漏洞公告，也常被称为：厂商公告（Vendor Advisory）；但由于某一厂商只会维护与该厂商相关的软件漏洞通告，开源社区的开发人员难以一一关注所有厂商的公告信息。因此，出现了许多第三方平台收集并维护所有漏洞公告信息，被称为：第三方公告（Third-Party Advisory），例如：Red Hat\footnote{https://access.redhat.com/errata/}、Debian\footnote{https://www.debian.org/security/}、Gentoo\footnote{https://security.gentoo.org/}等。
@@ -61,13 +61,13 @@ CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中�
     \caption{Debian平台中漏洞CVE-2021-44228信息}
     \label{fig:debian-2021-44228}
 \end{figure}
-如图\ref{fig:debian-2021-44228}所示为Debian平台中漏洞CVE-2021-44228信息\footnote{https://security-tracker.debian.org/tracker/CVE-2021-44228}，其中还甚至包括了该漏洞的补丁提交信息\footnote{https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3}（图中“Note”中的URL引用链接），这在NVD以及Vendor Advisory中都未出现。
+如图\ref{fig:debian-2021-44228}所示为Debian平台中漏洞CVE-2021-44228信息\footnote{https://security-tracker.debian.org/tracker/CVE-2021-44228}，其中还甚至包括了该漏洞的补丁提交信息\footnote{https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3}（图中“Note”中的URL参考链接），这在NVD以及Vendor Advisory中都未出现。
 
 
 \subsection{漏洞补丁}
 补丁（Patch），也称：补丁程序，是指对计算机程序进行的一组更改，旨在更新其功能或修复其缺陷。漏洞补丁（Vulnerability Patch）则指为修复程序中的安全漏洞所开发的补丁，通常以代码提交（Git和SVN Commit），或文本文件（.patch文件）等形式。
 
-如图\ref{fig:debian-2021-44228}中的URL引用链接“https://github.com/apache/logging-log4j2/commit/\\c77b3cb39312b83b053d23a2158b99ac7de44dd3” （Github Commit），即为漏洞CVE-2021-44228的补丁，补丁内容见图\ref{fig:debian-2021-44228}。
+如图\ref{fig:debian-2021-44228}中的URL参考链接“https://github.com/apache/logging-log4j2/commit/\\c77b3cb39312b83b053d23a2158b99ac7de44dd3” （Github Commit），即为漏洞CVE-2021-44228的补丁，补丁内容见图\ref{fig:debian-2021-44228}。
 
 \begin{figure}[h]
     \centering
@@ -92,7 +92,7 @@ Nguyen和Massacci\cite{nguyen2013reliability}最早揭示了NVD数据库中漏�
 \subsection{漏洞补丁分析}
 当前，有多中补丁分析相关的任务可用于提高软件安全性，如：补丁的生成和部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁的存在性测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}以及秘密补丁识别\cite{xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine}。
 
-此外，研究人员也已为Java\cite{ponta2019manually}、C/C++\cite{fan2020ac}以及特定开源项目\cite{jimenez2018enabling}构建安全补丁数据集。基于这些数据集，研究人员已开展实证研究以表征漏洞及其补丁\cite{zaman2011security,li2017large,liu2020large,antal2020exploring}。在这些工作中，补丁信息多由人工识别\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine,ponta2019manually,zaman2011security}，或通过启发式规则识别，例如：在CVE的引用链接中查找补丁提交信息\cite{duan2019automating,fan2020ac,jimenez2018enabling,li2017large,liu2020large}，以及在提交信息（Commit Message）中搜索CVE标识符\cite{fan2020ac, jimenez2018enabling, antal2020exploring}。这些工作存在的问题为：通过人工收集成本过高，且耗时较长；然而，启发式规则的方法又不足以找到或是找全补丁。
+此外，研究人员也已为Java\cite{ponta2019manually}、C/C++\cite{fan2020ac}以及特定开源项目\cite{jimenez2018enabling}构建安全补丁数据集。基于这些数据集，研究人员已开展实证研究以表征漏洞及其补丁\cite{zaman2011security,li2017large,liu2020large,antal2020exploring}。在这些工作中，补丁信息多由人工识别\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,xu2017spain,zhou2017automated,sabetta2018practical,chen2020machine,ponta2019manually,zaman2011security}，或通过启发式规则识别，例如：在CVE的参考链接中查找补丁提交信息\cite{duan2019automating,fan2020ac,jimenez2018enabling,li2017large,liu2020large}，以及在提交信息（Commit Message）中搜索CVE标识符\cite{fan2020ac, jimenez2018enabling, antal2020exploring}。这些工作存在的问题为：通过人工收集成本过高，且耗时较长；然而，启发式规则的方法又不足以找到或是找全补丁。
 
 
 \subsection{漏洞补丁应用}
