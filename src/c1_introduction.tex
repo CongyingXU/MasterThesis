@@ -1,69 +1,70 @@
 \chapter{绪论}
 
 % 本章节概述了背景、研究目的与意义\cite{jia2021:oss-vulnerability, mitre2021:cve}。
-本章将详细阐述本文的研究背景、研究问题、主要工作和贡献以及本文的篇章结构。
+本章将阐述本文的研究背景、研究问题、主要工作、主要贡献以及本文的篇章结构。
 
 \section{研究背景}
 
-开源软件（Open Source Software，OSS）为开源及闭源应用程序的开发提供了基础，应用程序的开发人员可以直接使用开源软件提供的通用功能进行软件开发而不需重新造轮子。据Synopsys公司发布的《开源安全和风险分析报告》\footnote{https://www.synopsys.com/content/dam/synopsys/sig-assets/reports/rep-ossra-2021.pdf}中数据显示，该公司分析的1,500个应用程序中98\%的应用程序都使用了开源软件的功能。大规模使用开源软件可以加速应用程序开发的进程，但同时也引入了安全风险。Synopsys公司在2020年分析的1,500个应用程序中有84\%的应用程序包含至少一个公开的开源软件漏洞，对比于2019年时的数据（75\%）增加了9\%。更糟糕的是，据Snyk公司发布的报告\footnote{https://snyk.io/wp-content/uploads/sooss\_report\_v2.pdf}显示，近些年，所披露的开源软件漏洞越来越多，过去两年间几乎翻了一倍。
+开源软件（Open Source Software，OSS）为开源及闭源应用程序的开发提供了基础。得益于开源社区的蓬勃发展，在软件开发过程中，开发人员经常会使用开源软件中已实现的功能，节省开发时间，加快开发速度\tocheck{add ref}。然而，伴随着开发效率的提高，开源软件中的安全漏洞也会被引入软件系统中\tocheck{add ref}。据Synopsys公司发布的《开源安全和风险分析报告》\footnote{https://www.synopsys.com/content/dam/synopsys/sig-assets/reports/rep-ossra-2021.pdf}显示，在所分析的1,500个应用程序中，98\%的应用程序都使用了开源软件。
+%然而，大规模使用开源软件可以加速应用程序开发的进程，但同时也引入了安全风险。
+报告指出，有84\%的应用程序包含至少一个已知的开源软件漏洞，对比于前一年（2019年），增加了9\%。此外，据Snyk公司发布的报告\footnote{https://snyk.io/wp-content/uploads/sooss\_report\_v2.pdf}显示，近些年，开源软件中所披露的漏洞越来越多，过去两年间几乎翻了一倍。
 
-为此，大量工作都在研究如何降低开源软件漏洞所带来的安全风险，包括通过学习漏洞特征来检测开源软件中的漏洞\cite{li2016vulpecker,li2018vuldeepecker,zhou2019devign,jimenez2019importance}、通过匹配漏洞及补丁签名\cite{jang2012redebug, kim2017vuddy, xu2020patch, xiao2020mvp, cui2020vuldetector}修复开源软件中的漏洞\cite{mulliner2013patchdroid, duan2019automating, xu2020automatic, machiry2020spider}、进行软件成分分析以确定应用程序中的开源漏洞是否在调用执行路径上\cite{pashchenko2018vulnerable, ponta2020detection, pashchenko2020vuln4real, Wang2020empirical}。
-
-值得注意的是，漏洞数据库在这些工作中有着非常重要的作用，体现在为各种漏洞分析任务提供有价值的数据（例如，漏洞描述、受漏洞影响的软件、版本以及补丁信息）。目前，已有多方人员致力于构建漏洞数据库。在安全社区中，CVE List\footnote{https://cve.mitre.org/cve/}和NVD\footnote{https://nvd.nist.gov}是最具影响力的漏洞数据库，该数据库包含应用软件、系统以及硬件的漏洞。在工业界中，BlackDuck\footnote{https://www.synopsys.com/content/dam/synopsys/sig-assets/datasheets/bdknowledgebase-ds-ul.pdf}、WhiteSource\footnote{https://www.whitesourcesoftware.com/vulnerability-database/}、Veracode\footnote{https://sca.veracode.com/vulnerability-database/search}和Snyk\footnote{https://snyk.io/vuln}等公司较为关注开源软件的漏洞，并构建各自的商业数据库。在学术界中，已有很多工作致力于构建漏洞数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul}，但这些数据集大多是针对特定语言的生态系统或针对特定的软件项目而设计的。
+针对上述问题，已有大量工作研究如何降低开源软件漏洞所带来的安全风险，包括通过学习漏洞特征来检测开源软件中的漏洞\cite{li2016vulpecker,li2018vuldeepecker,zhou2019devign,jimenez2019importance}、通过匹配漏洞及补丁签名\cite{jang2012redebug, kim2017vuddy, xu2020patch, xiao2020mvp, cui2020vuldetector}修复开源软件中的漏洞\cite{mulliner2013patchdroid, duan2019automating, xu2020automatic, machiry2020spider}、进行软件成分分析以确定应用程序中的开源软件漏洞是否在执行路径上\cite{pashchenko2018vulnerable, ponta2020detection, pashchenko2020vuln4real, Wang2020empirical}。在这些工作中，完整且准确的漏洞数据十分重要，例如，漏洞描述、受漏洞影响的软件、版本以及补丁等知识都是这些工作得以开展的基础。目前，已有多方人员致力于构建安全漏洞数据库。在安全社区中，由美国政府资助的CVE List\footnote{https://cve.mitre.org/cve/}（Common Vulnerabilities \& Exposures）、NVD\footnote{https://nvd.nist.gov}（National Vulnerability Database）和由中国政府资助的CNVD\footnote{https://www.cnvd.org.cn/}（国家信息安全漏洞共享平台）、CNNVD\footnote{http://www.cnnvd.org.cn/}（国家信息安全漏洞数据库）是最具影响力的漏洞数据库，该数据库包含应用软件、系统以及硬件的漏洞。在工业界中，BlackDuck\footnote{https://www.synopsys.com/content/dam/synopsys/sig-assets/datasheets/bdknowledgebase-ds-ul.pdf}、WhiteSource\footnote{https://www.whitesourcesoftware.com/vulnerability-database/}、Veracode\footnote{https://sca.veracode.com/vulnerability-database/search}和Snyk\footnote{https://snyk.io/vuln}等公司较为关注开源软件中的安全漏洞，并已经构建各自的商业数据库。在学术界中，已有很多工作致力于构建漏洞数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul}，但这些数据集大多是针对特定语言的生态系统或针对特定的软件项目而设计的。
 
 \section{研究问题}
 % \textbf{研究问题：}
-随着这些漏洞数据库中漏洞数据积累得越来越多，研究人员也越来越关注这些数据库中漏洞信息的质量。Dong等人\cite{dong2019towards}发现了漏洞数据库中受漏洞影响的软件版本信息的不准确情况，
-Chaparro等人\cite{chaparro2017detecting}和Mu等人\cite{mu2018understanding}发现了漏洞描述中缺失关键的漏洞重现步骤的普遍性。这种不完整或不准确的信息使得安全工作人员难以及时地识别、重现和修复应用程序中的漏洞。
+随着构建的漏洞数据库越来越多，数据库中积累的漏洞数据也越来越多，研究人员开始关注数据库中漏洞信息的质量。Dong等人\cite{dong2019towards}发现了漏洞数据库中受漏洞影响的软件版本信息不准确情况，Chaparro等人\cite{chaparro2017detecting}和Mu等人\cite{mu2018understanding}发现了漏洞描述中普遍缺失关键的漏洞重现步骤。这种不完整或不准确的信息使得安全工作人员难以及时地识别、重现和修复应用程序中的漏洞。
 
-漏洞补丁作为刻画漏洞特征的重要知识，可应用于多种安全相关的任务，例如，补丁生成和热部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁存在测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}、软件成分分析\cite{ponta2020detection,pashchenko2020vuln4real,Wang2020empirical}以及漏洞检测\cite{li2016vulpecker,li2018vuldeepecker,jang2012redebug,kim2017vuddy, xiao2020mvp, cui2020vuldetector}。如果漏洞的补丁信息缺失或不准确，那么这些安全应用的准确性将会受到严重的影响。然而，漏洞数据库中的补丁信息尚未被系统地研究和评估，目前尚不清楚现有漏洞数据库中补丁的质量情况。
+漏洞补丁作为刻画漏洞特征的重要知识，可应用于多种安全相关的任务，包括补丁生成和热部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁存在测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}、软件成分分析\cite{ponta2020detection,pashchenko2020vuln4real,Wang2020empirical}、漏洞检测\cite{li2016vulpecker,li2018vuldeepecker,jang2012redebug,kim2017vuddy, xiao2020mvp, cui2020vuldetector}等。如果漏洞数据库中的补丁知识缺失或不准确，那么这些应用的准确性将会受到严重的影响。然而，漏洞数据库中的补丁知识尚未被系统地研究和评估，目前尚不清楚现有漏洞数据库中补丁的质量情况。
 
-此外，现有的数据集主要通过：（1）人工手动定位漏洞补丁\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,zhou2017automated,sabetta2018practical,chen2020machine,xiao2020mvp,ponta2020detection,pashchenko2020vuln4real}，（2）通过启发式规则，比如在CVE引用信息中查找代码提交\cite{duan2019automating,li2016vulpecker}，或是在代码提交历史中搜索CVE标识符（CVE-ID）\cite{you2017semfuzz,Wang2020empirical}，（3）从为特定项目建立的安全公告中搜索漏洞补丁\cite{mulliner2013patchdroid,jang2012redebug,kim2017vuddy}。以上这些方法的人工成本过高，且针对特定的程序语言或项目无法广泛应用于所有开源软件漏洞。
+此外，现有的漏洞补丁识别方法主要有三种：（1）人工手动查找漏洞补丁\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,zhou2017automated,sabetta2018practical,chen2020machine,xiao2020mvp,ponta2020detection,pashchenko2020vuln4real}，（2）通过启发式规则识别漏洞补丁，比如在CVE引用信息中查找代码提交\cite{duan2019automating,li2016vulpecker}或是在代码提交历史中搜索CVE标识符（CVE ID）\cite{you2017semfuzz,Wang2020empirical}，（3）在特定项目的安全公告中搜索漏洞补丁\cite{mulliner2013patchdroid,jang2012redebug,kim2017vuddy}。以上这些方法的人工成本过高，且针对特定的程序语言或项目无法广泛应用于所有开源软件漏洞。
+
+综上，目前的问题是，漏洞数据库中补丁的特征及质量尚未被系统地研究和评估，并且已有的漏洞补丁采集方法通用性较差且人工成本过高。
 
 \section{本文工作}
-为了解决以上研究问题，本文先进行了一项经验研究，以了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征。该研究涵盖主要五个方面，包括补丁的覆盖度、一致性、类型、映射关系和准确性。然后，受经验研究结果的启发，本文提出了第一种名为\tool 的基于多源信息的开源软件漏洞的补丁识别方法。通过构建针对漏洞的多源引用信息网络，识别补丁信息。本文还设计了大量实验，验证了\tool 的准确性、通用性、实用性等多个方面。
+为解决上述研究问题，本文先开展了一项针对开源软件漏洞补丁的经验研究，以了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征。然后，基于经验研究的发现，本文提出了一种名为\tool 的基于多源知识的开源软件漏洞的补丁识别方法。该方法通过构建漏洞的多源参考链接网络来识别补丁。本文还进行了大量实验，从准确性、通用性、实用性等多个方面对\tool 进行了评估。
 
-\subsection{经验研究}
-为了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征，该经验研究涵盖：补丁的覆盖度、一致性、类型、映射关系和准确性五个方面，并选择Veracode\footnote{https://sca.veracode.com/vulnerability-database/search}公司和Snyk\footnote{https://snyk.io/vuln}公司公开的漏洞数据库作为研究对象。
+\subsection{开源软件漏洞补丁的经验研究}
+为了了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征，本文挑选了两个认可度较高的商业漏洞数据库作为研究对象。该经验研究涵盖五个方面，包括商业漏洞数据库中补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析。
 
-本文首先构建了一个广度数据集，该数据集包含10，070个开源软件漏洞。在此数据集上，本文分析两个漏洞数据库中所有开源软件漏洞补丁信息的覆盖率和一致性。结果表明，\tocheck{10,070}个CVE漏洞中只有\tocheck{4,602（5.7\%）}的漏洞由漏洞数据库提供补丁信息，只有\tocheck{19.7\%}的漏洞在两个数据库中有一致的补丁信息。%\congyingEdit{可以再写些其他的结果}。
+本文首先构建了一个广度数据集，该数据集包含10，070个开源软件漏洞。在此数据集上，本文分析两个漏洞数据库中开源软件漏洞补丁的覆盖率和一致性。结果表明：在漏洞补丁覆盖率方面，\tocheck{10,070}个CVE漏洞中只有\tocheck{4,602（5.7\%）}的漏洞在商业漏洞数据库中提供了补丁；在漏洞补丁一致性方面，只有\tocheck{19.7\%}的漏洞在两个商业漏洞数据库中有一致的补丁。%\congyingEdit{可以再写些其他的结果}。
 
-本文首先构建了一个深度数据集，该数据集包含1,295个开源软件漏洞及其补丁。在此数据集上，本文分析了开源软件漏洞补丁类型、映射关系和准确性。结果表明，\tocheck{1,295}个CVE漏洞中，\tocheck{1,265（97.7\%）}漏洞的补丁类型是GitHub和SVN的代码提交，\tocheck{533（41.1\%）}的CVE漏洞与其补丁有一对多的映射关系；此外，两个商业数据库的补丁精度都高于\tocheck{90\%}，但对于一对多映射类型的CVE漏洞，两个商业数据库中补丁的召回率仅约为\tocheck{50\%}。
+基于广度数据集中含补丁的漏洞数据，本文还通过人工构建了一个深度数据集。该数据集包含1,295个开源软件漏洞，且这些漏洞都有补丁。在此数据集上，本文分析了开源软件漏洞补丁的类型和漏洞补丁的映射关系，并评估了商业数据库中漏洞补丁的准确性。结果表明：在漏洞补丁类型方面，\tocheck{1,265（97.7\%）}漏洞的补丁类型都是GitHub或SVN的代码提交；在漏洞补丁映射关系方面，\tocheck{533（41.1\%）}的CVE漏洞与其补丁有一对多的映射关系；在漏洞补丁准确性方面，两个商业数据库的补丁精度都高于\tocheck{90\%}，但对于一对多映射类型的CVE漏洞，两个商业数据库中补丁的召回率都仅为\tocheck{50\%}左右。
 
-这些结果表明，这两个商业漏洞数据库中缺失了一些漏洞的补丁信息，尤其是对于有多个补丁的漏洞，补丁缺失现象更为严重。这种不完整或不准确的信息使得安全工作人员难以及时地识别、重现和修复使用的开源软件中的漏洞。同时，这也反映出自动化补丁识别方法的需求，这些方法可以帮助工作人员正确且完全地找到补丁信息。
+这些结果表明，现有的商业漏洞数据库中缺失了许多漏洞的补丁，尤其是对于有多个补丁的漏洞，补丁缺失现象更为严重。这种信息不完整或不准确的情况，使得安全工作人员难以及时地识别、重现和修复开源软件中的漏洞。同时，这也反映出自动化的补丁识别方法的需求，自动化的方法可以帮助工作人员识别并补全缺失的补丁。
 
-\subsection{方法设计}
-受经验研究结果的启发，本文提出了一个名为\tool 的基于多源知识的开源软件漏洞的补丁识别方法，从多个知识源（即NVD\footnote{https://nvd.nist.gov}、Debian\footnote{https://security-tracker.debian.org/tracker/}、Red Hat\footnote{https://bugzilla.redhat.com/}以及GitHub\footnote{https://github.com/}）构建漏洞的参考链接网络并识别补丁。该方法的核心思想是：漏洞的补丁（\tocheck{Commit URL}）会在与该漏洞相关的各种来源的漏洞公告、分析报告、讨论和解决的过程中被频繁提及和引用。因此，本文首先设计了一种基于多知识源的漏洞引用信息网络，再从该网络中选出具有最高置信度和连通度的补丁节点作为结果。
+\subsection{开源软件漏洞补丁的识别方法}
+基于经验研究的发现，本文提出了一个名为\tool 的基于多源知识的开源软件漏洞的补丁识别方法。该方法从多个知识源（即NVD\footnote{https://nvd.nist.gov}、Debian\footnote{https://security-tracker.debian.org/tracker/}、Red Hat\footnote{https://bugzilla.redhat.com/}以及GitHub\footnote{https://github.com/}）构建漏洞的参考链接网络并识别补丁。该方法的核心思想是：漏洞的补丁链接会在与该漏洞相关的各种来源的漏洞公告、分析报告、讨论和解决的过程中被频繁提及和引用。因此，本文首先设计了一种基于多知识源的漏洞参考链接网络，然后再从该网络中选出具有最高置信度和连通度的补丁节点作为结果。
 
-\tool 以漏洞的CVE-ID作为输入，主要经过三个步骤：（1）构建多源信息网络，该步骤的目的是将该CVE在被报告、讨论和解决阶段的参考链接进行建模。\tool 从多个\tocheck{漏洞知识源}（即NVD、Debian、Red Hat和GitHub）中提取与该CVE相关的参考链接信息并构建一个信息网络。（2）选择补丁，\tool 从构建的引用信息网络中选择中具有高连通性和高置信度的补丁节点作为该CVE的补丁。（3）扩增补丁，\tool 通过搜索同一代码库所有分支中的相关提交来扩展候选补丁集。
+\tool 以漏洞的CVE ID作为输入，经过三个步骤，输出该漏洞的补丁。（1）构建多源信息网络，该步骤的目的是将该CVE在被报告、讨论和解决阶段的参考链接进行建模。\tool 从多个\tocheck{漏洞知识源}（即NVD、Debian、Red Hat和GitHub）中提取与该CVE相关的参考链接信息并构建一个信息网络。（2）选择补丁，\tool 从构建的参考链接网络中选择中具有高连通性和高置信度的补丁节点作为该CVE的补丁。（3）扩增补丁，\tool 通过搜索同一代码库所有分支中的相关提交来扩展补丁集。最终，返回所有选中的及扩展的补丁。
 
 \subsection{实验验证}
-为了评估\tool 的准确性，本文将\tool 与三种基于启发式的方法和两个商业漏洞数据库在经验研究中构建的深度数据集上进行了比较。结果表明，（1）与现有的基于启发式规则的方法相比，\tool 能够多找到273.8\%漏洞的补丁；同时，在补丁信息的准确性上，\tool 的F1数值（F1-Score）也比基于启发式规则的方法高116.8\%；（2）与现有的商业漏洞数据库相比，\tool 的召回率（Recall）高18.4\%；但12.0\%的漏洞\tool 未能找到补丁信息，\tool 的精度（Precision）也低6.4\%。%；（3）\tool 对于大范围开源软件漏洞具有较好的通用性，在实际使用中，也具有较好的实用性。
+本文进行了大量实验，通过五个研究问题，从准确性、通用性、实用性等多个方面对\tool 进行了评估。为了评估\tool 的准确性，本文将\tool 与三种基于启发式规则的方法以及两个商业漏洞数据库进行了比较。结果表明，在包含1,295个漏洞的深度数据集上，（1）与现有的基于启发式规则的方法相比，\tool 能够多找到835（273.8\%）漏洞的补丁；同时，在补丁的准确性上，\tool 的F1数值（F1-Score）也比基于启发式规则的方法高116.8\%；（2）与现有的商业漏洞数据库相比，\tool 的召回率（Recall）高出18.4\%；但仍有155（12.0\%）的漏洞\tool 未能找到补丁，\tool 的精度（Precision）也低了6.4\%。%；（3）\tool 对于大范围开源软件漏洞具有较好的通用性，在实际使用中，也具有较好的实用性。
 
-此外，为了评估\tool 的通用性，本文还在另外两个包含\tocheck{3,185}和\tocheck{5,468}个CVE的数据集上运行\tool 。结果表明，\tool 在两个附加数据集上可查找到\tocheck{67.7\%}和\tocheck{51.5\%}CVE的补丁，通过采样评估，精度分别为\tocheck{0.823}和\tocheck{0.888}，召回率分别为\tocheck{0.845}和\tocheck{0.899}，这表明\tool 在查找补丁方面具有较好的通用性。
+此外，为了评估\tool 的通用性，本文还另外构建了两个更大的、包含\tocheck{3,185}和\tocheck{5,468}个漏洞的数据集，并在这两个数据集上运行\tool 。结果表明，\tool 在两个数据集上分别可以找到\tocheck{67.7\%}和\tocheck{51.5\%}个漏洞的补丁；精确率分别为\tocheck{0.823}和\tocheck{0.888}，召回率分别为\tocheck{0.845}和\tocheck{0.899}，这表明\tool 在查找补丁方面具有较好的通用性。
 
-此外，为了评估\tool 的实用性，本文还邀请了10名参与者进行了用户研究。评估结果表明，在实际使用中，\tool 有助于用户更准确、更快速地查找到补丁信息。
+此外，为了评估\tool 的实用性，本文还邀请了10名参与者进行了用户研究。评估结果表明，在实际使用中，\tool 有助于用户更准确、更快速地查找到补丁。
 
 \subsection{主要贡献}
 本文主要有以下贡献：
 \begin{enumerate}
-\item [（1）]本文进行了一项经验研究，以了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征。该研究涵盖主要五个方面，包括补丁的覆盖度、一致性、类型、映射关系和准确性。
-\item [（2）]本文提出了第一种名为 \tool 的基于多源信息的开源软件漏洞的补丁识别方法，可服务于安全社区、工业界和学术界的研究人员。
-\item [（3）]本文进行了一系列实验验证，以评估\tool 的准确性、通用性、在实践中的实用性等多个方面。
+\item [（1）]本文开展了一项针对开源软件漏洞补丁的经验研究，以了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征。该经验研究涵盖五个方面，包括补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析。
+\item [（2）]本文提出了一种名为 \tool 的基于多源知识的开源软件漏洞的补丁识别方法，该方法可服务于安全社区、工业界和学术界的研究人员。
+\item [（3）]本文进行了针对\tool 准确性、通用性、实用性等多个方面的实验评估。
 \end{enumerate}
 
 
 \section{本文篇章结构}
 本文共包含六个章节，结构如下：
 
-第一章绪论，介绍了本文的研究背景及研究问题，然后概述了本文的主要工作及主要贡献，包括经验研究、方法设计和实验验证，以及本文的篇章结构。
+第一章绪论，介绍了本文的研究背景及研究问题，简述了本文的主要工作（包括经验研究、方法设计和实验验证）、主要贡献以及篇章结构。
 
-第二章背景知识及相关工作，介绍了本文所涉及的背景知识，包括通用漏洞披露（CVE）、漏洞公告、漏洞补丁等信息，为后文经验研究、方法设计等内容的详细阐述做铺垫；本章还介绍了本文研究主题的相关工作，包括漏洞信息质量、漏洞补丁分析以及漏洞补丁的应用。
+第二章背景知识及相关工作，介绍了本文所涉及的背景知识，包括通用漏洞披露（CVE）、漏洞公告、漏洞补丁等信息，为后文经验研究、方法设计等内容做铺垫；本章还介绍了与本文研究主题的相关工作，包括漏洞信息质量、漏洞补丁分析以及漏洞补丁应用。
 
-第三章经验研究，介绍了本文为了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征所开展的实证研究工作，涵盖：补丁的覆盖度、一致性、类型、映射关系和准确性五个方面。
+第三章经验研究，介绍了本文为了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征所开展的实证研究工作，涵盖补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析。五个方面。
 
-第四章\tool 方法设计，介绍了本文提出了一个名为\tool 的基于多源信息的开源软件漏洞的补丁识别方法，包括多源信息网络构建、补丁节点精选以及候选补丁扩增三个步骤。
+第四章\tool 方法设计，介绍了本文提出了一个名为\tool 的基于多源知识的开源软件漏洞的补丁识别方法。该方法包括多源信息网络构建、补丁选择以及补丁扩增三个步骤。
 
-第五章实验验证及结果分析，介绍了本文评估\tool 的准确性、通用性、在实践中的实用性等方面的实验设计及结果分析。
+第五章实验评估，介绍了本文针对\tool 的准确性、通用性、在实践中的实用性等方面所进行的实验评估。
 
 第六章总结与展望，对本文的工作内容及研究成果进行总结，讨论本文研究工作中存在的不足及可以改进的地方，并展望了未来可以进行的工作。

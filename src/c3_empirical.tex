@@ -8,24 +8,24 @@
 为了了解已有漏洞数据库中开源软件漏洞补丁的质量和特征，本文所开展的针对当前商业漏洞数据库的经验研究包含以下研究问题：
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{RQ1 补丁覆盖率分析：}当前商业漏洞数据库中，漏洞补丁信息的覆盖度如何？即，有多少漏洞包含补丁信息？（见章节\ref{sec:coverage}）
-    \item \textbf{RQ2 补丁一致性分析：}不用漏洞库间，漏洞补丁信息的一致性如何？即，有多少漏洞在漏洞数据库中具有相同的补丁信息？（见章节\ref{sec:consistency}）
+    \item \textbf{RQ1 补丁覆盖率分析：}当前商业漏洞数据库中，漏洞补丁的覆盖度如何？即，有多少漏洞含补丁？（见章节\ref{sec:coverage}）
+    \item \textbf{RQ2 补丁一致性分析：}不用漏洞库间，漏洞补丁的一致性如何？即，有多少漏洞在不同漏洞数据库中有相同的补丁？（见章节\ref{sec:consistency}）
     \item \textbf{RQ3 补丁类型分析：}开源漏洞补丁的类型有哪些？ （见章节\ref{sec:type}）
     \item \textbf{RQ4 补丁映射分析：}开源漏洞与其补丁在数量上的映射关系是怎样的？ （见章节\ref{sec:cardinality}）
-    \item \textbf{RQ5 补丁准确性分析：}当前商业漏洞数据库中，漏洞的补丁信息准确度如何？ （见章节\ref{sec:accuracy}）
+    \item \textbf{RQ5 补丁准确性分析：}当前商业漏洞数据库中，漏洞补丁的准确度如何？ （见章节\ref{sec:accuracy}）
 \end{itemize}
     
-其中，RQ1可用来评估漏洞数据库中开源软件漏洞的补丁缺失程度，RQ2用来评估不同漏洞数据库中漏洞补丁的不一致程度，RQ3和RQ4用来表征常见的补丁类型以及开源漏洞及其补丁之间的映射关系，RQ5可用来评估不同漏洞数据库中漏洞补丁信息的准确性。总的来说，RQ1、RQ2和RQ5的结果旨在从不同的角度评估补丁质量，并挖掘出对自动化补丁\tocheck{识别}方法的需求；RQ3和RQ4旨在从不同角度捕捉开源软件漏洞补丁的特征，并为自动化补丁\tocheck{识别}方法的设计提供\tocheck{启发}。
+其中，RQ1可用来评估漏洞数据库中开源软件漏洞的补丁缺失程度，RQ2用来评估不同漏洞数据库中漏洞补丁的不一致程度，RQ3和RQ4用来表征常见的补丁类型以及开源漏洞及其补丁之间的映射关系，RQ5可用来评估不同漏洞数据库中漏洞补丁的准确性。总的来说，RQ1、RQ2和RQ5的结果旨在从不同的角度评估补丁质量，并挖掘出对自动化补丁\tocheck{识别}方法的需求；RQ3和RQ4旨在从不同角度捕捉开源软件漏洞补丁的特征，并为自动化补丁\tocheck{识别}方法的设计提供\tocheck{启发}。
 
 \subsection{评估标准}\label{sec:metric}
 本章经验研究使用了信息检索中常用的评估标准---Precision（精确率）、Recall（召回率）和F1-Score（F1值）。
 
 对于一个搜索或分类问题来说，样本分为“Positive（正）”和“Negative（负）”两个类别。那么，模型搜索或分类的结果就会有四种情况：
 \begin{itemize}
-    \item True Positive（真阳性），表示：将正样本预测为正样本，即数据库提供的或工具返回的正确补丁信息。
-    \item True Negative（真阴性），表示：将负样本预测为负样本，即数据库未提供的或工具未返回的错误补丁信息。
-    \item False Positive（假阳性），表示：将负样本预测为正样本，即数据库提供的或工具返回的错误补丁信息。
-    \item False Negative（假阴性），表示：将正样本预测为负样本，即数据库未提供的或工具未返回的正确补丁信息。
+    \item True Positive（真阳性），表示：将正样本预测为正样本，即数据库提供的或工具返回的正确补丁。
+    \item True Negative（真阴性），表示：将负样本预测为负样本，即数据库未提供的或工具未返回的错误补丁。
+    \item False Positive（假阳性），表示：将负样本预测为正样本，即数据库提供的或工具返回的错误补丁。
+    \item False Negative（假阴性），表示：将正样本预测为负样本，即数据库未提供的或工具未返回的正确补丁。
 \end{itemize}
 
 \textbf{Precision（精确率），}用于衡量数据库提供的补丁中正确补丁的比率，或是工具返回结果中正确补丁的比率，计算公式如下：
@@ -45,7 +45,7 @@
 
 \section{数据准备}\label{sec:preparation}
 \subsection{漏洞数据库选择}
-为挑选高质量的、具有代表性的漏洞数据库作为研究对象，本文前期调研了来自安全领域的社区、工业界和学术界的漏洞数据库。在该章节的经验研究工作中，本文首先排除了来自安全社区的数据库（例如，CVE List和NVD）。因为这两个数据库不提供结构化的补丁信息，而补丁链接多是隐藏在参考链接中；此外，CVE List和NVD数据库中不仅仅包含开源软件漏洞，还包括闭源软件、系统及硬件相关的漏洞。本文还排除了来自学术界的数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul,li2017large,liu2020large,antal2020exploring}，这是因为这些数据集中的漏洞通常限定于特定的一两种程序语言（例如：Python、Java），而非面向所有开源软件，缺乏多样性不具有代表性；此外，由于长期缺乏维护，这些漏洞数据集缺失较新的漏洞数据。
+为挑选高质量的、具有代表性的漏洞数据库作为研究对象，本文前期调研了来自安全领域的社区、工业界和学术界的漏洞数据库。在该章节的经验研究工作中，本文首先排除了来自安全社区的数据库（例如，CVE List和NVD）。因为这两个数据库不提供结构化的补丁，而补丁链接多是隐藏在参考链接中；此外，CVE List和NVD数据库中不仅仅包含开源软件漏洞，还包括闭源软件、系统及硬件相关的漏洞。本文还排除了来自学术界的数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul,li2017large,liu2020large,antal2020exploring}，这是因为这些数据集中的漏洞通常限定于特定的一两种程序语言（例如：Python、Java），而非面向所有开源软件，缺乏多样性不具有代表性；此外，由于长期缺乏维护，这些漏洞数据集缺失较新的漏洞数据。
 
 
 对于工业界的数据库，本文首先关注到BlackDuck\cite{blackduck}、WhiteSource\cite{whitesource}、Veracode\cite{veracode}和Snyk\cite{snyk}四家安全公司提供软件成分分析（Software Composition Analysis）服务，这种服务通过识别并分析当前软件系统中使用的开源成本（即第三方库），报告所使用的开源成分中的漏洞。因此，这四家公司需要先构建尽可能完整且包含详细漏洞信息的漏洞库作为服务基础，本文便首先将这四家公司的漏洞数据库作为研究对象。截至2021年4月5日，收集的信息为：
@@ -59,20 +59,20 @@
 % \item \textbf{Gitlab Security} GitLab 咨询数据库是 Gitlab 依赖扫描器\footnote{https://docs.gitlab.com/ee/user/application\_security/dependency\_scanning/index.html} 的基础。目前涵盖了 6000 多个 CVE 条目和 8 个生态系统（即 Nuget、Conan、Maven 等）。提供了详细信息，例如描述、受影响的组件和版本、解决方案和参考。
 \end{itemize}
 
-进一步调研后发现，这四家公司中某些公司并未公开漏洞数据库，或是公开的漏洞信息中不包含用于修复漏洞的补丁信息，这将无法达成研究目标。最终，本文选择了两家公司的漏洞数据库作为研究对象，下文中简称为：$DB_A$和$DB_B$。
+进一步调研后发现，这四家公司中某些公司并未公开漏洞数据库，或是公开的漏洞信息中不包含用于修复漏洞的补丁，这将无法达成研究目标。最终，本文选择了两家公司的漏洞数据库作为研究对象，下文中简称为：$DB_A$和$DB_B$。
 
 
 \subsection{广度数据集构建}
 为了评估漏洞数据库中补丁的缺失程度以及不同数据库间补丁的不一致性（即RQ1和RQ2），本文基于$DB_A$和$DB_B$构建了一个开源软件漏洞的广度数据集用以实验分析。截至2020年4月7日，分别从$DB_A$和$DB_B$中分别获取了\tocheck{8,630}和\tocheck{5,858}个CVE漏洞。
 
 \subsection{深度数据集构建}
-为了表征漏洞补丁的类型、映射关系以及尽可能准确地评估补丁信息的准确性（即RQ3、RQ4和RQ5），本文还基于$DB_A$和$DB_B$的数据，构建了一个开源软件漏洞的深度数据集。该数据集的漏洞数量少于广度数据集，但每个漏洞都包含由人工确认的补丁信息。%为了确保漏洞补丁信息完整性和准确性，其中所有漏洞的补丁信息都是由人工识别。
+为了表征漏洞补丁的类型、映射关系以及尽可能准确地评估补丁的准确性（即RQ3、RQ4和RQ5），本文还基于$DB_A$和$DB_B$的数据，构建了一个开源软件漏洞的深度数据集。该数据集的漏洞数量少于广度数据集，但每个漏洞都包含由人工确认的补丁。%为了确保漏洞补丁完整性和准确性，其中所有漏洞的补丁都是由人工识别。
 
-在该深度数据集的构建过程中，为了确保数据集能够涵盖足够多的漏洞用以实验评估，但又不至于在人工识别补丁的阶段产生难以完成的工作量，本文仅将在$DB_A$和$DB_B$都含有补丁信息的漏洞列入该深度数据集，最终，该深度数据集共包含\tocheck{1,417}个CVE漏洞。
+在该深度数据集的构建过程中，为了确保数据集能够涵盖足够多的漏洞用以实验评估，但又不至于在人工识别补丁的阶段产生难以完成的工作量，本文仅将在$DB_A$和$DB_B$都含有补丁的漏洞列入该深度数据集，最终，该深度数据集共包含\tocheck{1,417}个CVE漏洞。
 
 
 
-然后，对于该深度数据集中的每个CVE漏洞，首先分别由两位研究人员通过分析$DB_A$和$DB_B$数据库报告的补丁、查看NVD中的漏洞描述和参考链接信息以及搜索GitHub代码仓库的提交历史和其他网络资源等方式，独立得找到其补丁信息；之后，对比由两位研究人员独立查找得到得补丁信息，对于补丁结果不一致的漏洞，两位研究人员再一起分析讨论直到达成共识。这两位研究人员分别是本文作者和与本文作者同课题组的学生。由于公开的信息有限，\tocheck{1,417}个CVE漏洞中的\tocheck{122}个CVE漏洞无法找到补丁信息，比如：漏洞CVE-2016-3942在NVD中没有漏洞报告，但$DB_A$和$DB_B$将 jsrender@f984e1\cite{jsrender}标识为其补丁，两位研究人员无法确认该补丁信息的准确性。最终，该深度数据集共包含了\tocheck{1,295}个CVE漏洞。
+然后，对于该深度数据集中的每个CVE漏洞，首先分别由两位研究人员通过分析$DB_A$和$DB_B$数据库报告的补丁、查看NVD中的漏洞描述和参考链接信息以及搜索GitHub代码仓库的提交历史和其他网络资源等方式，独立得找到其补丁；之后，对比由两位研究人员独立查找得到得补丁，对于补丁结果不一致的漏洞，两位研究人员再一起分析讨论直到达成共识。这两位研究人员分别是本文作者和与本文作者同课题组的学生。由于公开的信息有限，\tocheck{1,417}个CVE漏洞中的\tocheck{122}个CVE漏洞无法找到补丁，比如：漏洞CVE-2016-3942在NVD中没有漏洞报告，但$DB_A$和$DB_B$将 jsrender@f984e1\cite{jsrender}标识为其补丁，两位研究人员无法确认该补丁的准确性。最终，该深度数据集共包含了\tocheck{1,295}个CVE漏洞。
 
 \begin{figure*}[h]
     \centering
@@ -99,10 +99,10 @@
     \centering
     \includegraphics[scale=0.98]{fig/rq1-CVE-IDs-Patches-VS.pdf}
     %\vspace{-5pt}
-    \caption{含补丁信息的开源软件漏洞}\label{fig:rq1-cves-with-patches}
+    \caption{含补丁知识的开源软件漏洞}\label{fig:rq1-cves-with-patches}
     \end{subfigure}
     %\vspace{-10pt}
-    \caption{$DB_A$与$DB_B$间数据交集}\label{fig:intersection}
+    \caption{$DB_A$与$DB_B$漏洞数据交集}\label{fig:intersection}
 \end{figure}
 
 
@@ -111,7 +111,7 @@
 
 \section{RQ1：覆盖率分析}\label{sec:coverage}
 
-如图\ref{fig:rq1-cves}所示，$DB_A$和$DB_B$数据库中共有的CVE漏洞为\tocheck{4,418}个，同时$DB_A$和$DB_B$分别包含\tocheck{4,212}和\tocheck{1,440}个特有的CVE漏洞；如图\ref{fig:rq1-cves-with-patches}所示，$DB_A$中\tocheck{3,607（41.8\%）}的CVE漏洞含有补丁信息，$DB_B$中\tocheck{2,412（41.2\%）}的CVE漏洞含有补丁信息；$DB_A$和$DB_B$数据库共有\tocheck{10,070}个开源软件CVE漏洞，而其中仅有\tocheck{4,602（45.7\%）}的漏洞提供了补丁信息。
+如图\ref{fig:rq1-cves}所示，$DB_A$和$DB_B$数据库中共有的CVE漏洞为\tocheck{4,418}个，同时$DB_A$和$DB_B$分别包含\tocheck{4,212}和\tocheck{1,440}个特有的CVE漏洞；如图\ref{fig:rq1-cves-with-patches}所示，$DB_A$中\tocheck{3,607（41.8\%）}的CVE漏洞含有补丁，$DB_B$中\tocheck{2,412（41.2\%）}的CVE漏洞含有补丁；$DB_A$和$DB_B$数据库共有\tocheck{10,070}个开源软件CVE漏洞，而其中仅有\tocheck{4,602（45.7\%）}的漏洞提供了补丁。
 
 % \begin{figure}[h]
 %     \centering
@@ -122,11 +122,11 @@
 % \begin{figure}[h]
 %     \centering
 %     \includegraphics[scale=0.98]{fig/rq1-CVE-IDs-Patches-VS.pdf}
-%     \caption{补丁信息的开源软件漏洞数据}\label{fig:rq1-cves-with-patches}
+%     \caption{补丁的开源软件漏洞数据}\label{fig:rq1-cves-with-patches}
 % \end{figure}
 
 由此可见，数据库$DB_A$和$DB_B$中开源软件漏洞的补丁覆盖率都较低，分别为41.8\%和41.2\%，漏洞补丁缺失的情况较为普遍。%而且可以看出，不同的漏洞数据库对\congyingEdit{OSS}漏洞的覆盖范围不同。
-同时，这也体现出自动化补丁查找方法的必要性，可用于填补数据库中缺失的补丁信息。
+同时，这也体现出自动化补丁查找方法的必要性，可用于填补数据库中缺失的补丁。
 
 
 \section{RQ2：一致性分析}\label{sec:consistency}
@@ -139,7 +139,7 @@
     \begin{tabular}{|*{1}{C{4.4em}}|*{1}{C{3.6em}}*{1}{C{5.0em}}*{1}{C{5.0em}}|*{1}{C{3.6em}}*{1}{C{4.8em}}*{1}{C{5.0em}}|}
     \noalign{\hrule height 1pt}
     \multirow{2}{*}{补丁一致} & \multicolumn{3}{c|}{存在性不一致} & \multicolumn{3}{c|}{内容不一致} \\\cline{2-4}\cline{5-7}
-     & 总数 & 无漏洞信息 & 无补丁信息 & 总数 & 包含关系 & 非包含关系 \\\noalign{\hrule height 1pt}
+     & 总数 & 无漏洞信息 & 无补丁 & 总数 & 包含关系 & 非包含关系 \\\noalign{\hrule height 1pt}
     % \multirow{2}{*}{Cons.} & \multicolumn{3}{c|}{Existence Inconsistency} & \multicolumn{3}{c|}{Content Inconsistency} \\\cline{2-4}\cline{5-7}
     % & Total & No CVE & No Patch & Total & Inclusion & Difference \\\noalign{\hrule height 1pt}
     907 （19.7\%） & 3,185 （69.2\%） & 1,392 （30.2\%） & 1,793 （39.0\%） & 510 （11.1\%） & 176 （3.8\%） & 334 （7.3\%）\\
@@ -149,12 +149,12 @@
     \end{tabular}
 \end{table}
 
-为了分析两个数据库之间的补丁信息一致性情况，本节主要关注带有补丁的CVE漏洞，即图\ref{fig:rq1-cves-with-patches}中的CVE漏洞。考虑到漏洞补丁的个数可能不唯一（即可能为一组补丁集），所以仅当两个数据库针对同一漏洞提供的补丁集完全相同时，才判定为补丁信息一致。本节将补丁信息不一致分为存在性不一致和内容不一致两种情况。前者是指某一个数据库为该CVE漏洞提供了补丁信息，而另一个数据库却不存在该CVE信息，或是存在该CVE却不存在相关补丁信息；后者是指两个数据库都存在该CVE的补丁信息，但它们的补丁集并不完全一致，分为包含关系或非包含关系的不一致。这两种情况分别反映了出数据库$DB_A$和$DB_B$中开源软件漏洞及其补丁信息的不完整性，以及漏洞补丁信息可能是不准确的
+为了分析两个数据库之间的补丁一致性情况，本节主要关注带有补丁的CVE漏洞，即图\ref{fig:rq1-cves-with-patches}中的CVE漏洞。考虑到漏洞补丁的个数可能不唯一（即可能为一组补丁集），所以仅当两个数据库针对同一漏洞提供的补丁集完全相同时，才判定为补丁一致。本节将补丁不一致分为存在性不一致和内容不一致两种情况。前者是指某一个数据库为该CVE漏洞提供了补丁，而另一个数据库却不存在该CVE信息，或是存在该CVE却不存在相关补丁；后者是指两个数据库都存在该CVE的补丁，但它们的补丁集并不完全一致，分为包含关系或非包含关系的不一致。这两种情况分别反映了出数据库$DB_A$和$DB_B$中开源软件漏洞及其补丁的不完整性，以及漏洞补丁可能是不准确的
 
 
-表\ref{table:consistency}中展示了补丁一致性分析的结果。其中，第一列为在$DB_A$和$DB_B$中具有一致补丁集的CVE数量（907，19.7\%），第二至四列为补丁存在性不一致的CVE数量（3,185，69.2\%），最后三列为都存在补丁信息但补丁集内容不一致的CVE数量（510，11.1\%）。可以发现：\tocheck{4,602}个CVE中，（1）只有\tocheck{907（19.7\%）}的漏洞在$DB_A$和$DB_B$中有一致的补丁信息；（2）超过三分之二（即\tocheck{3,185（69.2\%）}）的CVE漏洞在数据库$DB_A$和$DB_B$中存在补丁信息不一致的情况，其中\tocheck{1,392（30.2\%）}的CVE漏洞不在$DB_{A}$或$DB_{B}$中，\tocheck{1,793（39.0\%）}的CVE漏洞都存在于$DB_{A}$和$DB_{B}$中但在某一数据库中无补丁信息；（3）\tocheck{510（11.1\%）}的CVE漏洞补丁信息都存在于$DB_{A}$和$DB_{B}$中补丁集内容不一致，其中，\tocheck{176（3.8\%）}CVE的来自于某一个数据库的补丁集包含来自另一个数据库的补丁集，\tocheck{334（7.3\%）}CVE的来自$DB_{A}$和$DB_{B}$的补丁集即不同也不包含。
+表\ref{table:consistency}中展示了补丁一致性分析的结果。其中，第一列为在$DB_A$和$DB_B$中具有一致补丁集的CVE数量（907，19.7\%），第二至四列为补丁存在性不一致的CVE数量（3,185，69.2\%），最后三列为都存在补丁但补丁集内容不一致的CVE数量（510，11.1\%）。可以发现：\tocheck{4,602}个CVE中，（1）只有\tocheck{907（19.7\%）}的漏洞在$DB_A$和$DB_B$中有一致的补丁；（2）超过三分之二（即\tocheck{3,185（69.2\%）}）的CVE漏洞在数据库$DB_A$和$DB_B$中存在补丁不一致的情况，其中\tocheck{1,392（30.2\%）}的CVE漏洞不在$DB_{A}$或$DB_{B}$中，\tocheck{1,793（39.0\%）}的CVE漏洞都存在于$DB_{A}$和$DB_{B}$中但在某一数据库中无补丁；（3）\tocheck{510（11.1\%）}的CVE漏洞补丁都存在于$DB_{A}$和$DB_{B}$中补丁集内容不一致，其中，\tocheck{176（3.8\%）}CVE的来自于某一个数据库的补丁集包含来自另一个数据库的补丁集，\tocheck{334（7.3\%）}CVE的来自$DB_{A}$和$DB_{B}$的补丁集即不同也不包含。
 
-这些结果表明，$DB_A$和$DB_B$间存在较多的补丁信息不一致情况，进而表明数据库中补丁信息的准确性也需要进一步评估。
+这些结果表明，$DB_A$和$DB_B$间存在较多的补丁不一致情况，进而表明数据库中补丁的准确性也需要进一步评估。
 
 
 \section{RQ3：补丁类型分析}\label{sec:type}
@@ -175,7 +175,7 @@
 
 \textbf{一对一：}是指一个CVE漏洞与其补丁在数量上为一对一的关系，即一个CVE漏洞只需一个补丁即可修复，后文中简记为：\textit{SP}（Single Patch）。如图\ref{fig:rq4-cardinality}所示，深度数据集中\tocheck{567（43.8\%）}的CVE与其补丁具有一对一的映射关系（\textit{SP}）
 
-\textbf{\tocheck{一对一组}：}是指一个CVE漏洞有多个补丁信息，CVE漏洞与其补丁（commit）在数量上非一对一关系，然而，这些commit又都是等效的，任何一个补丁都足以修复该漏洞，后文中简记为：\textit{MEP}（Multiple Equivalent Patch）。等效补丁，是指代码变更完全一样的两个commit，其主要有两种类型：（1）Requested Commit VS. Merged Commit，通过GitHub中的Pull Request功能修补的CVE漏洞，请求提交（Requested Commit）和合并提交（Merged Commits）是该漏洞的等效补丁集。例如，python-jose@89b463\footnote{https://github.com/mpdavis/python-jose/commit/89b46353b9f611e9da38de3d2fedf52331167b93}是拉取请求提交（Requested Commit），python-jose@73007d\footnote{https://github.com/mpdavis/python-jose/commit/73007d6887a7517ac07c6e755e494baee49ef513}是用于修复CVE-2016-7036的合并提交（Merged Commits），这两个commit是等效的。（2）SVN Commit VS. GitHub Commit，一些开源软件的仓库是后期由SVN迁移到GitHub的，因此，同一软件的SVN和GitHub的代码仓库中分别有用于修补该CVE的commit，且这两处的commit中代码变更是完全一样且完全等效的。例如，james-hupa代码仓库从SVN迁移到了GitHub，SVN Commit james-hupa@1373762\footnote{https://svn.apache.org/viewvc?view=revision\&revision=1373762}与GitHub Commit james-hupa@aff28a\footnote{https://github.com/apache/james-hupa/commit/aff28a8117a49969b0fc8cc9926c19fa90146d8d}是等效的。
+\textbf{\tocheck{一对一组}：}是指一个CVE漏洞有多个补丁，CVE漏洞与其补丁（commit）在数量上非一对一关系，然而，这些commit又都是等效的，任何一个补丁都足以修复该漏洞，后文中简记为：\textit{MEP}（Multiple Equivalent Patch）。等效补丁，是指代码变更完全一样的两个commit，其主要有两种类型：（1）Requested Commit VS. Merged Commit，通过GitHub中的Pull Request功能修补的CVE漏洞，请求提交（Requested Commit）和合并提交（Merged Commits）是该漏洞的等效补丁集。例如，python-jose@89b463\footnote{https://github.com/mpdavis/python-jose/commit/89b46353b9f611e9da38de3d2fedf52331167b93}是拉取请求提交（Requested Commit），python-jose@73007d\footnote{https://github.com/mpdavis/python-jose/commit/73007d6887a7517ac07c6e755e494baee49ef513}是用于修复CVE-2016-7036的合并提交（Merged Commits），这两个commit是等效的。（2）SVN Commit VS. GitHub Commit，一些开源软件的仓库是后期由SVN迁移到GitHub的，因此，同一软件的SVN和GitHub的代码仓库中分别有用于修补该CVE的commit，且这两处的commit中代码变更是完全一样且完全等效的。例如，james-hupa代码仓库从SVN迁移到了GitHub，SVN Commit james-hupa@1373762\footnote{https://svn.apache.org/viewvc?view=revision\&revision=1373762}与GitHub Commit james-hupa@aff28a\footnote{https://github.com/apache/james-hupa/commit/aff28a8117a49969b0fc8cc9926c19fa90146d8d}是等效的。
 如图\ref{fig:rq4-cardinality}所示，深度数据集中\tocheck{195（15.1\%）}的CVE与其补丁为一对一组映射关系（\textit{MEP}）
 
 \textbf{一对多，}是指一个CVE漏洞与其补丁在数量上为一对多的关系，即个CVE漏洞需多个非等效的补丁来修复。如图\ref{fig:rq4-cardinality}所示，深度数据集中\tocheck{533（41.2\%）}的CVE与其补丁为一对多的映射关系，其可以再分为三种类型: 
@@ -214,4 +214,4 @@
 本文使用精度（precision）、召回率（recall）和F1值（F1-score）作为评估补丁准确性的指标。对于具有两个等效补丁的CVE，若数据库提供两个等效补丁中的任意一个，精度和召回率都为1；若数据库提供两个等效补丁中的一个和另一个不相关的补丁，那么精度为0.5，召回率为1。
 
 表\ref{table:accuracy}为$DB_A$和$DB_B$的补丁准确性评估结果。其中，第一列为CVE与补丁的映射类型，第二列为每种映射类型的CVE数量，最后六列分别为数据库$DB_A$和$DB_B$中CVE补丁的准确率、召回率和F1值。结果表明，$DB_A$和$DB_B$对于\textit{SP}和\textit{MEP}类型的CVE可实现约90\%的精度和召回率；同时，对于\textit{MP}、\textit{MB}和\textit{MR}类型的CVE，可达到90\%以上的高精度，但仅有约50\%的召回率。
-这说明漏洞数据库$DB_A$和$DB_B$经常会遗漏一些漏洞的补丁信息，尤其是对于具有多个补丁的CVE漏洞。例如，对于漏洞CVE-2017-17837，$DB_A$和$DB_B$仅报告三个补丁中的一个；对于漏洞CVE-2019-19118，$DB_A$报告四个补丁中的两个，而$DB_B$仅报告四个补丁中的一个。对于安全服务用户来说，这会给漏洞的及时检测和修复带来较大挑战。%，这也反映出自动化补丁查找方法的必要性。
+这说明漏洞数据库$DB_A$和$DB_B$经常会遗漏一些漏洞的补丁，尤其是对于具有多个补丁的CVE漏洞。例如，对于漏洞CVE-2017-17837，$DB_A$和$DB_B$仅报告三个补丁中的一个；对于漏洞CVE-2019-19118，$DB_A$报告四个补丁中的两个，而$DB_B$仅报告四个补丁中的一个。对于安全服务用户来说，这会给漏洞的及时检测和修复带来较大挑战。%，这也反映出自动化补丁查找方法的必要性。
