@@ -70,7 +70,7 @@
 图\ref{fig:example}为样例CVE-2017-11428的多源参考链接网络。 其中，最顶层为根节点（即CVE ID），第二层为公告节点（即“知识源”）。
 \end{exmp}
 
-然后，\tool 通过网络请求分别获取NVD、Debian和Red Hat平台中该CVE的漏洞公告。NVD平台中，漏洞公告以JSON形式按年份存储于结构化数据\footnote{https://nvd.nist.gov/vuln/data-feeds}中，\tool 通过下载并解析相应的JSON文件即可获得NVD中该CVE的公告信息。Debian平台中，漏洞公告也以结构化数据的形式存储在仓库\footnote{https://salsa.debian.org/security-tracker-team/security-tracker/-/tree/master/data/CVE}中，\tool 可直接从中解析得Debian提供的该CVE公告信息。Red Hat平台提供了WebService API\footnote{https://bugzilla.redhat.com/docs/en/html/api/index.html}服务，\tool 可以直接使用该服务来检索Red Hat平台的漏洞公告。值得注意的是，分析发现：Debian会跟踪NVD上的所有CVE漏洞，而Red Hat并非跟踪所有CVE漏洞。
+然后，\tool 通过网络请求分别获取NVD、Debian和Red Hat平台中该CVE的漏洞公告。NVD平台中，漏洞公告以JSON形式按年份存储于结构化数据\footnote{https://nvd.nist.gov/vuln/data-feeds}中，\tool 通过下载并解析相应的JSON文件即可获得NVD中该CVE的公告信息。Debian平台中，漏洞公告也以结构化数据的形式存储在仓库\footnote{https://salsa.debian.org/security-tracker-team/security-tracker/-/tree/master/data/CVE}中，\tool 可直接从中解析得Debian提供的该CVE公告信息。Red Hat平台提供了WebService API\footnote{https://bugzilla.redhat.com/docs/en/html/api/index.html}服务，\tool 可以直接使用该服务来检索Red Hat平台的漏洞公告。值得注意的是，分析发现：Debian会跟踪NVD上的所有漏洞，而Red Hat并非跟踪所有漏洞。
 
 \tool 从每个知识源的漏洞公告中提取引用的链接信息（即URL），并将它们添加为相应公告节点的子节点。对于NVD公告，\tool 从“references”字段中直接获取取出相关URL；类似地，对于Debian公告，\tool 直接从“Notes”字段中提取出相关URL；而对于Red Hat公告，\tool 使用正则表达式从评论区（“comments”字段）中提取出相关URL，这是因为开发人员常常会在评论区讨论和记录漏洞的解决过程并列出对补丁，但NVD和Debian平台尚未开发评论区模块。
 
@@ -103,12 +103,12 @@
 \end{exmp}
 
 \subsection{\tocheck{参考链接扩增}}
-除了NVD、Debian和Red Hat等漏洞公告平台可作为漏洞知识来源之外，代码托管平台也可以被视为隐含的知识来源，因为补丁通常隐藏在代码仓的代码提交历史中。因此，在此子步骤中，\tool 将搜索代码托管平台以获取CVE漏洞的补丁（Github Commit形式），\tocheck{通过扩增知识来源的方式以进一步扩增该CVE的信息网络。}
+除了NVD、Debian和Red Hat等漏洞公告平台可作为漏洞知识来源之外，代码托管平台也可以被视为隐含的知识来源，因为补丁通常隐藏在代码仓的代码提交历史中。因此，在此子步骤中，\tool 将搜索代码托管平台以获取漏洞的补丁（Github Commit形式），\tocheck{通过扩增知识来源的方式以进一步扩增该CVE的信息网络。}
 
-受经验研究中补丁类型分析（Sec.\ref{sec:type}）的启发，93.7\%的都为 GitHub Commit的形式，所以在该步骤中\tool 只搜索GitHub平台的提交。此外，问题跟踪系统（Issue Tracker）通常还会为CVE漏洞相关的问题分配一个问题标识符（Issue—ID）；同样，软件厂商通常也会为该CVE分配一个漏洞公告标识符（Advisory-ID）。例如，受漏洞CVE-2019-10426影响的软件厂商为漏洞分配的标识符为SECURITY-1573\footnote{https://www.jenkins.io/security/advisory/2019-09-25/\#SECURITY-1573}，问题跟踪系统为该漏洞分配的问题标识符为THRIFT-4647\footnote{https://issues.apache.org/jira/browse/THRIFT-4647}。对此，\tool 可使用正则表达式\footnote{add 表达式}分别从已有的网络节点中提取问题和公告标识符。
+受经验研究中补丁类型分析（Sec.\ref{sec:type}）的启发，93.7\%的都为 GitHub Commit的形式，所以在该步骤中\tool 只搜索GitHub平台的提交。此外，问题跟踪系统（Issue Tracker）通常还会为漏洞相关的问题分配一个问题标识符（Issue—ID）；同样，软件厂商通常也会为该CVE分配一个漏洞公告标识符（Advisory-ID）。例如，受漏洞CVE-2019-10426影响的软件厂商为漏洞分配的标识符为SECURITY-1573\footnote{https://www.jenkins.io/security/advisory/2019-09-25/\#SECURITY-1573}，问题跟踪系统为该漏洞分配的问题标识符为THRIFT-4647\footnote{https://issues.apache.org/jira/browse/THRIFT-4647}。对此，\tool 可使用正则表达式\footnote{add 表达式}分别从已有的网络节点中提取问题和公告标识符。
 
 然后，\tool 使用CVE标识符和提取出的问题和公告标识符作为关键字，通过GitHub提供的REST API\footnote{https://docs.github.com/en/rest/reference/search\#search-commits}接口全站搜索相关的代码提交。%针对一次搜索，该API最多返回 1,000个搜索结果。
-为了减少噪音，对于API返回的提交，\tool 首先会检查该代码提交的仓库信息是否与CVE漏洞的CPE信息匹配。其中，CPE是针对受漏洞影响软件的结构化命名方案，包括供应商和产品名称信息，可以直接从NVD的JSON文件中解析得到。
+为了减少噪音，对于API返回的提交，\tool 首先会检查该代码提交的仓库信息是否与漏洞的CPE信息匹配。其中，CPE是针对受漏洞影响软件的结构化命名方案，包括供应商和产品名称信息，可以直接从NVD的JSON文件中解析得到。
 对于代码提交的仓库信息与CPE信息匹配的判定，\tool 沿用了Dong 等人的匹配准则\cite{dong2019towards}，该准则可灵活地应对同一个软件名称存在不同别名的情况。具体来说，给定两个软件的名称，如果匹配的单词数不小于不匹配的单词数，则这两个软件的名称匹配成功，视为同一软件。此外，\tool 仍会检查该提交是否为测试代码或非源代码文件的更改。如果这两个检查都通过，\tool 会将其作为GitHub节点的子节点加入网络。
 
 \begin{exmp}
