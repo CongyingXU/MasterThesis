@@ -164,9 +164,25 @@ RQ2---补丁一致性分析，旨在评估不同漏洞数据库间漏洞补丁�
 这些结果表明，$DB_A$和$DB_B$间存在较多的补丁不一致情况，这很可能是由补丁不准确导致，进而表明数据库中补丁的准确性需要进一步评估。
 
 \section{RQ3：补丁类型分析}\label{sec:type}
-RQ3---补丁类型分析，旨在表征开源软件漏洞的补丁类型。在章节\tocheck{\ref{sec:preparation}}中，基于人工收集的深度数据集共包含\tocheck{1,295}个漏洞及\tocheck{3,043}个补丁。本小节将基于该数据集分析漏洞的补丁类型。分析结果表明，\tocheck{3,043}个补丁中，\tocheck{2,852（93.7\%）}的补丁都是GitHub代码提交，这可能是因为GitHub在开源软件中被广泛使用；另外\tocheck{136（4.5\%）}的补丁为SVN代码提交，仅有\tocheck{55（1.8\%）}的补丁为来自其他Git平台的代码提交。
+\begin{table}[!t]
+    \centering
+    \small
+    \caption{补丁类型分析结果}\label{table:type}
+    %\vspace{-10pt}
+    % \begin{tabular}{|*{1}{C{4.4em}}|*{1}{C{3.6em}}*{1}{C{5.0em}}*{1}{C{5.0em}}|}
+    \begin{tabular}{|c|ccc|}
+    \noalign{\hrule height 1pt}
+    补丁总数 & GitHub代码提交 & SVN代码提交 & 其他Git平台代码提交 \\\noalign{\hrule height 1pt}
+    3,043 & 2,852（93.7\%） & 136（4.5\%） & 55（1.8\%）\\\noalign{\hrule height 1pt}
+    漏洞总数 & 仅GitHub代码提交 & 仅SVN代码提交 & 仅其他Git平台代码提交 \\\noalign{\hrule height 1pt}
+    1,295 & 1,202（92.8\%） & 4（0.3\%） & 30（2.3\%）\\
+    \noalign{\hrule height 1pt}
+    \end{tabular}
+\end{table}
 
-此外，从漏洞的角度来看，\tocheck{1,295}个漏洞中\tocheck{1,202（92.8\%）}的漏洞仅有GitHub提交类型的补丁，\tocheck{4（0.3\%）}的漏洞仅有SVN 提交类型的补丁。由于很多项目是从SVN切换为Git管理，\tocheck{48（3.7\%）}的漏洞既有GitHub又有SVN提交类型的补丁。只有\tocheck{30（2.3\%）}的漏洞，补丁都为来自其他Git平台的代码提交。另外的\tocheck{11（0.8\%）}的漏洞，补丁为GitHub和其他Git平台的代码提交。
+RQ3---补丁类型分析，旨在表征开源软件漏洞的补丁类型。在章节\tocheck{\ref{sec:preparation}}中，基于人工收集的深度数据集共包含\tocheck{1,295}个漏洞及\tocheck{3,043}个补丁。本小节将基于该数据集分析漏洞的补丁类型。如表\ref{table:type}所示，\tocheck{3,043}个补丁中，\tocheck{2,852（93.7\%）}的补丁都是GitHub代码提交，这可能是因为GitHub在开源软件中被广泛使用；另外\tocheck{136（4.5\%）}的补丁为SVN代码提交，仅有\tocheck{55（1.8\%）}的补丁为来自其他Git平台的代码提交。
+
+此外，从漏洞的角度来看，\tocheck{1,295}个漏洞中\tocheck{1,202（92.8\%）}的漏洞仅有GitHub提交类型的补丁，\tocheck{4（0.3\%）}的漏洞仅有SVN 提交类型的补丁。只有\tocheck{30（2.3\%）}的漏洞，补丁仅为来自其他Git平台的代码提交。由于很多项目是从SVN切换为Git管理，\tocheck{48（3.7\%）}的漏洞既有GitHub又有SVN提交类型的补丁。另外的\tocheck{11（0.8\%）}的漏洞，补丁为GitHub和其他Git平台的代码提交。
 
 以上结果表明，开源软件漏洞的补丁类型主要为GitHub的代码提交，少部分为SVN代码提交，而极小部分为其他Git平台的代码提交。
 
