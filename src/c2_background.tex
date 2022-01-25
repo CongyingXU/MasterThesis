@@ -11,23 +11,23 @@
 % 作为community的source，还有其他的third party db、sources？
 % 有什么作用? 被哪些其他 official、third-party report引用
 通用漏洞披露(Common Vulnerabilities and Exposures，CVE)\cite{mitre2021:cve}，是一个与网络安全有关的漏洞字典，收集各种信息安全漏洞并分配唯一编号以便公众查阅及引用\footnote{https://cve.mitre.org/cve/}。在实际使用中，当人们提及某个CVE时，其实是指某个被分配了CVE ID的安全漏洞\footnote{https://www.redhat.com/en/topics/security/what-is-cve}。
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.88\textwidth]{fig/CVE-2021-44228-2}
-    \caption{CVE平台中漏洞CVE-2021-44228}
-    \label{fig:CVE-2021-44228}
-\end{figure}
 
 如图\ref{fig:CVE-2021-44228}所示，每一个CVE条目（CVE Entry）都有唯一通用标识符（即CVE ID）、一段漏洞描述（即Description）以及至少一个参考链接（即References），该参考链接多为外部网站且包含与该漏洞相关的更详细的描述信息。图例\ref{fig:CVE-2021-44228}为漏洞CVE-2021-44228\footnote{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228}，该漏洞的描述信息为“Apache Log4j2 2.0-beta9 through 2.12.1 and 2.13.0 through 2.15.0 JNDI features used in configuration, ...... Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects.”，且引用了多个参考链接，如：“https://www.kb.cert.org/vuls/id/930724”、“https://tools.cisco.com/security/center/\\content/CiscoSecurityAdvisory/cisco-sa-apache-log4j-qRuKNEbd”等。
-\begin{figure}[h]
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.98\textwidth]{fig/CVE-2021-44228-2}
+    \caption{CVE平台中漏洞CVE-2021-44228}\label{fig:CVE-2021-44228}
+\end{figure}
+
+\begin{figure}[!t]
     \centering
     \includegraphics[width=1.0\textwidth]{fig/NVD-2021-44228}
-    \includegraphics[width=1.0\textwidth]{fig/NVD-2021-44228-2}
-    \caption{NVD平台中漏洞CVE-2021-44228信息}
+    \includegraphics[width=1.0\textwidth]{fig/NVD-2021-44228-2}\caption{NVD平台中漏洞CVE-2021-44228}
     \label{fig:NVD-2021-44228}
 \end{figure}
 
-\tocheck{可解释下CVE List，以及在NVD之后，描述下CVEdetails。}
+% \tocheck{可解释下CVE List，以及在NVD之后，描述下CVEdetails。}
 
 CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中漏洞信息过于精简，仅有一段漏洞描述和参考链接信息。基于CVE平台收录的漏洞条目信息，美国国家漏洞数据库（NVD）\footnote{https://nvd.nist.gov/}、中国国家信息安全漏洞库（CNNVD）\footnote{http://www.cnnvd.org.cn/}等漏洞数据库被构建。这些数据库与CVE平台数据完全同步，并为每个漏洞条目（CVE Entry）提供更丰富的信息，如：影响的软件名及版本、修复信息、严重性评分、影响评级等。图\ref{fig:NVD-2021-44228}所示为NVD平台中漏洞CVE-2021-44228\footnote{https://nvd.nist.gov/vuln/detail/CVE-2021-44228}信息。
 
@@ -69,15 +69,14 @@ CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中�
 \subsection{漏洞补丁}
 补丁（Patch），也称：补丁程序，是指对计算机程序进行的一组更改，旨在更新其功能或修复其缺陷。漏洞补丁（Vulnerability Patch）则指为修复程序中的安全漏洞所开发的补丁，通常是Git和SVN中的代码提交（Commit），或是文本文件（.patch文件）形式。对于代码提交形式的补丁，后文中将简称为补丁提交。
 
-例如，上图\ref{fig:debian-2021-44228}中的参考链接“https://github.com/apache/logging-log4j2/commit/\\c77b3cb39312b83b053d23a2158b99ac7de44dd3”，即为漏洞CVE-2021-44228的补丁提交，该提交的内容见图\ref{fig:commit-2021-44228}。
-
-\begin{figure}[h]
+\begin{figure}[!t]
     \centering
-    \includegraphics[width=1.0\textwidth]{fig/commit-2021-44228}
+    \includegraphics[width=0.95\textwidth]{fig/commit-2021-44228}
     \caption{漏洞CVE-2021-44228的Github Commit补丁}
     \label{fig:commit-2021-44228}
 \end{figure}
 
+例如，上图\ref{fig:debian-2021-44228}中的参考链接“https://github.com/apache/logging-log4j2/commit/\\c77b3cb39312b83b053d23a2158b99ac7de44dd3”，即为漏洞CVE-2021-44228的补丁提交，该提交的内容见图\ref{fig:commit-2021-44228}。
 
 
 \section{相关工作}
