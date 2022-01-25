@@ -126,7 +126,7 @@
     \centering
     \includegraphics[scale=0.29]{fig/commit-814d1d9}
     %\vspace{-10pt}
-    \caption{代码提交“saml@814d1d”}\label{fig:814d1d9}
+    \caption{“saml@814d1d”代码提交}\label{fig:814d1d9}
 \end{figure}
 
 \subsection{参考链接扩增}\label{sec:addGithub}
@@ -151,23 +151,23 @@
 
 \section{补丁选择}\label{sec:selection}
 
-步骤二的目的是尽可能准确且完整地从该漏洞参考链接网络中选择出补丁节点。 为了实现这一目标，本小节设计了以下两种启发式方法。
+步骤二的设计目标是尽可能准确且完整地从该漏洞参考链接网络中选择出补丁节点。为了实现这一目标，本小节设计了以下两种补丁选择方法。
 
 \subsection{基于置信度的补丁选择方法}
-该方法中，\tool 将直接选择具有高置信度的补丁作为正确的补丁。具体来说，本文认为参考链接网络中的两种补丁节点具有比较高的置信度。
+在该方法中，\tool 将直接选择具有高置信度的补丁作为正确的补丁。具体来说，本文认为参考链接网络中的两种补丁节点具有比较高的置信度。
 
-第一种，为被NVD直接引用的补丁节点，即图中作为NVD子节点的补丁节点被认为具有高置信度。这是因为NVD数据库建立在强大的社区支持下，每个漏洞的信息都经过多个流程的人工确认，且初始漏洞报告在发布后还会不断维护更新。已有的很多工作\cite{duan2019automating, li2016vulpecker, li2018vuldeepecker}都是基于这种启发式方法来查找补丁。
+第一种，为被NVD直接引用的补丁节点，即图中作为NVD子节点的补丁节点，被认为具有高置信度。这是因为NVD数据库建立在强大的社区支持下，每个漏洞的信息都经过多个流程的人工确认，且初始漏洞报告在发布后还会不断维护更新。因此，本文认为NVD中的补丁具有较高的精度。此外，已有的很多工作\cite{duan2019automating, li2016vulpecker, li2018vuldeepecker}都是基于这种方法来查找补丁。
 
-第二种，为从Github直接搜索出的补丁节点，即图中作为GitHub子节点的补丁节点被认为具有高置信度。这是因为在将此类补丁节点添加至网络中前，经过较为严苛的确认。\tool 会确保Commit Message中包含该漏洞的CVE ID、 Advisory ID或Issue ID，并且其所属的仓库信息与CPE名称必须成功匹配。这种方法也在已有的很多工作\cite{you2017semfuzz, Wang2020empirical}中使用。
+第二种，为从Github直接搜索出的补丁节点，即图中作为GitHub子节点的补丁节点，被认为具有高置信度。这是因为在将此类补丁节点添加到网络前，经过了较为严苛的确认。\tool 会确保代码提交信息中包含该漏洞的CVE ID、 Advisory ID或Issue ID，并且其所属的仓库信息必须与该漏洞的CPE名称成功匹配。这种方法也在已有的很多工作\cite{you2017semfuzz, Wang2020empirical}中使用。
 
 \begin{exmp}
-在示例CVE-2017-11428的参考链接网络\ref{fig:example}中，\tool 将直接选择补丁节点ruby-saml@048a54加入补丁集。因为它是GitHub节点的子节点，具有较高的置信度，而实际上，ruby-saml@048a54也确实是正确的补丁之一。
+在漏洞CVE-2017-11428的参考链接网络中（图\ref{fig:example}），\tool 将直接选择补丁节点ruby-saml@048a54作为补丁结果之一。因为该节点是GitHub节点的子节点，具有较高的置信度。实际上，ruby-saml@048a54也确实是正确的补丁之一。
 \end{exmp}
 
 \subsection{基于连通度的补丁选择方法}
-仅仅使用基于置信度的启发式方法通常不足以完整地找出漏洞补丁集。因为NVD中很可能不包含补丁参考链接，且CVE ID、 Advisory ID或Issue ID也很可能不在提交消息（Commit Message）中，因此也无法通过搜索Github获取到补丁。考虑到漏洞的补丁（即commit）会在与该漏洞相关的各种来源的漏洞公告、分析报告、讨论和解决的过程中被频繁提及和引用，这也意味着：正确的补丁节点将会广泛地连接到网络中的根节点（即图中的CVE ID节点）上。因此，本文还设计了基于连通度的补丁节点选择方法。
+仅仅使用基于置信度的启发式方法通常不足以完整地找出漏洞补丁集。因为NVD中很可能不包含补丁链接，且CVE ID、 Advisory ID或Issue ID也很可能不在代码提交信息中，因此也无法通过搜索Github获取到补丁。考虑到漏洞的补丁会在与该漏洞相关的各种来源的漏洞公告、分析报告、讨论和解决的过程中被频繁提及和引用，这也意味着：正确的补丁节点将会广泛地连接到网络中的根节点（即图中的CVE ID节点）上。因此，本文还设计了基于连通度的补丁节点选择方法。
 
-具体来说，\tool 从两个角度衡量网络中补丁节点与根节点间的连通度。一是基于路径数，根节点可到达补丁节点的路径越多，补丁节点与根节点的连通性就越高；二是基于路径长度，从根节点到补丁节点的路径越短，补丁节点到根节点的连通性就越高。为了结合这两个维度，\tool 使用公式\ref{eq:connectivity}计算补丁节点到根节点的连通度，其中$ p = 1, ..., n$表示从根节点到补丁节点的$n$条路径，$d_p$表示路径$p$的长度。考虑到NVD和GitHub子节点的高置信度，如果路径$p$源于NVD和GitHub节点，则路径长度自动减1。
+具体来说，\tool 从两个角度衡量网络中补丁节点与根节点间的连通度。一是路径数，根节点可到达补丁节点的路径越多，补丁节点与根节点的连通性就越高；二是路径长度，从根节点到补丁节点的路径越短，补丁节点到根节点的连通性就越高。为了结合这两个方面，\tool 使用公式\ref{eq:connectivity}计算补丁节点到根节点的连通度。其中，$ p = 1, ..., n$表示从根节点到补丁节点的$n$条路径，$d_p$表示路径$p$的长度。考虑到NVD和GitHub子节点的高置信度，如果路径$p$源于NVD和GitHub节点，则路径长度自动减1。
 
 \begin{equation}\label{eq:connectivity}
     connectivity =\sum_{p=1}^{n}   \frac{1}{2^{({d}_{p} -1)}}
@@ -176,20 +176,50 @@
 基于每个补丁节点到根节点的连通度，\tool 选择连通度最高的节点作为该漏洞的补丁，加入补丁集。
 
 \begin{exmp}
-在图\ref{fig:example}中，从根节点到补丁节点ruby-saml@048a54的路径有两条。一是源自Debian的路径，长度为2，连通度为0.5。另一个是源自GitHub的路径，原始长度为2，调整后为1，连通性1。因此，ruby-saml@048a54节点到根节点的总连通度为1.5。同理，从根节点到补丁节点SAMLBase@482cdf存在四条路径，连通性分别为0.5、0.25、0.25和0.125。因此，SAMLBase@482cdf到根节点的连通度为1.125，低于ruby-saml@048a54节点，所以\tool 选择ruby-saml@048a54作为补丁。%，因为它具有最高的连接性。
+在图\ref{fig:example}中，从根节点到补丁节点ruby-saml@048a54的路径有两条。一是源自Debian的路径，长度为2，连通度为0.5。另一个是源自GitHub的路径，原始长度为2，调整后为1，连通度为1。因此，ruby-saml@048a54节点到根节点的总连通度为1.5。同理，从根节点到补丁节点SAMLBase@482cdf存在四条路径，连通性分别为0.5、0.25、0.25和0.125。因此，SAMLBase@482cdf到根节点的连通度为1.125，低于ruby-saml@048a54节点，所以\tool 选择ruby-saml@048a54作为补丁。%，因为它具有最高的连接性。
   %\tool 选择它作为 CVE-2017-11428 的补丁。
 \end{exmp}
 
+完成以上两种补丁选择方法后，\tool 已从该漏洞的参考链接网络中选出补丁集。由于构建该网络的过程中可能没有识别到补丁链接，所以该补丁集可能为空。同时，基于以上两种补丁选择方法，\tool 也有可能已获得该漏洞的多个补丁。
+
 
 \section{补丁扩增}
-受经验研究中映射分析（Sec.\ref{sec:cardinality}）的启发，CVE与其补丁之间存在一对多的映射关系。对此，\tool 的步骤三通过搜索同一代码库所有分支中的相关提交（Commit）来扩展补丁集。映射分析结果表明，超过\tocheck{40\%}的CVE与其补丁具有一对多的映射关系，且这些补丁通常是位于同一代码库的某一个或多个分支。对于这些多补丁的情况，\tool 在前两个步骤中构建的网络通常不能够完整地包含所有补丁。此外，补丁类型分析（Sec.\ref{sec:type}）表明绝大多数的补丁都以GitHub Commit形式。因此，\tool 的步骤三设计如下：对于每个已在步骤二中选定的GitHub Commit形式的补丁，\tool 将首先获取其Github代码仓库信息，并获取该仓库中的所有分支信息，在每个分支的特定时间范围内搜索相关的代码提交（Commit）。
+受经验研究中映射分析结果的启发，漏洞其补丁之间存在一对多的映射关系。章节\ref{sec:cardinality}中，映射分析结果表明，超过\tocheck{40\%}的漏洞与其补丁具有一对多的映射关系，且这些补丁通常是位于同一代码库的某一个或多个分支。对于这种多补丁的漏洞，\tool 在前两个步骤中构建的网络无法确保能完整地包含所有补丁。针对这一情况，基于步骤二中选出的补丁，步骤三通过搜索同一代码库所有分支中的相关提交来扩展补丁集。此外，补丁类型分析（Sec.\ref{sec:type}）表明绝大多数的补丁都以GitHub代码提交的形式。因此，\tool 的步骤三具体设计如下：对于每个已在步骤二中选定的GitHub代码提交形式的补丁，\tool 将首先获取其Github代码仓库信息，并获取该仓库中的所有分支信息，在每个分支的特定时间范围内搜索相关的代码提交。
 
-具体来说，对于GitHub Commit形式的选定补丁，\tool 从补丁链接中提取出仓库信息，即所有者（Owner）和存储库（Repository）信息。
-基于提交的所有者和仓库名信息，首先，\tool 使用GitHub的REST API\footnote{https://docs.github.com/en/rest/reference/repos\#list-branches}获取存储库中的所有分支信息，对于每个分支，\tool 会通过GitHub的REST API\footnote{https://docs.github.com/en/rest/reference/repos\#list-commits}检索在选定补丁之前和之后特定时间跨度（默认情况下为\tocheck{30天}）内创建的提交。这里设置了时间跨度，是考虑到工具时间性能和准确性的平衡；当项目历史较长且不设置时间限制时，\tool 运行时长也会无限增长。然后，对于REST API返回的提交，\tool 使用以下两个标准来确定该提交是否与选定补丁具有相关性：一是检索返回的提交的提交消息（Commit Message）与已选补丁的提交消息（Commit Message）相同或是包含关系；二是检索返回的提交的提交消息（Commit Message）包含CVE ID、 Advisory ID或Issue ID。如果检索返回的提交满足两个条件之一，\tool 会将其作为扩展补丁节点添加为选定补丁的子节点。
+具体来说，对于GitHub代码提交形式的补丁，\tool 从补丁链接中提取出仓库信息，即所有者（Owner）和存储库（Repository）信息。基于补丁提交的所有者和仓库名信息，\tool 先使用GitHub的REST API\footnote{https://docs.github.com/en/rest/reference/repos\#list-branches}获取存储库中的所有分支信息。对于每个分支，\tool 再通过GitHub的REST API\footnote{https://docs.github.com/en/rest/reference/repos\#list-commits}检索选定补丁之前和之后特定时间跨度内的提交，时间跨度默认为\tocheck{30天}。这里设置时间跨度，是考虑到工具时间性能和准确性之间的平衡。当项目历史较长且不设置时间限制时，\tool 运行时长也会无限增长。
 
-最后，\tool 将返回步骤二中选定的补丁和步骤三中扩展的补丁作为补丁集返回给用户。此外，\tool 还返回该漏洞的参考链接网络，以便于工作人员追溯补丁的来源及关系，从补丁集选定确认正确的补丁。
+然后，对于API返回的特定时间跨度内的提交，\tool 使用以下两个标准来确定该提交是否与选定补丁具有相关性：一是提交信息（Commit Message）与已选补丁的提交消息相同或是包含关系；二是提交消息包含CVE ID、 Advisory ID或Issue ID。如果检索返回的提交满足这两个条件之一，\tool 会将该补丁扩展为选定补丁的子节点。
 
+最后，\tool 将返回步骤二中选定的补丁和步骤三中扩展的补丁作为补丁列表返回给用户。此外，\tool 还返回该漏洞的参考链接网络，以便于工作人员追溯补丁的来源及关系。%，从补丁集选定确认正确的补丁。
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[scale=0.30]{fig/11428-commit-048a54}
+    % \vspace{-10pt}
+    \caption{“ruby-saml@048a54”代码提交}\label{fig:048a54}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[scale=0.30]{fig/11428-commit-d7ce60}
+    % \vspace{-10pt}
+    \caption{“ruby-saml@d7ce60”代码提交}\label{fig:d7ce60}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[scale=0.30]{fig/11428-commit-a35f72}
+    % \vspace{-10pt}
+    \caption{“ruby-saml@a35f72”代码提交}\label{fig:a35f72}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[scale=0.30]{fig/11428-commit-03af9e}
+    % \vspace{-10pt}
+    \caption{“ruby-saml@03af9e”代码提交}\label{fig:03af9e}
+\end{figure}
 
 \begin{exmp}
-在步骤二中为CVE-2017-11428选定的补丁为ruby-saml@048a54（位于主分支），\tool 通过步骤三查找到了另外三个提交：ruby-saml@d7ce60\footnote{https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280}、ruby-saml@a35f72\footnote{https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c}和ruby-saml@03af9e\footnote{https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8}。它们与选定补丁ruby-saml@048a54具有相同的提交信息（Commit Message）却具有并不完全相同的代码更改（Diff），且分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将它们添加为ruby-saml@048a54的子节点，而实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，但经验研究\ref{sec:study}中的数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54一个补丁。
+在步骤二中，\tool 为漏洞CVE-2017-11428选出的补丁为ruby-saml@\\048a54（位于主分支）。在步骤三种，\tool 查找到了另外三个提交---ruby-saml@d7ce60\footnote{https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280}、ruby-saml@a35f72\footnote{https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c}和ruby-saml@03af9e\footnote{https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8}。图\ref{fig:048a54}、\ref{fig:d7ce60}、\ref{fig:a35f72}和\ref{fig:03af9e}所示，它们与选定补丁ruby-saml@048a54具有相同的提交信息却不同的代码更改。这三个提交分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将三个提交添加为ruby-saml@048a54的子节点。实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，而数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54一个补丁。
 \end{exmp}
