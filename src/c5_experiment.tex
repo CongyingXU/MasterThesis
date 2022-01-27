@@ -75,13 +75,14 @@
     \end{tabular}
 \end{table*}
 
-表\ref{table:heuristic}显示了三种启发式方法与\tool 的准确率对比结果。可以发现，对于很大一部分漏洞，三种启发式方法都无法找到其补丁。深度数据集的1295个漏洞中，基于检索NVD References的启发式方法，\tocheck{768（59.3\%）}的漏洞无法找到补丁；基于检索GitHub Commits的启发式方法，\tocheck{990（76.4\%）}的漏洞无法找到补丁；基于检索NVD以及GitHub的启发式方法，\tocheck{576（44.5\%）}的漏洞无法找到补丁；然而，仅\tocheck{155（12.0\%）}漏洞的补丁无法被\tool 找到。
+表\ref{table:heuristic}显示了三种启发式方法与\tool 的准确率对比结果。
 
-由于NVD References中引用信息都经过人工核对，References中引用信息的置信度比较高，所以基于检索NVD References的启发式方法具有较高的精确率（\tocheck{0.970}）。但对于一对多映射关系的CVE，基于检索NVD References的启发式方法召回率就比较低，分别为\tocheck{0.552、0.416和0.708}。这也反映出NVD平台漏洞补丁的不完整情况。基于检索GitHub Commits的启发式方法具有较低的精确率和召回率，分别为\tocheck{0.461}和\tocheck{0.417}，而基于检索NVD以及GitHub的启发式方法中和了前两种方法的精确率和召回率分别为\tocheck{0.793}和\tocheck{0.732}。
+\textbf{补丁覆盖率方面：}可以发现，在包含1,295个漏洞的的深度数据集上，三种启发式方法的补丁覆盖率都较低。对于基于检索NVD References的启发式方法，\tocheck{768（59.3\%）}的漏洞无法找到补丁。对于基于检索GitHub Commits的启发式方法，\tocheck{990（76.4\%）}的漏洞无法找到补丁。对于基于检索NVD以及GitHub的启发式方法，\tocheck{576（44.5\%）}的漏洞无法找到补丁。然而，仅\tocheck{155（12.0\%）}漏洞的补丁无法被\tool 找到。
 
+\textbf{补丁准确性方面：}基于检索NVD References的启发式方法具有较高的精确率（\tocheck{0.970}），这是因为NVD References中引用信息都经过人工核对，References中引用信息的置信度比较高。但对于一对多映射关系的CVE，基于检索NVD References的启发式方法召回率就比较低，分别为\tocheck{0.552、0.416和0.708}。这也反映出NVD平台漏洞补丁的不完整情况。
 与基于检索NVD References的启发式方法对比，\tool 的精确率更低，但拥有更高的召回率和相似的F1值；尤其是对于\textit{MP}和\textit{MB}类型的CVE，\tool 的召回率也明显更高。考虑到\tool 找到补丁的漏洞数比第一种启发式方法多出\tocheck{116.3\%}，\tool 中轻微的准确率降低是可以接受的。
 
-与基于检索GitHub Commits的启发式方法和基于检索NVD以及GitHub的启发式方法对比，\tool 在精确率、召回率和F1值上全面胜出。\tool 的F1值分别高出了\tocheck{116.8\%}和\tocheck{16.3\%}。
+基于检索GitHub Commits的启发式方法具有较低的精确率和召回率，分别为\tocheck{0.461}和\tocheck{0.417}，而基于检索NVD以及GitHub的启发式方法中和了前两种方法的精确率和召回率分别为\tocheck{0.793}和\tocheck{0.732}。与基于检索GitHub Commits的启发式方法和基于检索NVD以及GitHub的启发式方法对比，\tool 在精确率、召回率和F1值上全面胜出。\tool 的F1值分别高出了\tocheck{116.8\%}和\tocheck{16.3\%}。
 
 \begin{tcolorbox}[size=title,opacityfill=0.15]
 Highlight：与现有的基于启发式的方法相比，\tool 将能找到补丁的漏洞数提高\tocheck{58.6\%}到\tocheck{273.8\%}，同时，将F1值提高\tocheck{116.8\%}。
