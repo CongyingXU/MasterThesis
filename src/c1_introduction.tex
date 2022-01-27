@@ -17,7 +17,7 @@
 
 漏洞补丁作为刻画漏洞特征的重要知识，可应用于多种安全相关的任务，包括补丁生成和热部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁存在测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}、软件成分分析\cite{ponta2020detection,pashchenko2020vuln4real,Wang2020empirical}、漏洞检测\cite{li2016vulpecker,li2018vuldeepecker,jang2012redebug,kim2017vuddy, xiao2020mvp, cui2020vuldetector}等。如果漏洞数据库中的补丁知识缺失或不准确，那么这些应用的准确性将会受到严重的影响。然而，漏洞数据库中的补丁知识尚未被系统地研究和评估，目前尚不清楚现有漏洞数据库中补丁的质量情况。
 
-此外，现有的漏洞补丁识别方法主要有三种：（1）人工手动查找漏洞补丁\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,zhou2017automated,sabetta2018practical,chen2020machine,xiao2020mvp,ponta2020detection,pashchenko2020vuln4real}，（2）通过启发式规则识别漏洞补丁，比如在CVE引用信息中查找代码提交\cite{duan2019automating,li2016vulpecker}或是在代码提交历史中搜索CVE标识符（CVE ID）\cite{you2017semfuzz,Wang2020empirical}，（3）在特定项目的安全公告中搜索漏洞补丁\cite{mulliner2013patchdroid,jang2012redebug,kim2017vuddy}。以上这些方法的人工成本过高，且针对特定的程序语言或项目无法广泛应用于所有开源软件漏洞。
+此外，现有的漏洞补丁识别方法主要有三种：（1）人工手动查找漏洞补丁\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,zhou2017automated,sabetta2018practical,chen2020machine,xiao2020mvp,ponta2020detection,pashchenko2020vuln4real}，（2）通过启发式规则识别漏洞补丁，比如在NVD参考链接中查找代码提交\cite{duan2019automating,li2016vulpecker}或是在代码提交历史中搜索CVE标识符（CVE ID）\cite{you2017semfuzz,Wang2020empirical}，（3）在特定项目的安全公告中搜索漏洞补丁\cite{mulliner2013patchdroid,jang2012redebug,kim2017vuddy}。以上这些方法的人工成本过高，且针对特定的程序语言或项目无法广泛应用于所有开源软件漏洞。
 
 综上，目前的问题是，漏洞数据库中补丁的特征及质量尚未被系统地研究和评估，并且已有的漏洞补丁采集方法通用性较差且人工成本过高。
 
@@ -41,9 +41,9 @@
 \subsection{实验评估}
 本文进行了大量实验，通过五个研究问题，从准确性、通用性、实用性等多个方面对\tool 进行了评估。为了评估\tool 的准确性，本文将\tool 与三种基于启发式规则的方法以及两个商业漏洞数据库进行了比较。结果表明，在包含1,295个漏洞的深度数据集上，（1）与现有的基于启发式规则的方法相比，\tool 能够多找到835（273.8\%）漏洞的补丁；同时，在补丁的准确性上，\tool 的F1数值（F1-Score）也比基于启发式规则的方法高116.8\%；（2）与现有的商业漏洞数据库相比，\tool 的召回率（Recall）高出18.4\%；但仍有155（12.0\%）的漏洞\tool 未能找到补丁，\tool 的精确率（Precision）也低了6.4\%。%；（3）\tool 对于大范围开源软件漏洞具有较好的通用性，在实际使用中，也具有较好的实用性。
 
-此外，为了评估\tool 的通用性，本文还另外构建了两个更大的、包含\tocheck{3,185}和\tocheck{5,468}个漏洞的数据集，并在这两个数据集上运行\tool 。结果表明，\tool 在两个数据集上分别可以找到\tocheck{67.7\%}和\tocheck{51.5\%}个漏洞的补丁；精确率分别为\tocheck{0.823}和\tocheck{0.888}，召回率分别为\tocheck{0.845}和\tocheck{0.899}，这表明\tool 在查找补丁方面具有较好的通用性。
+此外，为了评估\tool 的通用性，本文还另外构建了两个更大的、包含\tocheck{3,185}和\tocheck{5,468}个漏洞的数据集，并在这两个数据集上运行\tool 。结果表明，\tool 在两个数据集上分别可以找到\tocheck{67.7\%}和\tocheck{51.5\%}个漏洞的补丁；精确率分别为\tocheck{0.823}和\tocheck{0.888}，召回率分别为\tocheck{0.845}和\tocheck{0.899}，这表明\tool 在识别补丁方面具有较好的通用性。
 
-此外，为了评估\tool 的实用性，本文还邀请了10名参与者进行了用户研究。评估结果表明，在实际使用中，\tool 有助于用户更准确、更快速地查找到补丁。
+此外，为了评估\tool 的实用性，本文还邀请了10名参与者进行了用户研究。评估结果表明，在实际使用中，\tool 有助于用户更准确、更快速地识别到补丁。
 
 \subsection{主要贡献}
 本文主要有以下贡献：
