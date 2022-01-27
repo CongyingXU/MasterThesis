@@ -25,7 +25,7 @@
 \subsection{与基于启发式规则的方法对比}
 本节首先选择了两种被广泛使用的基于启发式规则的方法（\textbf{检索NVD}\cite{duan2019automating,li2016vulpecker,li2018vuldeepecker}和\textbf{检索GitHub}\cite{you2017semfuzz,Wang2020empirical}），此外，还将这前种基于启发式规则的方法结合为第三种基于启发式规则的方法（\textbf{检索NVD以及GitHub}）。
 
-\textbf{检索NVD：}检索NVD平台上该漏洞“Reference”字段中引用的参考链接以获取补丁提交。如图\ref{fig:CVE-2019-18841}所示为NVD平台上CVE-2019-18841的参考链接\footnote{https://nvd.nist.gov/vuln/detail/CVE-2019-18841}，可以从中提取出补丁提交“https://github.com/ankane/chartkick/commit/b810936bbf687bc74c5b6dba72d2397a399885fa”。
+\textbf{检索NVD：}检索NVD平台上该漏洞“Reference”字段中引用的参考链接以获取补丁提交。如图\ref{fig:CVE-2019-18841}所示为NVD平台上CVE-2019-18841的参考链接\footnote{https://nvd.nist.gov/vuln/detail/CVE-2019-18841}，可以从中提取出补丁提交“https://github.com/ankane/chartkick/commit/b810936bbf687bc7\\4c5b6dba72d2397a399885fa”。
 \begin{figure*}[!t]
     \centering
     \includegraphics[scale=0.44]{fig/NVD-2019-18841}
@@ -34,7 +34,7 @@
 \end{figure*}
 
 \textbf{检索GitHub：}检索GitHub中，检索带有漏洞标识符的代码提交。如图\ref{fig:commitmessage}所示，漏洞CVE-2018-8014的补丁提交信息\footnote{https://github.com/apache/tomcat80/commit/2c9d8433bd3247a2856d4b255}为“Fix https://bz.apache.org/bugzilla/sho\\w\_bug.cgi?id=62343 Make CORS filter defaults more secure. This is the fix for CVE-2018-8014.”，漏洞标识符“CVE-2018-8014”出现在该提交信息中。以“CVE-2018-8014”为输入，通过检索Github即可获取该补丁提交。%作为漏洞CVE-2018-8014的补丁。
-\begin{figure*}[h]
+\begin{figure*}[!t]
     \centering
     \includegraphics[scale=0.45]{fig/CVE in commit message.jpg}
     %\vspace{-10pt}
@@ -43,7 +43,7 @@
 
 \textbf{检索NVD以及GitHub：}将前两种基于启发式规则的方法结合为第三种基于启发式规则的方法，即检索NVD中的参考链接以及GitHub中的代码提交。
 
-\begin{table*}[h]
+\begin{table*}[!t]
     \centering
     % \footnotesize
     \small
@@ -142,7 +142,12 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 
 \section{RQ7：削弱性分析}\label{sec:ablation}
 
-\begin{table*}[h]
+为了探究\tool 中各个步骤及环节设计的实际效果及必要性，本小节通过对比\tool 及其削弱部分环节后生成的变体的准确率，以量化分析各步骤及设计的实际效果。
+
+针对步骤一：多源信息网络构建，本小节分别进行了“去除某一知识源”和“去除网络构建步骤”的削弱处理；针对步骤二：补丁节点精选，本小节分别进行了“去除基于连通度和置信度的补丁选择方法”、“去除基于连通度或置信度的补丁选择方法”和“变更基于连通度的方法设置”的削弱处理；针对步骤三：补丁扩增，本小节进行了“去除补丁扩增步骤”的削弱处理。表\ref{table:contribution}和\ref{table:contribution-2}展示了削弱性分析的结果，以衡量\tool 中的各步骤和设计对于准确性的贡献度。
+
+
+\begin{table*}[!t]
     \centering
     \small
     \caption{\tool 削弱性分析结果（1）}\label{table:contribution}
@@ -185,18 +190,13 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
     \end{tabular}
 \end{table*}
 
-为了探究\tool 中各个步骤及环节设计的实际效果及必要性，本小节通过对比\tool 及其削弱部分环节后生成的变体的准确率，以量化分析各步骤及设计的实际效果。
-
-针对步骤一：多源信息网络构建，本小节分别进行了“去除某一知识源”和“去除网络构建步骤”的削弱处理；针对步骤二：补丁节点精选，本小节分别进行了“去除基于连通度和置信度的补丁选择方法”、“去除基于连通度或置信度的补丁选择方法”和“变更基于连通度的方法设置”的削弱处理；针对步骤三：补丁扩增，本小节进行了“去除补丁扩增步骤”的削弱处理。表\ref{table:contribution}和\ref{table:contribution-2}展示了削弱性分析的结果，以衡量\tool 中的各步骤和设计对于准确性的贡献度。
-
 \subsection{去除某一知识源} 
 在\tool 的步骤一（多源信息网络构建）中，通过分别删除四个知识源NVD、Debian、Red Hat和GitHub中的一个，生成削弱后的变体$v_1^1$、$v_1^2$、$v_1^3$和$v_1^4$。从表\ref{table:contribution}中发现，这四个变体没有找到补丁的漏洞数量都是大于\tool 的。在精确率、召回率和F1值相当的情况下，$v_1^1$、$v_1^2$、$v_1^3$和$v_1^4$未找到补丁的漏洞数分别为：498（38.5\%）、173（13.4\%）、180（13.9\%）和242（18.7\%），分别比\tool 多了\tocheck{30.1\%、1.6\%、2.2\%和7.6\%}。这表明，构建更完整的信息网络，也将取得更好的补丁识别结果。\tool 中选取的四个知识源都有助于构建更完整的信息网络，也更有助于为更多的漏洞找到补丁。同时，可以发现，删除知识源NVD和GitHub后未找到补丁的漏洞数增到了498（38.5\%）和242（18.7\%），这也说明知识源NVD和GitHub的贡献度是最高的，效果也是最好的。
 
 \subsection{去除网络构建步骤}
 在\tool 的步骤一（多源信息网络构建）中，不以逐层迭代的方式构建信息网络，而是仅仅使用包含在四个知识源公告中直接引用的参考链接，通过该方式生成削弱后的变体$v_1^5$。具体实现为：在\tool 的步骤一中跳过“引用节点分析”步骤，实验结果为表\ref{table:contribution}中的$v_1^5$。可以发现，$v_1^5$没有找到补丁的漏洞数量增加到了414（32.0\%）。在数值上，$v_1^5$找到补丁的漏洞数比\tool 少了\tocheck{22.7\%}，但同时精确率却高出了\tocheck{6.3\%}，召回率低了\tocheck{6.0\%}，F1值较为相似。这些结果表明，补丁并不总是在NVD、Debian和Red Hat中被直接引用，而是可能隐藏在多层参考链接之中；同时说明，本文构建的信息网络有助于用户找到隐藏的补丁，但需要以小幅的精确率降低为代价。
 
-
-\begin{table*}[h]
+\begin{table*}[!t]
     \centering
     \small
     \caption{\tool 削弱性分析结果（2）}\label{table:contribution-2}
@@ -287,14 +287,14 @@ Highlight：\tool 中的知识源、网络构建、补丁选择和补丁扩增�
 本小节为探究\tool 的准确性对\tool 中参数的敏感性，\tool 中有两个可配置的参数，分别是：\tool 步骤一网络构建时网络深度限制的设置，以及步骤三补丁扩增时的相关代码提交时间跨度的设定。
 
 评估\textbf{RQ6 准确性评估}、\textbf{RQ7 削弱性分析}、\textbf{RQ9 通用性分析}和\textbf{RQ10 实用性能分析}时，网络深度限制默认设置为\textbf{5}层，代码提交时间跨度默认设置为\textbf{30}天。为了评估\tool 对这两个参数的敏感性，该小节将分别固定两个参数中的一个为默认设置，改变另一个参数的设置，并在深度数据集上重新运行\tool 。网络深度限制具体设置为3、4、5和6层，提交时间跨度具体设置为0、10、20、30、40、50和60天。
-\begin{figure*}[h]
+\begin{figure*}[!t]
     \centering
     \includegraphics[scale=1.0]{fig/rq8-sensitivity-depth.pdf}
     %\vspace{-5pt}
     \caption{网络深度限制（层数）敏感性分析结果}\label{fig:depth}
 \end{figure*}
 
-\begin{figure*}[h]
+\begin{figure*}[!t]
     \centering
     \includegraphics[scale=1.0]{fig/rq8-sensitivity-span.pdf}
     %\vspace{-20pt}
@@ -334,7 +334,7 @@ Highlight：总的来说，\tool 的精确率对两个可配置参数的变化�
 
 对于第一个数据集中的\tocheck{3,185}个漏洞，\tool 找到了\tocheck{2,155（67.7\%）}漏洞的补丁，而两个漏洞数据库$DB_A$和$DB_B$仅分别提供了\tocheck{2,190（68.8\%）}和\tocheck{995（31.2\%）}漏洞的补丁。在\tool 找到补丁的\tocheck{2,155}个漏洞中，$DB_A$和$DB_B$仅提供了其中的\tocheck{1,455}和\tocheck{700}个漏洞的补丁。对于第二个数据集中的\tocheck{5,468}个漏洞，\tool 找到了\tocheck{2,816（51.5\%）}漏洞的补丁，而两个漏洞数据库$DB_A$和$DB_B$没有提供补丁。
 
-\begin{table*}[h]
+\begin{table*}[!t]
     \centering
     \small
     \caption{\tool 通用性分析结果}\label{table:generality}
@@ -385,7 +385,7 @@ Highlight：\tool 在两个更大的开源漏洞数据集上可识别到\tocheck
 %     \end{tabular}
 % \end{table*}
 
-\begin{table*}[h]
+\begin{table*}[!t]
     \centering
     \small
     \caption{用户研究中10个任务的用时和准确率}\label{table:usefulness}
