@@ -1,8 +1,8 @@
-% \chapter{\tool ---补丁定位方法}
+% \chapter{\tool ----补丁定位方法}
 
 \chapter{开源软件漏洞的补丁识别方法}
 
-本章将详细阐述\tool ---一种基于多源知识的开源软件漏洞补丁识别方法的设计。
+本章将详细阐述\tool ----一种基于多源知识的开源软件漏洞补丁识别方法的设计。
 
 \section{方法概述}
 \begin{figure*}[t]
@@ -26,7 +26,7 @@
 
 \section{参考链接网络构建}
 % \section{步骤一：构建多源参考链接网络}
-\tool 的步骤一为漏洞参考链接网络构建，一共包括三个子步骤---公告分析、参考链接分析和参考链接扩增。前两个子步骤通过分析来自NVD、Debian和Red Hat三个知识源的漏洞公告及其中的参考链接，构建初始参考链接网络。第三个子步骤为从GitHub平台中搜索相关的代码提交，作为补丁节点扩入参考链接网络。
+\tool 的步骤一为漏洞参考链接网络构建，一共包括三个子步骤----公告分析、参考链接分析和参考链接扩增。前两个子步骤通过分析来自NVD、Debian和Red Hat三个知识源的漏洞公告及其中的参考链接，构建初始参考链接网络。第三个子步骤为从GitHub平台中搜索相关的代码提交，作为补丁节点扩入参考链接网络。
 
 \subsection{公告分析} \label{sec:advisory analysis}
 % 首先，\tool 初始化参考链接网络，将输入的CVE ID设置为根节点，获取三个漏洞知识源（即NVD、Debian和Red Hat）中该漏洞的公告，并将三个公告节点添加为根节点的子节点。这些公告节点便于后期追溯选定的补丁的信息来源。
@@ -221,5 +221,5 @@
 \end{figure}
 
 \begin{exmp}
-在步骤二中，\tool 为漏洞CVE-2017-11428选出的补丁为ruby-saml@\\048a54（位于主分支）。在步骤三种，\tool 识别到了另外三个提交---ruby-saml@d7ce60\footnote{https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280}、ruby-saml@a35f72\footnote{https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c}和ruby-saml@03af9e\footnote{https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8}。图\ref{fig:048a54}、\ref{fig:d7ce60}、\ref{fig:a35f72}和\ref{fig:03af9e}所示，它们与选定补丁ruby-saml@048a54具有相同的提交信息却不同的代码更改。这三个提交分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将三个提交添加为ruby-saml@048a54的子节点。实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，而数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54一个补丁。
+在步骤二中，\tool 为漏洞CVE-2017-11428选出的补丁为ruby-saml@\\048a54（位于主分支）。在步骤三种，\tool 识别到了另外三个提交----ruby-saml@d7ce60\footnote{https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280}、ruby-saml@a35f72\footnote{https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c}和ruby-saml@03af9e\footnote{https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8}。图\ref{fig:048a54}、\ref{fig:d7ce60}、\ref{fig:a35f72}和\ref{fig:03af9e}所示，它们与选定补丁ruby-saml@048a54具有相同的提交信息却不同的代码更改。这三个提交分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将三个提交添加为ruby-saml@048a54的子节点。实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，而数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54一个补丁。
 \end{exmp}
