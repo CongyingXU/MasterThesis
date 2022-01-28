@@ -23,7 +23,7 @@
 为了评估\tool 的准确性，本节将\tool 分别与三种基于启发式规则的方法和两个商业漏洞数据库（$DB_A$和$DB_B$）进行比较，并进一步分析了\tool 中误报和漏报的原因。
 
 \subsection{与基于启发式规则的方法对比}
-本节首先选择了两种被广泛使用的基于启发式规则的方法（\textbf{检索NVD}\cite{duan2019automating,li2016vulpecker,li2018vuldeepecker}和\textbf{检索GitHub}\cite{you2017semfuzz,Wang2020empirical}），此外，还将这前种基于启发式规则的方法结合为第三种基于启发式规则的方法（\textbf{检索NVD以及GitHub}）。
+本节首先选择了两种被广泛使用的基于启发式规则的方法（\textbf{检索NVD}\cite{duan2019automating,li2016vulpecker,li2018vuldeepecker} 和\textbf{检索GitHub}\cite{you2017semfuzz,Wang2020empirical}），此外，还将这前种基于启发式规则的方法结合为第三种基于启发式规则的方法（\textbf{检索NVD以及GitHub}）。
 
 \textbf{检索NVD：}检索NVD平台上该漏洞“Reference”字段中引用的参考链接以获取补丁提交。如图\ref{fig:CVE-2019-18841}所示为NVD平台上CVE-2019-18841的参考链接\footnote{https://nvd.nist.gov/vuln/detail/CVE-2019-18841}，可以从中提取出补丁提交“https://github.com/ankane/chartkick/commit/b810936bbf687bc7\\4c5b6dba72d2397a399885fa”。
 \begin{figure*}[!t]
@@ -94,9 +94,10 @@
 
 基于检索GitHub的启发式方法具有较低的精确率和召回率，分别为\tocheck{0.461}和\tocheck{0.417}，而基于检索NVD以及GitHub的启发式方法中和了前两种方法的精确率和召回率分别为\tocheck{0.793}和\tocheck{0.732}。与基于检索GitHub的启发式方法和基于检索NVD以及GitHub的启发式方法对比，\tool 在精确率、召回率和F1值上全面胜出。\tool 的F1值分别高出了\tocheck{116.8\%}和\tocheck{16.3\%}。
 
-\begin{tcolorbox}[size=title,opacityfill=0.15]
-Highlight：与现有的基于启发式规则的方法相比，\tool 将补丁覆盖率提高\tocheck{58.6\%}到\tocheck{273.8\%}，同时，将F1值提高\tocheck{116.8\%}。
-\end{tcolorbox}
+% \begin{tcolorbox}[size=title,opacityfill=0.15]
+% Highlight：与现有的基于启发式规则的方法相比，\tool 将补丁覆盖率提高\tocheck{58.6\%}到\tocheck{273.8\%}，同时，将F1值提高\tocheck{116.8\%}。
+% \end{tcolorbox}
+综上，与现有的基于启发式规则的方法相比，\tool 能够显著的提高补丁覆盖率和F1值。\tool 将补丁覆盖率提高\tocheck{58.6\%}到\tocheck{273.8\%}，同时，将F1值提高\tocheck{116.8\%}。
 
 
 \subsection{与商业漏洞数据库对比}
@@ -111,9 +112,9 @@ Highlight：与现有的基于启发式规则的方法相比，\tool 将补丁�
 
 这些结果表明，与漏洞数据库$DB_A$和$DB_B$相比，\tool 以略低的补丁精确率和覆盖率为代价，拥有更为显着的召回率。这也说明，\tool 可用于补充现有漏洞数据库缺失的漏洞补丁数据。
 
-\begin{tcolorbox}[size=title,opacityfill=0.15]
-Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回率，以及高\tocheck{5.5\%到8.6\%}的F1值，但同时\tool 牺牲了\tocheck{6.4\%}的精确率和\tocheck{12.0\%}的补丁覆盖率。
-\end{tcolorbox}
+% \begin{tcolorbox}[size=title,opacityfill=0.15]
+% Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回率，以及高\tocheck{5.5\%到8.6\%}的F1值，但同时\tool 牺牲了\tocheck{6.4\%}的精确率和\tocheck{12.0\%}的补丁覆盖率。
+% \end{tcolorbox}
 
 \subsection{漏报和误报分析}\label{sec:fpfn}
 
@@ -136,9 +137,11 @@ Highlight：\tool 具有比$DB_A$和$DB_B$高\tocheck{15.5\%和18.4\%}的召回�
     \item [（2）] 参考链接的页面上列出了多对漏洞及其问题和补丁。由于\tool 缺乏语义理解能力，其他漏洞的补丁也可能会被\tool 错误地识别。例如，漏洞CVE-2018-15750的补丁和CVE-2018-15751的补丁都维护在发行说明（Release Note）\footnote{https://docs.saltstack.com/en/latest/topics/releases/2018.3.3.html}中，该发行说明还都被NVD、Debian和Red Hat引用，造成了\tool 的误报。
 \end{enumerate}  
 
-\begin{tcolorbox}[size=title,opacityfill=0.15]
-Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和误报的两个主要原因，针对这些情形，可进一步提高\tool 的准确性。
-\end{tcolorbox}
+% \begin{tcolorbox}[size=title,opacityfill=0.15]
+% Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和误报的两个主要原因，针对这些情形，可进一步提高\tool 的准确性。
+% \end{tcolorbox}
+
+综上，通过人工分析共总结出\tool 漏报的五个主要原因和误报的两个主要原因，针对这些情形，可进一步提高\tool 的准确性。
 
 \section{RQ7：削弱性分析}\label{sec:ablation}
 
@@ -292,14 +295,14 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 在评估\textbf{RQ6 准确性评估}、\textbf{RQ7 削弱性分析}、\textbf{RQ9 通用性分析}和\textbf{RQ10 实用性能分析}时，网络深度限制默认设置为\textbf{5}层，代码提交时间跨度默认设置为\textbf{30}天。为了评估\tool 对这两个参数的敏感性，该小节将固定其中一个参数为默认设置，改变另一个参数的设置，并在深度数据集上重新运行\tool 。网络深度限制具体设置为3、4、5和6层，提交时间跨度具体设置为0、10、20、30、40、50和60天。
 \begin{figure*}[!t]
     \centering
-    \includegraphics[scale=1.0]{fig/rq8-sensitivity-depth.pdf}
+    \includegraphics[scale=0.9]{fig/rq8-sensitivity-depth.pdf}
     %\vspace{-5pt}
     \caption{网络深度限制（层数）敏感性分析结果}\label{fig:depth}
 \end{figure*}
 
 \begin{figure*}[!t]
     \centering
-    \includegraphics[scale=1.0]{fig/rq8-sensitivity-span.pdf}
+    \includegraphics[scale=0.9]{fig/rq8-sensitivity-span.pdf}
     %\vspace{-20pt}
     \caption{提交时间跨度的敏感性分析结果}\label{fig:span}
 \end{figure*}
@@ -313,7 +316,7 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 % \begin{tcolorbox}[size=title,opacityfill=0.15]
 % Highlight：总的来说，\tool 的精确率对两个可配置参数的变化不是很敏感。
 % \end{tcolorbox}
-综上，\tool 的精确率对两个可配置参数的变化不是非常敏感，且网络深度参数设置为5层、提交时间跨度设置为30天时效果相对最优。
+综上，\tool 的准确率对两个可配置参数的变化不是非常敏感，且网络深度参数设置为5层、提交时间跨度设置为30天时效果相对最优。
 
 \section{RQ9：通用性分析}\label{sec:generality}
 
@@ -360,7 +363,7 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 
 表\ref{table:generality}为评估结果，在第一个数据集取样的\tocheck{91}个漏洞中，\tool 的F1值为\tocheck{0.784}，$DB_A$的F1值较高为0.858，$DB_B$的F1值较低为0.725。与小节\ref{sec:accuracy-evaluation}中的结果类似，漏洞数据库$DB_A$和$DB_B$都拥有更高的精确率（0.935和0.885），但召回率也更低（0.827和0.664）。在从第二个数据集取样的\tocheck{89}个漏洞中，$DB_A$和$DB_B$中没有任何漏洞的补丁，而\tool 可取得达到\tocheck{0.867}的F1值，0.888的精确率和0.899的召回率。
 
-这些结果表明，即使对于更大范围的开源软件漏洞，\tool 的准确率也基本稳定。在开源软件漏洞的补丁定位方面，\tool 具有较好的通用性。尤其在第二个数据集上的结果，在漏洞数据库$DB_A$和$DB_B$都没有补丁时，\tool 仍可以找到大量漏洞的补丁。这表明，\tool 可以极大地补充或增强现有的商业漏洞数据库
+这些结果表明，即使对于更大范围的开源软件漏洞，\tool 的准确率也基本稳定。在开源软件漏洞的补丁定位方面，\tool 具有较好的通用性。尤其在第二个数据集上的结果，在漏洞数据库$DB_A$和$DB_B$都没有补丁时，\tool 仍可以找到大量漏洞的补丁。这表明，\tool 可以极大地补充或增强现有的商业漏洞数据库。
 
 
 % \begin{tcolorbox}[size=title,opacityfill=0.15]
@@ -392,7 +395,7 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 \begin{table*}[!t]
     \centering
     \small
-    \caption{用户研究中10个任务的用时和准确率}\label{table:usefulness}
+    \caption{用户研究中任务的用时和准确率}\label{table:usefulness}
     %\vspace{-10pt}
     % \begin{tabular}{|c|*{1}{C{5.3em}}|*{3}{C{2.4em}}|*{1}{C{5.3em}}|*{3}{C{2.4em}}|}
     \begin{tabular}{|c|c|ccc|c|ccc|}
@@ -420,6 +423,16 @@ Highlight：通过人工分析共总结出\tool 漏报的五个主要原因和�
 % Highlight：在实际使用中，\tool 有助于用户更准确、更快速地识别到补丁。
 % \end{tcolorbox}
 综上，在实际使用中，\tool 有助于用户更准确、更快速地识别到补丁。
+
+\section{实验结论}
+本文从准确性、削弱性、敏感度、通用性及实用性五个方面对估\tool 进行了评估。结果表明：
+\begin{enumerate}
+    \item [（1）] \textbf{准确性：}\tool 可以达到88.0\%的补丁覆盖率、86.4\%的精确率和86.4\%的召回率。与现有的基于启发式规则的方法相比，\tool 能够显著的提高补丁覆盖率和F1值，将补丁覆盖率提高\tocheck{58.6\%}到\tocheck{273.8\%}，将F1值提高\tocheck{116.8\%}。与商业漏洞数据库$DB_A$和$DB_B$相比，\tool 以略低的补丁精确率和覆盖率为代价，拥有更为显着的召回率。这表明，\tool 可用于补充现有漏洞数据库缺失的漏洞补丁数据。
+    \item [（2）] \textbf{削弱性：}\tool 中的知识源、网络构建、补丁选择和补丁扩增步骤，及其中环节的设计对最终结果都有一定的贡献度和必要性。
+    \item [（3）] \textbf{敏感度：}\tool 的准确率对两个可配置参数的变化不是非常敏感，且网络深度参数设置为5层、提交时间跨度设置为30天时效果相对最优。
+    \item [（4）] \textbf{通用性：}在更大范围的开源软件漏洞上，\tool 具有较好的通用性，覆盖率和准确率比较稳定。在商业漏洞数据库$DB_A$和$DB_B$都没有补丁时，\tool 仍可以找到大量漏洞的补丁。这表明，\tool 可以极大地补充或增强现有的商业漏洞数据库。
+    \item [（5）] \textbf{实用性：}在实际工作场景下，\tool 有助于用户更准确、更快速地识别到补丁。
+\end{enumerate}
 
 \section{讨论}
 基于上文实验评估的结果，以及\tool 的设计，本节将主要讨论\tool 存在的短板和潜在的价值。

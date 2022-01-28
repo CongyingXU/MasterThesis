@@ -111,7 +111,7 @@ Fan等人\cite{fan2020ac}针对Google Chrome、 Linux和 Google Android项目构
 
 
 \subsection{漏洞补丁应用}
-漏洞补丁可被用于多种软件安全性任务。例如，补丁存在性检测\cite{8文琪2020}、基于漏洞补丁生成漏洞攻击程序\cite{brumley2008automatic,you2017semfuzz}、基于漏洞补丁分析进行漏洞影响分析\cite{4李舟军2015软件安全漏洞检测技术,5李韵2020基于机器学习的软件漏洞挖掘方法综述,pashchenko2018vulnerable,ponta2020detection,pashchenko2020vuln4real,Wang2020empirical}以及基于漏洞补丁进行漏洞检测\cite{li2016vulpecker,li2018vuldeepecker,zhou2019devign,jimenez2019importance}。%、通过匹配漏洞签名\cite{jang2012redebug,kim2017vuddy}、通过匹配漏洞和补丁检测签名\cite{xu2020patch,xiao2020mvp,cui2020vuldetector}来检测程序中的漏洞。
+漏洞补丁可被用于多种软件安全性任务。例如，补丁存在性检测\cite{8文琪2020}、基于漏洞补丁生成漏洞攻击程序\cite{brumley2008automatic,you2017semfuzz}、基于漏洞补丁分析进行漏洞影响分析\cite{4李舟军2015软件安全漏洞检测技术,5李韵2020基于机器学习的软件漏洞挖掘方法综述,pashchenko2018vulnerable,ponta2020detection,pashchenko2020vuln4real,Wang2020empirical} 以及基于漏洞补丁进行漏洞检测\cite{li2016vulpecker,li2018vuldeepecker,zhou2019devign,jimenez2019importance}。%、通过匹配漏洞签名\cite{jang2012redebug,kim2017vuddy}、通过匹配漏洞和补丁检测签名\cite{xu2020patch,xiao2020mvp,cui2020vuldetector}来检测程序中的漏洞。
 
 文琪等人\cite{8文琪2020}提出一个名为PatchChecker的基于关键路径和语义的漏洞补丁存在性检测方法。该方法通过识别漏洞的修复路径及其程序修复前后的语义特征，生漏洞补丁的签名；基于补丁签名，在目标程序中识别对应路径并进行比较，以判断漏洞补丁是否被应用。%基于安全漏洞的补丁数据，Li等人\cite{[16]}提出了一种可扩展的漏洞检测方法，该方法使用一种可扩展的基于语法的方法来识别克隆的漏洞代码。
 Li等人\cite{li2016vulpecker}提出了一种基于代码相似度分析的自动化漏洞检测方法。给定漏洞，该方法先抽取该漏洞补丁中的代码特征，再利用代码相似度算法检测项目中相似的代码，实现漏洞检测。之后，Li等人\cite{li2018vuldeepecker}又提出了一种基于深度学习系统的漏洞检测方法。Kim等人\cite{kim2017vuddy}提出了一种可扩展的克隆代码的安全漏洞检测方法。该方法利用函数级代码粒度和基于长度过滤技术来实现其极高的可扩展性，能够高效准确地检测大型软件程序中的安全漏洞。
