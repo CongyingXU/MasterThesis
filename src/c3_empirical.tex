@@ -19,7 +19,7 @@
 上述研究问题中，RQ1用来评估漏洞数据库中开源软件漏洞的补丁缺失情况，RQ2用来评估不同漏洞数据库间漏洞补丁的不一致情况，RQ3和RQ4用来表征常见的补丁类型以及开源漏洞及其补丁之间的映射关系，RQ5可用来评估不同漏洞数据库中漏洞补丁的准确性。总得来说，RQ1、RQ2和RQ5的结果旨在从不同的角度评估补丁质量，并挖掘出对自动化补丁识别方法的需求；RQ3和RQ4旨在从不同角度捕捉开源软件漏洞补丁的特征，并为自动化补丁识别方法的设计提供启发。
 
 \subsection{评估标准}\label{sec:metric}
-本章经验研究使用了信息检索中常用的评估标准----Precision（精确率）、Recall（召回率）和F1-Score（F1值）。
+本章经验研究使用了信息检索中常用的评估标准---Precision（精确率）、Recall（召回率）和F1-Score（F1值）。
 
 对于一个搜索或分类问题来说，样本分为“Positive（正）”和“Negative（负）”两个类别。那么，模型搜索或分类的结果就会有四种情况：
 \begin{itemize}
@@ -48,15 +48,15 @@
 \subsection{漏洞数据库选择}
 为了挑选出具有代表性的漏洞数据库作为研究对象，本文前期调研了来自安全领域的社区、工业界和学术界的漏洞数据库。
 
-对于来自安全社区的数据库，本文着重关注CVE List、NVD以及CVE Details\footnote{www.cvedetails.com}。进一步分析发现，这三个数据库不提供结构化的补丁数据，补丁多是隐藏在参考链接列表中。此外，这三个数据库中不仅包含开源软件漏洞，还包括闭源软件、操作系统及硬件相关的漏洞，本文难以从中识别出开源软件漏洞。在经验研究中，本文排除了这类数据库。
+对于来自安全社区的数据库，本文着重关注CVE、NVD以及CVE Details\footnote{www.cvedetails.com}。进一步分析发现，这三个数据库不提供结构化的补丁数据，补丁多是隐藏在参考链接列表中。此外，这三个数据库中不仅包含开源软件漏洞，还包括闭源软件、操作系统及硬件相关的漏洞，本文难以从中识别出开源软件漏洞。在经验研究中，本文排除了这类数据库。
 
 对于来自学术界的数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul,li2017large,liu2020large,antal2020exploring}，这些数据集中的漏洞通常限定于特定的一两种程序语言（例如Python、Java等），而非面向所有开源软件，不具有代表性。此外，在论文发表后，由于长期缺乏维护，这些漏洞数据集缺失较新的漏洞数据。本文也排除了这类数据。
 
-对于工业界的数据库，本文首先关注到BlackDuck、Sonatype、WhiteSource、Veracode和Snyk五家安全公司提供软件成分分析（Software Composition Analysis）服务。这种服务需要先构建尽可能完整且包含详细漏洞信息的漏洞库作为数据基础，通过识别并分析当前软件系统中使用的开源成本（即第三方库），报告系统中开源成分中的漏洞。本文首先选择这四家公司的漏洞数据库作为研究对象。截至2021年4月5日，收集的信息如下：
+对于工业界的数据库，本文首先关注到BlackDuck、Sonatype、WhiteSource、Veracode和Snyk五家安全公司提供软件成分分析（Software Composition Analysis）服务。这种服务需要先构建尽可能完整且包含详细漏洞知识的漏洞库作为数据基础，通过识别并分析当前软件系统中使用的开源成本（即第三方库），报告系统中开源成分中的漏洞。本文首先选择这五家公司的漏洞数据库作为研究对象。截至2021年4月5日，收集的信息如下：
 
 \begin{itemize}[leftmargin=*]
 \item\textbf{Black Duck\footnote{https://www.synopsys.com/software-integrity/security-testing/software-composition-analysis.html}，}该公司的报告显示：该公司的收录了157,000多个漏洞，涵盖90多种编程语言。其中，由于更新迅速，该数据库收录了很多较新的漏洞，这些漏洞甚至尚未被NVD收录。该公司的漏洞数据库由特定的专家团队进行维护，以确保漏洞数据的完整性和准确性。%然而，该公司的漏洞数据信息并未对外公开。
-\item\textbf{Sonatype\footnote{https://ossindex.sonatype.org}，} 该公司称：\textit{“OSS Index是一个免费的开源组件目录，其中的扫描工具可帮助开发人员识别漏洞、了解风险并确保其软件安全。”}\footnote{英文原文为："OSS Index is a free catalogue of open source components and scanning tools to help developers identify vulnerabilities, understand risk, and keep their software safe."} Sonatype的漏洞数据库覆盖20多个程序语言生态系统（如：Maven、npm、Go、PyPI等）。该数据库公开的漏洞信息包括漏洞描述、受漏洞影响的组件和版本、CVSS向量、参考链接等信息。
+\item\textbf{Sonatype\footnote{https://ossindex.sonatype.org}，} 该公司称：\textit{“OSS Index是一个免费的开源组件目录，其中的扫描工具可帮助开发人员识别漏洞、了解风险并确保其软件安全”}\footnote{英文原文为："OSS Index is a free catalogue of open source components and scanning tools to help developers identify vulnerabilities, understand risk, and keep their software safe."}。Sonatype的漏洞数据库覆盖20多个程序语言生态系统（如：Maven、npm、Go、PyPI等）。该数据库公开的漏洞信息包括漏洞描述、受漏洞影响的组件和版本、CVSS向量、参考链接等信息。
 \item\textbf{WhiteSource\footnote{https://www.whitesourcesoftware.com/vulnerability-database/}，}该公司从NVD及其他安全公告平台和问题追踪系统（issue tracking system）中共收集超过175,000个漏洞，涵盖200多种编程语言。
 \item\textbf{Veracode\footnote{https://sca.analysiscenter.veracode.com/vulnerability-database}，}该公司的漏洞数据库涵盖10多种编程语言相关的18,000多个漏洞。该数据库公开的信息包括受漏洞影响的组件和版本范围、补救措施、参考链接等。
 \item\textbf{Snyk\footnote{https://snyk.io/vuln}，}该公司称：漏洞数据库是由经验丰富的安全研究团队持续维护，通过关注安全公告、Jira问题报告、GitHub中代码提交等方式自动识别安全漏洞相关的报告。该公司的数据库覆盖超过10个程序语言生态系统，如：Maven、npm、Go、Composer等。该数据库公开的漏洞信息包括受漏洞影响的组件、版本范围、修复方法、参考链接等。
@@ -94,7 +94,7 @@
 
 
 \section{RQ1：补丁覆盖率分析}\label{sec:coverage}
-RQ1----补丁覆盖率分析，旨在评估漏洞数据库中开源软件漏洞的补丁缺失情况。对于包含10,070个开源软件漏洞的广度数据集，仅有\tocheck{1,417}个漏洞含有补丁，补丁覆盖率为32.0\%。本文还进一步分析了数据库$DB_A$和$DB_B$的补丁覆盖率。
+RQ1---补丁覆盖率分析，旨在评估漏洞数据库中开源软件漏洞的补丁缺失情况。对于包含10,070个开源软件漏洞的广度数据集，仅有\tocheck{1,417}个漏洞含有补丁，补丁覆盖率为32.0\%。本文还进一步分析了数据库$DB_A$和$DB_B$的补丁覆盖率。
 如图\ref{fig:rq1-cves}所示，数据库$DB_A$和$DB_B$中共同拥有\tocheck{4,418}个漏洞，同时$DB_A$包含\tocheck{4,212}个特有的漏洞，$DB_B$包含\tocheck{1,440}个特有的漏洞。如图\ref{fig:rq1-cves-with-patches}所示，$DB_A$中，\tocheck{3,607（41.8\%）}的漏洞含有补丁；$DB_B$中，\tocheck{2,412（41.2\%）}的漏洞含有补丁。$DB_A$和$DB_B$数据库共的\tocheck{4,418}个开源软件漏洞中，仅有\tocheck{1,417（32.0\%）}的漏洞含有补丁。$DB_A$和$DB_B$数据库一共有\tocheck{10,070}个开源软件漏洞（即广度数据集），而其中仅有\tocheck{4,602（45.7\%）}的漏洞含有补丁
 \begin{figure}[!t]
     \centering
@@ -150,7 +150,7 @@ RQ1----补丁覆盖率分析，旨在评估漏洞数据库中开源软件漏洞�
     \end{tabular}
 \end{table}
 
-RQ2----补丁一致性分析，旨在评估不同漏洞数据库间漏洞补丁的不一致情况。
+RQ2---补丁一致性分析，旨在评估不同漏洞数据库间漏洞补丁的不一致情况。
 为了分析两个数据库之间的补丁一致性情况，本节仅分析带有补丁的漏洞，即图\ref{fig:rq1-cves-with-patches}中的漏洞。考虑到漏洞补丁的个数可能不唯一（即可能为一组补丁集），所以仅当两个数据库针对同一漏洞提供的补丁集完全相同时，才判定为补丁一致。本节将补丁不一致分为，存在性不一致和内容不一致两种情况。第一种是指，某一个数据库存在该漏洞的补丁，而另一个数据库却不存在该漏洞，或是存在该漏洞却不存在相关补丁。第二种是指，两个数据库都存在该漏洞的补丁，但它们的补丁集并不完全一致，可以是包含关系或非包含关系。以上两种情况，分别反映了出数据库$DB_A$和$DB_B$中开源软件漏洞补丁的不完整性及不一致性。
 
 表\ref{table:consistency}为补丁一致性分析的结果。其中，第一列为在$DB_A$和$DB_B$中具有一致补丁集的漏洞数量，第二至四列为补丁存在性不一致的漏洞数量，最后三列为都存在补丁但补丁集内容不一致的漏洞数量。可以发现：
@@ -180,7 +180,7 @@ RQ2----补丁一致性分析，旨在评估不同漏洞数据库间漏洞补丁�
     \end{tabular}
 \end{table}
 
-RQ3----补丁类型分析，旨在表征开源软件漏洞的补丁类型。在章节\tocheck{\ref{sec:preparation}}中，基于人工收集的深度数据集共包含\tocheck{1,295}个漏洞及\tocheck{3,043}个补丁。本小节将基于该数据集分析漏洞的补丁类型。如表\ref{table:type}所示，\tocheck{3,043}个补丁中，\tocheck{2,852（93.7\%）}的补丁都是GitHub代码提交，这可能是因为GitHub在开源软件中被广泛使用；另外\tocheck{136（4.5\%）}的补丁为SVN代码提交，仅有\tocheck{55（1.8\%）}的补丁为来自其他Git平台的代码提交。
+RQ3---补丁类型分析，旨在表征开源软件漏洞的补丁类型。在章节\tocheck{\ref{sec:preparation}}中，基于人工收集的深度数据集共包含\tocheck{1,295}个漏洞及\tocheck{3,043}个补丁。本小节将基于该数据集分析漏洞的补丁类型。如表\ref{table:type}所示，\tocheck{3,043}个补丁中，\tocheck{2,852（93.7\%）}的补丁都是GitHub代码提交，这可能是因为GitHub在开源软件中被广泛使用；另外\tocheck{136（4.5\%）}的补丁为SVN代码提交，仅有\tocheck{55（1.8\%）}的补丁为来自其他Git平台的代码提交。
 
 此外，从漏洞的角度来看，\tocheck{1,295}个漏洞中\tocheck{1,202（92.8\%）}的漏洞仅有GitHub提交类型的补丁，\tocheck{4（0.3\%）}的漏洞仅有SVN 提交类型的补丁。只有\tocheck{30（2.3\%）}的漏洞，补丁仅为来自其他Git平台的代码提交。由于很多项目是从SVN切换为Git管理，\tocheck{48（3.7\%）}的漏洞既有GitHub又有SVN提交类型的补丁。另外的\tocheck{11（0.8\%）}的漏洞，补丁为GitHub和其他Git平台的代码提交。
 
@@ -194,7 +194,7 @@ RQ3----补丁类型分析，旨在表征开源软件漏洞的补丁类型。在�
 \caption{漏洞及其补丁映射类型统计}\label{fig:rq4-cardinality}
 \end{figure}
 
-RQ4----补丁映射分析，旨在表征开源漏洞及其补丁之间的映射关系。基于深度数据集中\tocheck{1,295}个漏洞及其补丁，本节将分析开源漏洞及其补丁间在数量上的映射关系。本文将漏洞与其补丁之间的映射关系分为三种类型：一对一、\tocheck{一对一组}及一对多。
+RQ4---补丁映射分析，旨在表征开源漏洞及其补丁之间的映射关系。基于深度数据集中\tocheck{1,295}个漏洞及其补丁，本节将分析开源漏洞及其补丁间在数量上的映射关系。本文将漏洞与其补丁之间的映射关系分为三种类型：一对一、\tocheck{一对一组}及一对多。
 
 \textbf{一对一，}是指一个漏洞与其补丁在数量上为一对一的关系，即一个漏洞只需一个补丁即可修复，后文中简记为：\textit{SP}（Single Patch）。如图\ref{fig:rq4-cardinality}所示，深度数据集中\tocheck{567（43.8\%）}的漏洞与其补丁都是一对一的映射关系（\textit{SP}）。
 
@@ -239,7 +239,7 @@ RQ4----补丁映射分析，旨在表征开源漏洞及其补丁之间的映射�
     \end{tabular}
 \end{table}
 
-RQ5----补丁准确性分析，旨在评估不同漏洞数据库中漏洞补丁的准确性。
+RQ5---补丁准确性分析，旨在评估不同漏洞数据库中漏洞补丁的准确性。
 本文使用精确率（precision）、召回率（recall）和F1值（F1-score）作为评估补丁准确性的指标。对于具有等效补丁的漏洞，则进行特殊计算。例如，对于具有两个等效补丁的漏洞，若数据库提供两个等效补丁中的任意一个，精确率和召回率都为1；若数据库提供两个等效补丁中的一个和另一个不相关的补丁，那么精确率为0.5，召回率为1。依此类推。
 
 表\ref{table:accuracy}为$DB_A$和$DB_B$的补丁准确性评估结果。其中，第一列为漏洞与补丁的映射类型，第二列为每种映射类型的漏洞数量，最后六列分别为数据库$DB_A$和$DB_B$中漏洞补丁的准确率、召回率和F1值。结果表明，对于\textit{SP}和\textit{MEP}类型的漏洞，$DB_A$和$DB_B$可达到约90\%的精确率和召回率；对于\textit{MP}、\textit{MB}和\textit{MR}类型的漏洞，可达到90\%以上的高精确率，但仅有约50\%的召回率。例如，对于漏洞CVE-2017-17837，$DB_A$和$DB_B$仅报告三个补丁中的一个；对于漏洞CVE-2019-19118，$DB_A$报告四个补丁中的两个，而$DB_B$仅报告四个补丁中的一个。
