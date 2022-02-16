@@ -13,9 +13,9 @@
 \end{figure*}
 
 基于前一章经验研究的发现，本文设计了一个名为\tool 的自动化开源软件漏洞的补丁识别方法。
-该方法仅识别代码提交类型的补丁（即补丁提交，详见章节\ref{sec:type}），并构建一对多的漏洞补丁映射关系。该方法的核心思想是：漏洞补丁会在讨论和解决漏洞的、多种来源的漏洞公告、分析报告等参考链接中被频繁地提及和引用因此，本文首先设计了一种基于多知识源的漏洞参考链接网络，再从该网络中选出具有最高置信度和连通度的补丁节点作为结果，并基于选定的补丁进行补丁扩展，从而构建一对多的漏洞补丁映射关系。
+该方法可用于识别代码提交类型的补丁（即补丁提交，详见章节\ref{sec:type}），并构建一对多的漏洞补丁映射关系。该方法的核心思想是：漏洞补丁会在讨论和解决漏洞的、多种来源的漏洞公告、分析报告等参考链接中被频繁地提及和引用。因此，本文首先设计了一种基于多知识源的漏洞参考链接网络，再从该网络中选出具有最高置信度和连通度的补丁节点作为结果，并基于选定的补丁进行补丁扩展，从而构建一对多的漏洞补丁映射关系。
 
-图\ref{fig:overview}为\tool 的方法概览。其中，\tool 以漏洞的CVE ID作为输入，主要经过三个步骤，最终返回补丁列表。步骤一，构建多源参考链接网络。该步骤的目的是将该漏洞在被报告、讨论和解决阶段引用的参考链接进行建模（参考链接，即引用的URL网址）。\tool 从多个\tocheck{漏洞知识源}（即NVD、Debian\footnote{https://security-tracker.debian.org/tracker/}、Red Hat\footnote{https://bugzilla.redhat.com/}和GitHub）中提取与该漏洞相关的参考链接并构建一个参考链接网络。这里将NVD视为主知识源，将Debian、Red Hat和GitHub视为次知识源，次级知识源列表可以不断扩增，以确保该方法的可扩展性和灵活性。步骤二，补丁选择。\tool 从构建的参考链接网络中选择中具有高连通性和高置信度的补丁节点作为该漏洞的补丁。步骤三，扩增补丁。经验研究中发现漏洞与其补丁之间存在一对多的映射关系。针对这一特征，基于步骤二中选定的补丁，\tool 通过搜索同一代码库所有分支中的相关代码提交来扩展补丁集。最终，\tool 返回该漏洞的补丁列表。
+图\ref{fig:overview}为\tool 的方法概览。其中，\tool 以漏洞的CVE ID作为输入，主要经过三个步骤，最终返回补丁列表。步骤一，多源参考链接网络构建。该步骤的目的是将该漏洞在被报告、讨论和解决阶段引用的参考链接进行建模（参考链接，即引用的URL网址）。\tool 从多个\tocheck{漏洞知识源}（即NVD、Debian\footnote{https://security-tracker.debian.org/tracker/}、Red Hat\footnote{https://bugzilla.redhat.com/}和GitHub）中提取与该漏洞相关的参考链接并构建一个参考链接网络。这里将NVD视为主知识源，将Debian、Red Hat和GitHub视为次知识源，次级知识源列表可以不断扩增，以确保该方法的可扩展性和灵活性。步骤二，补丁选择。\tool 从构建的参考链接网络中选择具有高连通性和高置信度的补丁节点作为该漏洞的补丁。步骤三，补丁扩增。经验研究中发现漏洞与其补丁之间存在一对多的映射关系。针对这一特征，基于步骤二中选定的补丁，\tool 通过搜索同一代码库所有分支中的相关代码提交来扩展补丁集。最终，\tool 返回该漏洞的补丁列表。
 三个步骤的具体设计和实现将在下文中详细阐述。
 
 % \begin{itemize}[leftmargin=*]
@@ -71,9 +71,9 @@
 图\ref{fig:example}为漏洞CVE-2017-11428\footnote{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11428}的多源参考链接网络。 其中，最顶层为根节点（即CVE ID），第二层为公告节点（即知识源NVD\footnote{https://nvd.nist.gov/vuln/detail/CVE-2017-11428}、Debian\footnote{https://security-tracker.debian.org/tracker/CVE-2017-11428}和Red Hat\footnote{https://bugzilla.redhat.com/show\_bug.cgi?id=CVE-2017-11428}）。
 \end{exmp}
 
-然后，\tool 通过网络请求分别获取NVD、Debian和Red Hat平台中该漏洞的漏洞公告。NVD平台中，漏洞公告以JSON形式按年份存储于结构化数据\footnote{https://nvd.nist.gov/vuln/data-feeds}中，\tool 通过下载并解析相应的JSON文件即可获得NVD中该漏洞的公告信息。Debian平台中，漏洞公告也以结构化数据的形式存储在仓库\footnote{https://salsa.debian.org/security-tracker-team/security-tracker/-/tree/master/data/CVE}中，\tool 可直接从中解析得Debian提供的该漏洞公告信息。Red Hat平台提供了WebService API\footnote{https://bugzilla.redhat.com/docs/en/html/api/index.html}服务，\tool 可以直接使用该服务来检索Red Hat平台的漏洞公告。其中，Debian会跟踪NVD上的所有漏洞，而Red Hat仅跟踪NVD上的部分漏洞。
+然后，\tool 通过网络请求分别获取NVD、Debian和Red Hat平台中该漏洞的漏洞公告。NVD平台中，漏洞公告以JSON形式按年份存储于结构化数据\footnote{https://nvd.nist.gov/vuln/data-feeds}中，\tool 通过下载并解析相应的JSON文件即可获得NVD中该漏洞的公告信息。Debian平台中，漏洞公告也以结构化数据的形式存储在仓库\footnote{https://salsa.debian.org/security-tracker-team/security-tracker/-/tree/master/data/CVE}中，\tool 可直接从中解析Debian提供的该漏洞公告信息。Red Hat平台提供了WebService API\footnote{https://bugzilla.redhat.com/docs/en/html/api/index.html}服务，\tool 可以直接使用该服务来检索Red Hat平台的漏洞公告。其中，Debian会跟踪NVD上的所有漏洞，而Red Hat仅跟踪NVD上的部分漏洞。
 
-\tool 从每个知识源的漏洞公告中提取引用的参考链接信息，并将它们添加为相应公告节点的子节点。对于NVD公告，\tool 从“references”字段中直接获取取出相关参考链接。类似地，对于Debian公告，\tool 直接从“Notes”字段中提取出相关参考链接。对于Red Hat公告，\tool 使用正则表达式从评论区（“comments”字段）中提取出相关参考链接，这是因为开发人员常常会在评论区讨论和记录漏洞的解决过程并列出补丁，但NVD和Debian平台并无评论区模块。
+\tool 从每个知识源的漏洞公告中提取引用的参考链接信息，并将它们添加为相应公告节点的子节点。对于NVD公告，\tool 从“References”字段中直接获取相关参考链接。类似地，对于Debian公告，\tool 直接从“Notes”字段中提取出相关参考链接。对于Red Hat公告，\tool 使用正则表达式从评论区（“comments”字段）中提取出相关参考链接。这是因为开发人员常常会在评论区讨论和记录漏洞的解决过程并列出补丁。
 
 \begin{figure}[!t]
     \centering
@@ -83,28 +83,28 @@
 \end{figure}
 
 \begin{exmp}
-如图\ref{fig:example}中的第三层所示，对于CVE-2017-11428，NVD公告中包含了两个参考链接。链接一\footnote{https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations}是对描述此漏洞细节的博客的引用，链接二\footnote{https://www.kb.cert.org/vuls/id/475445}是对该漏洞的第三方公告的引用。如图\ref{fig:debian-2017-11428}所示，这两个参考链接也包含在Debian公告中，不过Debian公告还包含修复此漏洞的GitHub提交链接ruby-saml@048a54\footnote{https://github.com/onelogin/ruby-saml/commit/048a544730930f86e46804387a6b6fad50d8176f}。此外，Red Hat平台并未收录该漏洞，所以也无参考链接信息。
+如图\ref{fig:example}中的第三层所示，对于CVE-2017-11428，NVD公告中包含了两个参考链接。链接一\footnote{https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations}是描述此漏洞细节的博客，链接二\footnote{https://www.kb.cert.org/vuls/id/475445}是该漏洞的第三方公告。如图\ref{fig:debian-2017-11428}所示，这两个参考链接也包含在Debian公告中，不过Debian公告还包含修复此漏洞的GitHub提交链接ruby-saml@048a54\footnote{https://github.com/onelogin/ruby-saml/commit/048a544730930f86e46804387a6b6fad50d8176f}。此外，Red Hat平台并未收录该漏洞，所以也无参考链接信息。
 \end{exmp}
 
-基于参考链接网页的内容，\tool 将参考链接节点分为三种类型：补丁节点（Patch Node）、\tocheck{问题节点}（Issue Node）和\tocheck{混合节点}（Hybrid Node）。这里区分出补丁节点，是因为该方法的根本目的就是在多个知识源中找到所引用的补丁。识别补丁节点的方法为，如果参考链接中包含“git”字段且可通过正则表达式匹配到代码提交ID（Commit ID），则该链接为Git提交形式的补丁节点；如果参考链接中包含“svn”字段且可通过正则表达式匹配到代码提交ID（Commit ID），则该链接为SVN提交形式的补丁节点。
+基于参考链接网页的内容，\tool 将参考链接节点分为三种类型：补丁节点（Patch Node）、\tocheck{问题节点}（Issue Node）和\tocheck{混合节点}（Hybrid Node）。这里区分出“补丁节点”，是因为该方法的根本目的就是在多个知识源中找到所引用的补丁。识别补丁节点的方法为，如果参考链接中包含“git”字段且可通过正则表达式匹配到代码提交ID（Commit ID），则该链接为Git提交形式的补丁节点；如果参考链接中包含“svn”字段且可通过正则表达式匹配到代码提交ID（Commit ID），则该链接为SVN提交形式的补丁节点。
 
-这是还区分出问题节点，是因为开发人员常常会在问题追踪系统（Issue Tracker）中为漏洞申请一个问题报告（Issue Report，也称为工单），并在该报告的评论区讨论解决方案并引用补丁链接。所以，问题报告是一种较为特殊且重要的参考链接。此外，问题追踪系统中的问题报告会有一个问题标识符（Issue ID），开发人员常常会将此问题标识符写入代码提交信息（Commit Message）中。有利于识别漏洞相关的代码提交，详见章节\ref{sec:addGithub}。识别问题节点的方法为，如果参考链接中包含“/github.com/”和“/issues/”，则该链接为GitHub Issue类型的问题节点。如果参考链接中包含“/github.com/”和“/pull/”，则该链接为GitHub抓取（Pull Request）类型的问题节点。如果参考链接中包含“bugzilla”、“jira”、“issues”、“bugs”、“tickets”和“tracker”中的某一个字段且可通过正则表达式匹配到问题标识符（Issue ID），则该链接为通用类型的问题节点。对于所有未识别为补丁或问题节点的参考链接信息将被视为混合节点，它们多为博客、第三方漏洞公告等。
+这是还区分出“问题节点”，是因为开发人员常常会在问题追踪系统（Issue Tracker）中为漏洞申请一个问题报告（Issue Report，也称为工单），并在该报告的评论区讨论解决方案并引用补丁链接。所以，问题报告是一种较为特殊且重要的参考链接。此外，问题追踪系统中的问题报告会有一个问题标识符（Issue ID），开发人员常常会将此问题标识符写入代码提交信息（Commit Message）中。这有利于识别漏洞相关的代码提交，详见章节\ref{sec:addGithub}。识别问题节点的方法为，如果参考链接中包含“/github.com/”和“/issues/”，则该链接为GitHub Issue类型的问题节点。如果参考链接中包含“/github.com/”和“/pull/”，则该链接为GitHub抓取（Pull Request）类型的问题节点。如果参考链接中包含“bugzilla”、“jira”、“issues”、“bugs”、“tickets”和“tracker”中的某一个字段且可通过正则表达式匹配到问题标识符（Issue ID），则该链接为通用类型的问题节点。对于所有未识别为补丁或问题节点的参考链接将被视为“混合节点”，它们多为博客、第三方漏洞公告等。
 
 %受经验研究中补丁类型分析结果启发（见章节\ref{sec:type}），
 
 \begin{exmp}
-如图\ref{fig:example}中的第三层所示，NVD和Debian公告中包含的两个参考链接被标识为混合节点（即图中的两个紫色节点），仅有一个在Debian公告中的参考链接被识别为补丁节点（即图中的红色节点）。该漏洞在该步骤中未识别到问题类型节点。
+如图\ref{fig:example}中的第三层所示，NVD和Debian公告中包含的两个参考链接被标识为混合节点（即图中的两个紫色节点），仅有一个在Debian公告中的参考链接被识别为补丁节点（即图中的红色节点）。该漏洞在该步骤中未识别到问题节点。
 \end{exmp}
 
 \subsection{参考链接分析}
 对于前序步骤中已添加入图的每个参考链接节点，\tool 将通过以下两种节点分析方式，以分层迭代的方式继续扩建参考链接网络。%\tool 将通过“引用分析”和“信息增强”两个步骤以分层方式继续构建参考链接网络。
 
-\textbf{方式一，}如果该参考链接节点的类型为补丁节点，\tool 会通过网络请求该代码提交的内容并分析该代码提交是否只涉及了测试代码或非代码文件的修改。如果是的话，则表明该代码提交一定不是用于修复漏洞的补丁提交，\tool 会从网络中删除该节点。对于测试代码的判定，\tool 通过检查修改的文件路径中是否含有“test”字段来判断，如果文件路径含有“test”字段则判定为测试文件。对于源代码文件的判定，\tool 通过检查修改文件的后缀来识别该文件是否为代码文件，如果文件的后缀非常见代码文件类型，即不在列表\footnote{常见代码文件后缀列表：['java', 'py', 'c', 'cc', 'cpp', 'cxx', 'c++', 'js', 'go', 'rb', 'cs', 'as', 'php', 'pl', 'coffee', 'h', 'm', 'ts', 'kt', 'mjs', 'twig', 'htaccess', 'tpl', 'pt', 'scala', 's', 'erb', 'swf', 'asm', 'groovy', 'jsp', 'sh', 'hpp', 'phps', 'script', 'wscript', 'ldif', 'Tokens', 'nsi', 'tcl', 'idl', 'pyx', 'ps1', 'toml', 'inl', 'x', 'S', 'hbs']}中则判定为非源代码文件。
+\textbf{方式一，}如果该参考链接节点的类型为补丁节点，\tool 会通过网络请求该代码提交的内容并分析该代码提交是否只涉及了测试代码或非代码文件的修改。如果是的话，则表明该代码提交一定不是用于修复漏洞的补丁提交，\tool 会从网络中删除该节点。对于测试代码的判定，\tool 通过检查修改的文件路径中是否含有“test”字段来判断，如果文件路径含有“test”字段则判定为测试文件。对于源代码文件的判定，\tool 通过检查修改文件的后缀来识别该文件是否为代码文件，如果文件的后缀非常见的代码文件类型，即不在列表\footnote{常见代码文件后缀列表：['java', 'py', 'c', 'cc', 'cpp', 'cxx', 'c++', 'js', 'go', 'rb', 'cs', 'as', 'php', 'pl', 'coffee', 'h', 'm', 'ts', 'kt', 'mjs', 'twig', 'htaccess', 'tpl', 'pt', 'scala', 's', 'erb', 'swf', 'asm', 'groovy', 'jsp', 'sh', 'hpp', 'phps', 'script', 'wscript', 'ldif', 'Tokens', 'nsi', 'tcl', 'idl', 'pyx', 'ps1', 'toml', 'inl', 'x', 'S', 'hbs']}中则判定为非源代码文件。
 
 \textbf{方式二，}如果该参考链接节点的类型为问题节点或混合节点，\tool 会通过网络请求该参考链接的页面信息（即HTML文本），并解析出该网页中引用的参考链接，将其作为子节点扩入参考链接网络。首先，对于网页中参考链接的提取，\tool 使用正则表达式提取纯文本中的URL，同时使用HTML解析器提取超链接（即\textbf{<a>}标签）中的URL。
-然后，使用章节（\ref{sec:advisory analysis}）中相同的方式识别参考链接类型，并将这些引用添加为当前节点的子节点。值得注意的是，在该步骤及以后流程中参考链接网络将不再加入混合节点。这是因为混合节点极易引入噪声，随着网络构建得越深，噪声也就越多。所以，除了直接被NVD、Debian和Red Hat公告节点引用的混合节点，其他参考链接节点分析中将不再考虑混合节点，仅识别补丁节点和问题节点。此外，考虑到GitHub Issue中通常会引用来自其他软件仓库的问题或提交的链接，这给网络带来过多的噪音且使网络空间爆炸。因此，在该步骤中，如果被分析的参考链接节点为GitHub Issue类型，则仅仅将该节点引用的同一代码仓库中的代码提交或问题节点添加到网络中。
+然后，使用章节\ref{sec:advisory analysis}中相同的方式识别参考链接类型，并将这些引用添加为当前节点的子节点。值得注意的是，在该步骤及以后流程中参考链接网络将不再加入混合节点。这是因为混合节点极易引入噪声，随着网络构建得越深，噪声也就越多。所以，除了直接被NVD、Debian和Red Hat公告节点引用的混合节点，其他参考链接节点分析中将不再考虑混合节点，仅识别补丁节点和问题节点。此外，考虑到GitHub Issue中通常会引用来自其他软件仓库的问题或提交链接，这给网络带来过多的噪音且使网络搜索空间爆炸。因此，在该步骤中，如果被分析的参考链接节点为GitHub Issue类型，则仅仅将该节点引用的同一代码仓库中的代码提交或问题节点添加到网络中。
 
-对于所有新增的节点，\tool 将一直重复以上两种节点分析的方式迭代扩增网络，直到没有任何新增的节点或者网络深度达到设定的阈值（网络深度默认为\tocheck{5}层），该步骤结束。
+对于所有新增的节点，\tool 将一直重复以上两种节点分析方式迭代扩增网络，直到没有任何新增的节点，或者网络深度达到设定的阈值（网络深度默认为\tocheck{5}层）时，该步骤结束。
 
 \begin{figure}[!t]
     \centering
@@ -116,9 +116,9 @@
 \end{figure}
 
 \begin{exmp}
-在第一次迭代中，因为ruby-saml@048a54并非仅涉及测试代码或非源代码文件的更改，所以\tool 将补丁节点ruby-saml@048a54保留在图\ref{fig:example}中第三层。此外，\tool 标识还出第三层中的两个混合节点，其中一个混合节点未引用任何问题或提交链接，另一个混合节点了引用了两个问题链接SAMLBase\#3和saml\#140以及一个代码提交链接SAMLBase@482cdf。图\ref{fig:457445}为混合节点“www.kb.cert.org/...475445”引用的代码提交SAMLBase@482cdf\footnote{https://github.com/GoGentoOSS/SAMLBase/commit/482cdf8c090e0f1179073034ebcb609ac7c3f5b3}、问题链接SAMLBase\#3\footnote{https://github.com/GoGentoOSS/SAMLBase/issues/3}和问题链接saml\#140\footnote{https://github.com/crewjam/saml/pull/140}。
+在第一次迭代中，因为ruby-saml@048a54并非仅涉及测试代码或非源代码文件的更改，所以\tool 将补丁节点ruby-saml@048a54保留在图\ref{fig:example}中第三层。此外，\tool 标识还出第三层中的两个混合节点，其中一个混合节点未引用任何问题或提交链接，另一个混合节点引用了两个问题链接SAMLBase\#3和saml\#140以及一个代码提交链接SAMLBase@482cdf。图\ref{fig:457445}为混合节点“www.kb.cert.org/...475445”引用的代码提交SAMLBase@482cdf\footnote{https://github.com/GoGentoOSS/SAMLBase/commit/482cdf8c090e0f1179073034ebcb609ac7c3f5b3}、问题链接SAMLBase\#3\footnote{https://github.com/GoGentoOSS/SAMLBase/issues/3}和问题链接saml\#140\footnote{https://github.com/crewjam/saml/pull/140}。
 
-在第二次迭代中，\tool 发现节点SAMLBase\#3引用了SAMLBase@482cdf，而节点saml\#140引用了两个问题链接gosaml2\#36和saml\#163以及两个代码提交链接saml@814d1d和saml@55d682。考虑到gosaml2\#36与saml\#140并不属于同个代码仓库，saml@814d1d和saml@55d682也仅涉及测试代码的更改，\tool 便不将它们添加到网络中。为了便于示例讲解，这些未添加的节点仍显示在图\ref{fig:example}中，但以虚线连接。图\ref{fig:814d1d9}为代码提交链接saml@814d1d\footnote{https://github.com/crewjam/saml/commit/814d1d9c18457deeda08cbda2d38f79bedccfa62}，可以发现，该提交仅修改了“service\_provider\_test.go”一个文件，且该文件为测试代码文件。
+在第二次迭代中，\tool 发现节点SAMLBase\#3引用了SAMLBase@482cdf，而节点saml\#140引用了两个问题链接gosaml2\#36和saml\#163以及两个代码提交链接saml@814d1d和saml@55d682。考虑到gosaml2\#36与saml\#140并不属于同个代码仓库，saml@814d1d和saml@55d682也仅涉及测试代码的更改，\tool 便不将它们添加到网络中。为了便于示例讲解，这些未加入网络的节点仍显示在图\ref{fig:example}中，但以虚线连接。图\ref{fig:814d1d9}为代码提交链接saml@814d1d\footnote{https://github.com/crewjam/saml/commit/814d1d9c18457deeda08cbda2d38f79bedccfa62}，可以发现，该提交仅修改了“service\_provider\_test.go”一个文件，且该文件为测试代码文件。
 %在此迭代之后，达到深度限制。
 \end{exmp}
 
@@ -146,7 +146,7 @@
 \end{figure}
 
 \begin{exmp}
-对于样例CVE-2017-11428，\tool 无法从构建的网络中提取任何问题或公告标识符。因此，\tool 仅使用CVE标识符（CVE ID）来搜索GitHub中相关的代码提交。如图\ref{fig:048a54}所示，搜索返回的提交有ruby-saml@048a54，其仓库信息是“onelogin: ruby-saml”；此CVE-2017-11428的CPE是“onelogin: ruby-saml”，因此实现了名称的完全匹配，\tool 将会把ruby-saml@048a54节点加入网络。由于该节点已包含在参考网络中，\tool 便不再新增节点，将其连接为GitHub节点的子节点，见图\ref{fig:example}。此外，该次搜索结果中没有其他匹配的代码提交。
+对于样例CVE-2017-11428，\tool 无法从构建的网络中提取任何问题或公告标识符。因此，\tool 仅使用漏洞标识符（CVE ID）来搜索GitHub中相关的代码提交。如图\ref{fig:048a54}所示，搜索返回的提交包含提交ruby-saml@048a54，该提交的仓库信息是“onelogin: ruby-saml”，此CVE-2017-11428的CPE是“onelogin: ruby-saml”，因此实现了名称的完全匹配，\tool 会将ruby-saml@048a54节点加入网络。由于该节点已包含在参考网络中，\tool 便不再新增节点，仅将其连接为GitHub节点的子节点，见图\ref{fig:example}。此外，该次搜索结果中没有其他匹配的代码提交。
 \end{exmp}   
 
 \section{补丁选择}\label{sec:selection}
@@ -165,9 +165,9 @@
 \end{exmp}
 
 \subsection{基于连通度的补丁选择方法}
-仅仅使用基于置信度的启发式方法通常不足以完整地找出漏洞补丁集。因为NVD中很可能不包含补丁链接，且CVE ID、 Advisory ID或Issue ID也很可能不在代码提交信息中，因此也无法通过搜索GitHub获取到补丁。考虑到漏洞的补丁会在与该漏洞相关的各种来源的漏洞公告、分析报告、讨论和解决的过程中被频繁提及和引用，这也意味着：正确的补丁节点将会广泛地连接到网络中的根节点（即图中的CVE ID节点）上。因此，本文还设计了基于连通度的补丁节点选择方法。
+仅仅使用基于置信度的启发式方法通常不足以完整地找出漏洞补丁集。因为NVD中很可能不包含补丁链接，且CVE ID、 Advisory ID或Issue ID也很可能不在代码提交信息中，因此也无法通过搜索GitHub获取到补丁。考虑到漏洞的补丁会在与该漏洞相关的各种来源的漏洞公告、分析报告、讨论和解决的过程中被频繁提及和引用。这也意味着：正确的补丁节点将会广泛地连接到网络中的根节点（即图中的CVE ID节点）上。因此，本文还设计了基于连通度的补丁节点选择方法。
 
-具体来说，\tool 从两个角度衡量网络中补丁节点与根节点间的连通度。一是路径数，根节点可到达补丁节点的路径越多，补丁节点与根节点的连通性就越高；二是路径长度，从根节点到补丁节点的路径越短，补丁节点到根节点的连通性就越高。为了结合这两个方面，\tool 使用公式\ref{eq:connectivity}计算补丁节点到根节点的连通度。其中，$ p = 1, ..., n$表示从根节点到补丁节点的$n$条路径，$d_p$表示路径$p$的长度。考虑到NVD和GitHub子节点的高置信度，如果路径$p$源于NVD和GitHub节点，则路径长度自动减1。
+具体来说，\tool 从两个角度衡量网络中补丁节点与根节点间的连通度。一是路径数，从根节点到补丁节点的路径越多，补丁节点与根节点的连通性就越高。二是路径长度，从根节点到补丁节点的路径越短，补丁节点到根节点的连通性就越高。为了结合这两个方面，\tool 使用公式\ref{eq:connectivity}计算补丁节点到根节点的连通度。其中，$ p = 1, ..., n$表示从根节点到补丁节点的$n$条路径，$d_p$表示路径$p$的长度。考虑到NVD和GitHub子节点的高置信度，如果路径$p$源于NVD和GitHub节点，则路径长度自动减1。
 
 \begin{equation}\label{eq:connectivity}
     connectivity =\sum_{p=1}^{n}   \frac{1}{2^{({d}_{p} -1)}}
@@ -176,7 +176,7 @@
 基于每个补丁节点到根节点的连通度，\tool 选择连通度最高的节点作为该漏洞的补丁，加入补丁集。
 
 \begin{exmp}
-在图\ref{fig:example}中，从根节点到补丁节点ruby-saml@048a54的路径有两条。一是源自Debian的路径，长度为2，连通度为0.5。另一个是源自GitHub的路径，原始长度为2，调整后为1，连通度为1。因此，ruby-saml@048a54节点到根节点的总连通度为1.5。同理，从根节点到补丁节点SAMLBase@482cdf存在四条路径，连通性分别为0.5、0.25、0.25和0.125。因此，SAMLBase@482cdf到根节点的连通度为1.125，低于ruby-saml@048a54节点，所以\tool 选择ruby-saml@048a54作为补丁。%，因为它具有最高的连接性。
+在图\ref{fig:example}中，从根节点到补丁节点ruby-saml@048a54的路径有两条。一是源自Debian的路径，长度为2，连通度为0.5。另一条是源自GitHub的路径，原始长度为2，调整后为1，连通度为1。因此，ruby-saml@048a54节点到根节点的总连通度为1.5。同理，从根节点到补丁节点SAMLBase@482cdf存在四条路径，连通性分别为0.5、0.25、0.25和0.125。因此，SAMLBase@482cdf到根节点的连通度为1.125，低于ruby-saml@048a54节点，所以\tool 选择ruby-saml@048a54作为补丁。%，因为它具有最高的连接性。
   %\tool 选择它作为 CVE-2017-11428 的补丁。
 \end{exmp}
 
@@ -221,7 +221,7 @@
 \end{figure}
 
 \begin{exmp}
-在步骤二中，\tool 为漏洞CVE-2017-11428选出的补丁为ruby-saml@\\048a54（位于主分支）。在步骤三种，\tool 识别到了另外三个提交---ruby-saml@d7ce60\footnote{https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280}、ruby-saml@a35f72\footnote{https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c}和ruby-saml@03af9e\footnote{https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8}。图\ref{fig:048a54}、\ref{fig:d7ce60}、\ref{fig:a35f72}和\ref{fig:03af9e}所示，它们与选定补丁ruby-saml@048a54具有相同的提交信息却不同的代码更改。这三个提交分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将三个提交添加为ruby-saml@048a54的子节点。实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，而数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54一个补丁。
+在步骤二中，\tool 为漏洞CVE-2017-11428选出的补丁为ruby-saml@\\048a54（位于主分支）。在步骤三中，\tool 识别到了另外三个提交---ruby-saml@d7ce60\footnote{https://github.com/onelogin/ruby-saml/commit/d7ce607d9f9d996e1046dde09b675c3cf0c01280}、ruby-saml@a35f72\footnote{https://github.com/onelogin/ruby-saml/commit/a35f7251b86aa3b7caf4a64d8a3451f925e8855c}和ruby-saml@03af9e\footnote{https://github.com/onelogin/ruby-saml/commit/03af9e33d2d87f4ac9a644c5b0981ded4dca0bb8}。图\ref{fig:048a54}、\ref{fig:d7ce60}、\ref{fig:a35f72}和\ref{fig:03af9e}所示，它们与选定补丁ruby-saml@048a54具有相同的提交信息却不同的代码更改。这三个提交分别位于分支0.8.3--0.8.17、v0.9.3和v1.6.2中。如图\ref{fig:example}所示，\tool 将三个提交添加为ruby-saml@048a54的子节点。实际上，这四个代码提交也确实都是CVE-2017-11428的正确补丁，而数据库$DB_A$和$DB_B$都只提供了ruby-saml@048a54一个补丁。
 \end{exmp}
 
 % \section{本章小结}

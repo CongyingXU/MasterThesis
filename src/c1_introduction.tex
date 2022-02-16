@@ -7,18 +7,18 @@
 
 开源软件（Open Source Software，OSS）为开源及闭源应用程序的快速开发提供了基础。得益于开源社区的蓬勃发展，在软件开发过程中，开发人员经常会使用开源软件中已实现的功能，节省开发时间，加快开发速度\cite{Wang2020empirical}。然而，伴随着开发效率的提高，开源软件中的安全漏洞也会被引入软件系统\cite{2何熙巽2020软件供应链安全综述,3刘剑2018软件与网络安全研究综述}。据Synopsys公司发布的《开源安全和风险分析报告》\footnote{https://www.synopsys.com/content/dam/synopsys/sig-assets/reports/rep-ossra-2021.pdf}显示，在该公司分析的1,500个应用程序中，98\%的应用程序都使用了开源软件。
 %然而，大规模使用开源软件可以加速应用程序开发的进程，但同时也引入了安全风险。
-报告还指出，高达84\%的应用程序包含至少一个已知的开源软件漏洞，对比于前一年（2019年）增加了9\%。此外，据Snyk公司发布的报告\footnote{https://snyk.io/wp-content/uploads/sooss\_report\_v2.pdf}显示，近些年开源软件中所披露的漏洞越来越多，过去两年间几乎翻了一倍。
+报告还指出，高达84\%的应用程序包含至少一个已知的开源软件漏洞，该数据对比于前一年（2019年）增加了9\%。此外，据Snyk公司发布的报告\footnote{https://snyk.io/wp-content/uploads/sooss\_report\_v2.pdf}显示，近些年所披露的开源软件漏洞越来越多，过去两年间几乎翻了一倍。
 
 针对以上问题，大量工作都在研究如何降低开源软件漏洞带来的安全风险，包括通过学习漏洞特征来检测开源软件中的漏洞\cite{li2016vulpecker,li2018vuldeepecker,zhou2019devign,jimenez2019importance}、通过匹配漏洞及补丁签名来检测开源软件漏洞\cite{jang2012redebug, kim2017vuddy, xu2020patch, xiao2020mvp, cui2020vuldetector}%、修复开源软件中的漏洞\cite{mulliner2013patchdroid, duan2019automating, xu2020automatic, machiry2020spider}、
-以及进行软件成分分析以确定应用程序中的开源软件漏洞是否在执行路径上\cite{pashchenko2018vulnerable, ponta2020detection, pashchenko2020vuln4real, Wang2020empirical}。在这些工作中，准确且完整的漏洞知识十分重要。例如，漏洞描述、受漏洞影响的软件、版本以及补丁等知识都是这些工作得以开展的基础。目前，已有多方人员致力于构建安全漏洞数据库。在安全社区中，由美国政府资助的CVE List\footnote{https://cve.mitre.org/cve/}（Common Vulnerabilities \& Exposures）、NVD\footnote{https://nvd.nist.gov}（National Vulnerability Database）和由中国政府资助的CNVD\footnote{https://www.cnvd.org.cn/}（国家信息安全漏洞共享平台）、CNNVD\footnote{http://www.cnnvd.org.cn/}（国家信息安全漏洞数据库）是最具影响力的漏洞数据库。在工业界中，BlackDuck\footnote{https://www.synopsys.com/content/dam/synopsys/sig-assets/datasheets/bdknowledgebase-ds-ul.pdf}、WhiteSource\footnote{https://www.whitesourcesoftware.com/vulnerability-database/}、Veracode\footnote{https://sca.veracode.com/vulnerability-database/search}和Snyk\footnote{https://snyk.io/vuln}等公司较为关注开源软件中的安全漏洞，并已经构建各自的商业漏洞数据库，作为安全服务的基础。在学术界中，也有很多工作致力于构建漏洞数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul}，但这些数据集大多是针对特定语言的生态系统或针对特定的软件项目而设计。
+以及进行软件成分分析以确定应用程序中的开源软件漏洞是否在执行路径上\cite{pashchenko2018vulnerable, ponta2020detection, pashchenko2020vuln4real, Wang2020empirical}。在这些工作中，准确且完整的漏洞知识十分重要。例如，漏洞描述、受漏洞影响的软件、版本以及补丁等知识都是这些工作得以开展的基础。目前，已有多方人员致力于构建安全漏洞数据库。在安全社区中，由美国政府资助的CVE List\footnote{https://cve.mitre.org/cve/}（Common Vulnerabilities \& Exposures）、NVD\footnote{https://nvd.nist.gov}（National Vulnerability Database）和由中国政府资助的CNVD\footnote{https://www.cnvd.org.cn/}（国家信息安全漏洞共享平台）、CNNVD\footnote{http://www.cnnvd.org.cn/}（国家信息安全漏洞数据库）是最具影响力的漏洞数据库。在工业界中，BlackDuck\footnote{https://www.synopsys.com/content/dam/synopsys/sig-assets/datasheets/bdknowledgebase-ds-ul.pdf}、WhiteSource\footnote{https://www.whitesourcesoftware.com/vulnerability-database/}、Veracode\footnote{https://sca.veracode.com/vulnerability-database/search}和Snyk\footnote{https://snyk.io/vuln}等公司较为关注开源软件中的安全漏洞，并已经构建各自的商业漏洞数据库，作为安全服务的基础。在学术界中，也有很多工作致力于构建漏洞数据集\cite{ponta2019manually,fan2020ac,jimenez2018enabling,gkortzis2018vulinoss,namrud2019androvul}，但这些数据集大多是针对特定程序语言的生态系统或针对特定的软件项目而设计。
 
 \section{研究问题}
 % \textbf{研究问题：}
-随着构建的漏洞数据库越来越多，数据库中积累的漏洞数据也越来越多，研究人员开始关注数据库中漏洞知识的质量。Dong等人\cite{dong2019towards}发现了漏洞数据库中受漏洞影响的软件版本信息不准确的情况，Chaparro等人\cite{chaparro2017detecting}和Mu等人\cite{mu2018understanding}发现了漏洞描述中普遍缺失关键的漏洞重现步骤。这种信息不完整或不准确的情况使得安全工作人员难以及时地识别、重现和修复应用程序中的漏洞。
+随着构建的漏洞数据库越来越多，数据库中积累的漏洞数据也越来越多，研究人员开始关注数据库中漏洞知识的质量。Dong等人\cite{dong2019towards}发现了漏洞数据库中受漏洞影响的软件版本信息不准确的情况，Chaparro等人\cite{chaparro2017detecting}和Mu等人\cite{mu2018understanding}发现了漏洞描述中普遍缺失漏洞重现的步骤描述。这种信息不完整或不准确的情况使得安全工作人员难以及时地识别、重现和修复应用程序中的安全漏洞。
 
 漏洞补丁作为刻画漏洞特征的重要知识，可应用于多种安全相关的任务，包括补丁生成和热部署\cite{mulliner2013patchdroid,duan2019automating,xu2020automatic}、补丁存在测试\cite{zhang2018precise,jiang2020pdiff,dai2020bscout}、软件成分分析\cite{ponta2020detection,pashchenko2020vuln4real,Wang2020empirical}、漏洞检测\cite{li2016vulpecker,li2018vuldeepecker,jang2012redebug,kim2017vuddy, xiao2020mvp, cui2020vuldetector}等。如果漏洞数据库中的补丁知识缺失或不准确，那么这些安全任务的准确性将会受到严重影响。然而，漏洞数据库中的补丁知识尚未被系统地研究和评估，目前尚不清楚现有漏洞数据库中补丁的质量情况。
 
-此外，现有的漏洞补丁识别方法主要有三种：（1）人工手动查找漏洞补丁\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,zhou2017automated,sabetta2018practical,chen2020machine,xiao2020mvp,ponta2020detection,pashchenko2020vuln4real}。（2）通过启发式规则识别漏洞补丁，比如在NVD参考链接中查找代码提交\cite{duan2019automating,li2016vulpecker}或是在代码仓的提交历史中搜索漏洞标识符（CVE ID）\cite{you2017semfuzz,Wang2020empirical}。（3）在特定项目的安全公告中搜索漏洞补丁\cite{mulliner2013patchdroid,jang2012redebug,kim2017vuddy}。以上这些方法的人工成本过高，且针对特定的程序语言或项目设计，无法广泛应用于所有开源软件漏洞。
+此外，现有的漏洞补丁识别方法主要有三种：（1）人工手动查找漏洞补丁\cite{xu2020automatic,jiang2020pdiff,dai2020bscout,zhou2017automated,sabetta2018practical,chen2020machine,xiao2020mvp,ponta2020detection,pashchenko2020vuln4real}。（2）通过启发式规则识别漏洞补丁，比如在NVD参考链接中查找代码提交\cite{duan2019automating,li2016vulpecker}或是在代码仓的提交历史中搜索漏洞标识符（CVE ID）\cite{you2017semfuzz,Wang2020empirical}。（3）在特定项目的安全公告中搜索漏洞补丁\cite{mulliner2013patchdroid,jang2012redebug,kim2017vuddy}。以上方法的人工成本较高，且针对特定的程序语言或项目设计，无法广泛应用于所有开源软件漏洞。
 
 综上，目前的问题是，漏洞数据库中补丁的特征及质量尚未被系统地研究和评估，并且已有的漏洞补丁采集方法通用性较差且人工成本过高。
 
@@ -28,24 +28,24 @@
 \subsection{开源软件漏洞补丁的经验研究}
 为了了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征，本文挑选了两个认可度较高的商业漏洞数据库作为研究对象。该经验研究涵盖五个方面，包括补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析。
 
-本文首先构建了一个广度数据集，该数据集包含10,070个开源软件漏洞。在此数据集上，本文分析两个商业漏洞数据库中开源软件漏洞补丁的覆盖率和一致性。结果表明：在漏洞补丁覆盖率方面，\tocheck{10,070}个漏洞中只有\tocheck{4,602（5.7\%）}的漏洞在商业漏洞数据库中提供了补丁；在漏洞补丁一致性方面，只有\tocheck{19.7\%}的漏洞在两个商业漏洞数据库中有一致的补丁。%\congyingEdit{可以再写些其他的结果}。
+本文首先构建了一个广度数据集，该数据集包含10,070个开源软件漏洞。在此数据集上，本文分析两个商业漏洞数据库中开源软件漏洞补丁的覆盖率和一致性。结果表明，在漏洞补丁覆盖率方面，\tocheck{10,070}个漏洞中只有\tocheck{4,602（5.7\%）}的漏洞在商业漏洞数据库中提供了补丁；在漏洞补丁一致性方面，只有\tocheck{19.7\%}的漏洞在两个商业漏洞数据库中有一致的补丁。%\congyingEdit{可以再写些其他的结果}。
 
-基于广度数据集中含补丁的漏洞数据，本文还通过人工构建了一个深度数据集。该数据集包含1,295个开源软件漏洞，且这些漏洞都有补丁。在此数据集上，本文分析了开源软件漏洞补丁的类型和漏洞补丁的映射关系，并评估了商业数据库中漏洞补丁的准确性。结果表明：在漏洞补丁类型方面，\tocheck{1,265（97.7\%）}漏洞的补丁类型都是GitHub或SVN的代码提交；在漏洞补丁映射关系方面，\tocheck{533（41.1\%）}的漏洞与其补丁有一对多的映射关系；在漏洞补丁准确性方面，两个商业数据库的补丁精确率都高于\tocheck{90\%}，但对于一对多映射类型的漏洞，两个商业数据库中补丁的召回率都仅为\tocheck{50\%}左右。
+基于广度数据集中含补丁的漏洞数据，本文还通过人工构建了一个深度数据集。该数据集包含1,295个开源软件漏洞，且这些漏洞都有补丁。在此数据集上，本文分析了开源软件漏洞补丁的类型和漏洞补丁的映射关系，并评估了商业数据库中漏洞补丁的准确性。结果表明，在漏洞补丁类型方面，\tocheck{1,265（97.7\%）}漏洞的补丁类型都是GitHub或SVN的代码提交；在漏洞补丁映射关系方面，\tocheck{533（41.1\%）}的漏洞与其补丁有一对多的映射关系；在漏洞补丁准确性方面，两个商业数据库的补丁精确率都高于\tocheck{90\%}，但对于一对多映射类型的漏洞，两个商业数据库中补丁的召回率都仅为\tocheck{50\%}左右。
 
-这些结果表明，现有的商业漏洞数据库中缺失了许多漏洞的补丁，尤其是对于有多个补丁的漏洞，补丁缺失现象更为严重。这种信息不完整或不准确的情况，使得安全工作人员难以及时地识别、重现和修复开源软件中的漏洞。同时，这也反映出自动化的补丁识别方法的需求，自动化的方法可以帮助工作人员识别并补全缺失的补丁。
+这些结果表明，现有的商业漏洞数据库中缺失了许多漏洞的补丁，尤其是对于有多个补丁的漏洞，补丁缺失情况更为严重。这种信息不完整或不准确的情况，使得安全工作人员难以及时地识别、重现和修复开源软件中的漏洞。同时，这也反映出自动化的补丁识别方法的需求，自动化的方法可以帮助工作人员识别并补全缺失的补丁。
 
-\subsection{开源软件漏洞补丁的识别方法}
+\subsection{开源软件漏洞的补丁识别方法}
 基于经验研究的发现，本文提出了一种名为\tool 的基于多源知识的开源软件漏洞的补丁识别方法。该方法从多个知识源（即NVD\footnote{https://nvd.nist.gov}、Debian\footnote{https://security-tracker.debian.org/tracker/}、Red Hat\footnote{https://bugzilla.redhat.com/}以及GitHub\footnote{https://github.com/}）构建漏洞的参考链接网络并识别补丁（参考链接，即URL网址）。该方法的核心思想是：漏洞补丁会在讨论和解决漏洞的、多种来源的漏洞公告、分析报告等参考链接中被频繁地提及和引用。因此，本文首先设计了一种基于多知识源的漏洞参考链接网络，然后再从该网络中选出具有最高置信度和连通度的补丁节点作为结果，并基于选定的补丁进行补丁扩增，从而构建一对多的漏洞补丁映射关系。
 
-\tool 以漏洞的CVE ID作为输入，经过三个步骤，输出该漏洞的补丁。（1）多源参考链接网络构建，该步骤的目的是将该漏洞在被报告、讨论和解决阶段的参考链接进行建模。\tool 从多个\tocheck{漏洞知识源}（即NVD、Debian、Red Hat和GitHub）中提取引用的参考链接信息并构建一个参考链接网络。（2）补丁选择，\tool 从构建的参考链接网络中选择中具有高连通性和高置信度的补丁节点作为该漏洞的补丁。（3）补丁扩增，基于前一步骤选定的补丁，\tool 通过搜索同一代码库所有分支中的相关提交来扩展补丁集，构建一对多的漏洞补丁映射关系。最终，返回所有选中及扩展的补丁。
+\tool 以漏洞的CVE ID作为输入，经过三个步骤，输出该漏洞的补丁。步骤一：多源参考链接网络构建，该步骤的目的是将该漏洞在被报告、讨论和解决阶段的参考链接进行建模。\tool 从多个\tocheck{漏洞知识源}（即NVD、Debian、Red Hat和GitHub）中提取引用的参考链接信息并构建一个参考链接网络。步骤二：补丁选择，\tool 从构建的参考链接网络中选择中具有高连通性和高置信度的补丁节点作为该漏洞的补丁。步骤三：补丁扩增，基于前一步骤选定的补丁，\tool 通过搜索同一代码库所有分支中的相关提交来扩展补丁集，构建一对多的漏洞补丁映射关系。最终，返回所有选中及扩展的补丁。
 
 \subsection{实验评估}
 本文进行了大量实验，通过五个研究问题，从准确性、通用性、实用性等多个方面对\tool 进行了评估。为了评估\tool 的准确性，本文将\tool 与三种基于启发式规则的方法以及两个商业漏洞数据库进行了比较。结果表明，在包含1,295个漏洞的深度数据集上，
-（1）\tool 可以达到88.0\%的补丁覆盖率、0.864的补丁精确率和0.864的补丁召回率；
-（2）与现有的基于启发式规则的方法相比，\tool 将补丁覆盖率提高\tocheck{58.6\%}到\tocheck{273.8\%}；同时，在补丁的准确性上，\tool 的F1数值也比基于启发式规则的方法高116.8\%；
+（1）\tool 可以达到88.0\%的补丁覆盖率、0.864的补丁精确率和0.864的补丁召回率。
+（2）与现有的基于启发式规则的方法相比，\tool 将补丁覆盖率提高\tocheck{58.6\%}到\tocheck{273.8\%}；同时，在补丁的准确性上，\tool 的F1数值也比基于启发式规则的方法高116.8\%。
 （3）与现有的商业漏洞数据库$DB_A$和$DB_B$相比，\tool 的补丁召回率高出18.4\%；但仍有155（12.0\%）的漏洞\tool 未能找到补丁，补丁精确率也低了6.4\%。%；（3）\tool 对于大范围开源软件漏洞具有较好的通用性，在实际使用中，也具有较好的实用性。
 
-此外，为了评估\tool 的通用性，本文还另外构建了两个更大的、包含\tocheck{3,185} 和\tocheck{5,468}个漏洞的数据集，并在这两个数据集上运行\tool 。结果表明，\tool 在两个数据集上分别可以找到\tocheck{67.7\%}和\tocheck{51.5\%}个漏洞的补丁；补丁精确率分别为\tocheck{0.823} 和\tocheck{0.888}，补丁召回率分别为\tocheck{0.845}和\tocheck{0.899}，这表明\tool 在识别补丁方面具有较好的通用性。
+此外，为了评估\tool 的通用性，本文还另外构建了两个更大的、包含\tocheck{3,185} 和\tocheck{5,468}个漏洞的数据集，并在这两个数据集上运行\tool 。结果表明，\tool 在两个数据集上分别可以找到\tocheck{67.7\%}和\tocheck{51.5\%}个漏洞的补丁，补丁精确率分别为\tocheck{0.823} 和\tocheck{0.888}，补丁召回率分别为\tocheck{0.845}和\tocheck{0.899}。这表明\tool 在识别补丁方面具有较好的通用性。
 
 此外，为了评估\tool 在实际工作种的实用性，本文还邀请了10名实验人员进行了用户研究。评估结果表明，在实际使用中，\tool 有助于用户更准确、更快速地识别到补丁。
 
@@ -53,7 +53,7 @@
 本文主要有以下贡献：
 \begin{enumerate}
 \item [（1）]本文开展了一项针对开源软件漏洞补丁的经验研究，以了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征。该经验研究涵盖五个方面，包括补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析。
-\item [（2）]本文提出了一种名为 \tool 的基于多源知识的开源软件漏洞的补丁识别方法，该方法可服务于安全社区、工业界和学术界的研究人员。
+\item [（2）]本文提出了一种名为 \tool 的基于多源知识的开源软件漏洞的补丁识别方法，该方法可服务于安全社区、工业界和学术界的多种安全任务。
 \item [（3）]本文进行了针对\tool 准确性、通用性、实用性等多个方面的实验评估。
 \end{enumerate}
 
@@ -65,10 +65,10 @@
 
 第二章背景知识及相关工作，介绍了本文所涉及的背景知识，包括通用漏洞披露CVE、漏洞公告、漏洞补丁等信息，为后文经验研究、方法设计等内容的展开做铺垫。本章还介绍了与本文研究主题的相关工作，包括漏洞信息质量、漏洞补丁识别以及漏洞补丁应用。
 
-第三章经验研究，介绍了本文为了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征，针对开源软件漏洞补丁所开展的的经验研究，涵盖补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析五个方面。
+第三章开源软件漏洞补丁的经验研究，介绍了本文为了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征，针对开源软件漏洞补丁所开展的经验研究，涵盖补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析五个方面。
 
-第四章\tool 方法设计，介绍了本文提出的一种名为\tool 的基于多源知识的开源软件漏洞的补丁识别方法。该方法包括多源参考链接网络构建、补丁选择以及补丁扩增三个步骤。
+第四章开源软件漏洞的补丁识别方法，介绍了本文提出的一种名为\tool 的基于多源知识的开源软件漏洞的补丁识别方法。该方法包括多源参考链接网络构建、补丁选择以及补丁扩增三个步骤。
 
 第五章实验评估，介绍了本文针对\tool 的准确性、通用性、实用性等五个方面所进行的实验评估。
 
-第六章总结与展望，对本文的工作内容及研究成果进行总结，讨论本文研究工作中存在的不足及可以改进的地方，并展望了未来可以进行的工作。
+第六章总结与展望，对本文的工作内容及研究成果进行总结，讨论本文研究工作中存在的不足，并展望了未来可以进行的工作。
