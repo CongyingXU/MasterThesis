@@ -5,7 +5,7 @@
 %为了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征所开展的实证研究工作，涵盖补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析
 
 \section{研究设计}
-研究设计部分包含研究问题和评估标准的设计。
+研究设计主要包含，经验研究中研究问题的设计以及评估标准的选用两个部分。
 
 \subsection{研究问题}
 为了探究已有漏洞数据库中开源软件漏洞补丁的质量和特征，本文设计以下研究问题：
@@ -47,7 +47,7 @@
 \end{equation}
 
 \section{数据准备}\label{sec:preparation}
- 数据准备部分包含漏洞数据库选择、广度数据集构建和深度数据集构建。
+ 数据准备主要包含，漏洞数据库选择、广度数据集构建和深度数据集构建三个部分。
 
 \subsection{漏洞数据库选择}
 为了挑选出具有代表性的漏洞数据库作为研究对象，本文前期调研了来自安全领域的社区、工业界和学术界的漏洞数据库。
@@ -139,12 +139,12 @@ RQ1---补丁覆盖率分析，旨在评估漏洞数据库中开源软件漏洞�
 \begin{table}[!t]
     \centering
     \small
-    \caption{补丁一致性结果}\label{table:consistency}
+    \caption{$DB_A$与$DB_B$补丁一致性分析结果}\label{table:consistency}
     %\vspace{-10pt}
-    \begin{tabular}{|*{1}{C{4.4em}}|*{1}{C{3.6em}}*{1}{C{5.0em}}*{1}{C{5.0em}}|*{1}{C{3.6em}}*{1}{C{4.8em}}*{1}{C{5.0em}}|}
+    \begin{tabular}{|*{1}{C{4.4em}}|*{1}{C{3.8em}}*{1}{C{5.0em}}*{1}{C{5.0em}}|*{1}{C{3.6em}}*{1}{C{4.8em}}*{1}{C{5.0em}}|}
     \noalign{\hrule height 1pt}
     \multirow{2}{*}{补丁一致} & \multicolumn{3}{c|}{存在性不一致} & \multicolumn{3}{c|}{内容不一致} \\\cline{2-4}\cline{5-7}
-     & 总数 & 某一数据库中无漏洞 & 某一数据库中无补丁 & 总数 & 包含关系 & 非包含关系 \\\noalign{\hrule height 1pt}
+     & 总数 & 某一数据库中无漏洞 & 某一数据库中无补丁 & 总数 & 补丁为包含关系 & 补丁非包含关系 \\\noalign{\hrule height 1pt}
     % \multirow{2}{*}{Cons.} & \multicolumn{3}{c|}{Existence Inconsistency} & \multicolumn{3}{c|}{Content Inconsistency} \\\cline{2-4}\cline{5-7}
     % & Total & No CVE & No Patch & Total & Inclusion & Difference \\\noalign{\hrule height 1pt}
     907 （19.7\%） & 3,185 （69.2\%） & 1,392 （30.2\%） & 1,793 （39.0\%） & 510 （11.1\%） & 176 （3.8\%） & 334 （7.3\%）\\
