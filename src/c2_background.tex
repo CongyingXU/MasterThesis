@@ -1,9 +1,11 @@
 \chapter{背景知识及相关工作}
-本章将介绍开源软件漏洞相关的背景知识，包括通用漏洞披露（CVE）、国家漏洞数据库（NVD）、漏洞公告（Advisory）和漏洞补丁（Vulnerability Patch）。此外，本章将从漏洞信息质量、漏洞补丁识别和漏洞补丁应用三个方面介绍相关的研究工作。
+% 本章将介绍开源软件漏洞相关的背景知识，包括通用漏洞披露（CVE）、国家漏洞数据库（NVD）、漏洞公告（Advisory）和漏洞补丁（Vulnerability Patch）。此外，本章将从漏洞信息质量、漏洞补丁识别和漏洞补丁应用三个方面介绍相关的研究工作。
+本章将介绍开源软件漏洞相关的背景知识以及相关的研究工作。
 
 
 \section{背景知识}
 % 本小节主要介绍本文工作中的背景知识，包括通用漏洞披露（CVE）、漏洞通告（advisory）和漏洞补丁（vulnerability patch）。
+本文介绍的开源软件漏洞相关的背景知识，包括通用漏洞披露（CVE）、国家漏洞数据库（NVD）、漏洞公告（Advisory）和漏洞补丁（Vulnerability Patch）。
 
 \subsection{CVE及NVD} 
 % 重平台
@@ -49,7 +51,7 @@ CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中�
 图\ref{fig:Vendor-2021-44228}为厂商Apache发布的关于安全漏洞CVE-2021-44228的公告\footnote{https://logging.apache.org/log4j/2.x/security.html}，包含修复方式---“Log4j 2.x mitigation ...... Upgrade to Log4j 2.3.1 (for Java 6), 2.12.3 (for Java 7), or 2.17.0 (for Java 8 and later)”、漏洞发现者---“Credit：This issue was discovered by Chen Zhaojun of Alibaba Cloud Security Team.”、参考链接---“https://issues.apache.org/jira/browse/LOG4J2-3198”等信息。
 
 
-以上介绍的由厂商发布的漏洞公告，也被称为：厂商公告（Vendor Advisory）。由于某一厂商只会发布、维护与该厂商相关的软件漏洞通告，而开源社区的开发人员难以一一关注所有厂商的公告信息，因此，出现了许多第三方平台致力于收集并维护所有漏洞公告信息。这些由第三方平台收集并维护的漏洞公告也被称为：第三方公告（Third-Party Advisory）。目前，认可度较高、影响力较大的第三方漏洞公告平台有Red Hat\footnote{https://access.redhat.com/errata/}、Debian\footnote{https://www.debian.org/security/}、Gentoo\footnote{https://security.gentoo.org/}等。
+以上介绍的由厂商发布的漏洞公告，也被称为：厂商公告（Vendor Advisory）。由于某一厂商只会发布、维护与该厂商相关的软件漏洞通告，而开源社区的开发人员难以一一关注所有厂商的公告信息，因此，出现了许多致力于收集并维护所有漏洞公告信息的第三方平台。这些由第三方平台收集并维护的漏洞公告也被称为：第三方公告（Third-Party Advisory）。目前，认可度较高、影响力较大的第三方漏洞公告平台有Red Hat\footnote{https://access.redhat.com/errata/}、Debian\footnote{https://www.debian.org/security/}、Gentoo\footnote{https://security.gentoo.org/}等。
 
 % 官方或第三方？再顺路引出相关的sources，作为例子。
 
@@ -80,6 +82,8 @@ CVE被设计作为漏洞字典用于收录并编号漏洞，这也导致CVE中�
 
 
 \section{相关工作}
+本文将从漏洞信息质量、漏洞补丁识别和漏洞补丁应用三个方面介绍相关的研究工作。
+
 \subsection{漏洞信息质量}
 随着社区、工业界及学术界构建的漏洞数据库越来越多，数据库中积累的漏洞数据也越来越多，研究人员开始关注数据库中漏洞信息的质量。
 
