@@ -245,7 +245,9 @@
     %   {陈碧欢     \quad 副教授}
     %   % {沈立炜     \quad 副教授}
     % },
-    instructors = {}, % 盲审要求
+    instructors = {
+      {--}
+    }, % 盲审要求
     % 指导小组成员
     % 使用英文逗号 “,” 分隔
     % 如有需要，可以用 \quad 手工对齐
@@ -360,9 +362,12 @@
 % \raggedbottom
 
 % 前置部分包含目录、中英文摘要以及符号表等
-\frontmatter
 
+% 从摘要页开始计页码： https://github.com/stone-zeng/fduthesis/issues/88
+\pagenumbering{gobble}
 \tableofcontents                  % 目录
+
+\frontmatter
 \include{src/a1_abstract.tex}     % 摘要
 \include{src/a2_abstract_en.tex}  % 英文摘要
 
@@ -383,5 +388,8 @@
 \printbibliography                    % 参考文献列表
 \include{src/z1_acknowledgement.tex}  % 致谢
 \include{src/z2_review.tex}           % 评审意见修改
+
+% 注释掉声明页
+% \makecoveriii
 
 \end{document}
