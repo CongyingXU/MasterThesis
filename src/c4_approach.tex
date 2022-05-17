@@ -13,7 +13,7 @@
 \end{figure*}
 
 基于前一章经验研究的发现，本文设计了一个名为\tool 的自动化开源软件漏洞的补丁识别方法。
-该方法可用于识别代码提交类型的补丁（即补丁提交，详见章节\ref{sec:type}），并构建一对多的漏洞补丁映射关系。该方法的核心思想是：漏洞补丁会在讨论和解决漏洞的、多种来源的漏洞公告、分析报告等参考链接中被频繁地提及和引用。因此，本文首先设计了一种基于多知识源的漏洞参考链接网络，再从该网络中选出具有最高置信度和连通度的补丁节点作为结果，并基于选定的补丁进行补丁扩展，从而构建一对多的漏洞补丁映射关系。
+该方法可用于识别代码提交类型的补丁（即补丁提交，详见章节\ref{sec:type}），并构建一对多的漏洞补丁映射关系。该方法的核心思想是：漏洞补丁会在讨论和解决漏洞的、多种来源的漏洞公告、分析报告等参考链接中被频繁地提及和引用。本文方法将利用这一特质，基于多种来源的知识进行补丁识别。然而，如何有效地综合多种来源的知识，并准确地从中识别出补丁？本文首先设计了一种基于多知识源的漏洞参考链接网络来整合多种来源的信息，再基于节点的置信度和连通度从该网络中选出补丁作为结果，并基于选定的补丁进行扩展，从而构建一对多的漏洞补丁映射关系。
 
 图\ref{fig:overview}为\tool 的方法概览。其中，\tool 以漏洞的CVE ID作为输入，主要经过三个步骤，最终返回补丁列表。步骤一，多源参考链接网络构建。该步骤的目的是将该漏洞在被报告、讨论和解决阶段引用的参考链接进行建模（参考链接，即引用的URL网址）。\tool 从多个\tocheck{漏洞知识源}（即NVD、Debian\footnote{https://security-tracker.debian.org/tracker/}、Red Hat\footnote{https://bugzilla.redhat.com/}和GitHub）中提取与该漏洞相关的参考链接并构建一个参考链接网络。这里将NVD视为主知识源，将Debian、Red Hat和GitHub视为次知识源，次级知识源列表可以不断扩增，以确保该方法的可扩展性和灵活性。步骤二，补丁选择。\tool 从构建的参考链接网络中选择具有高连通性和高置信度的补丁节点作为该漏洞的补丁。步骤三，补丁扩增。经验研究中发现漏洞与其补丁之间存在一对多的映射关系。针对这一特征，基于步骤二中选定的补丁，\tool 通过搜索同一代码库所有分支中的相关代码提交来扩展补丁集。最终，\tool 返回该漏洞的补丁列表。
 三个步骤的具体设计和实现将在下文中详细阐述。
@@ -68,7 +68,7 @@
 % \end{table*}
 
 \begin{exmp}
-图\ref{fig:example}为漏洞CVE-2017-11428\footnote{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11428}的多源参考链接网络。 其中，最顶层为根节点（即CVE ID），第二层为公告节点（即知识源NVD\footnote{https://nvd.nist.gov/vuln/detail/CVE-2017-11428}、Debian\footnote{https://security-tracker.debian.org/tracker/CVE-2017-11428}和Red Hat\footnote{https://bugzilla.redhat.com/show\_bug.cgi?id=CVE-2017-11428}）。
+图\ref{fig:example}为漏洞CVE-2017-11428\footnote{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11428}的多源参考链接网络。 其中，最顶层为根节点（即CVE ID），第二层为公告节点（即知识源NVD\footnote{https://nvd.nist.gov/vuln/detail/CVE-2017-11428}、Debian\footnote{https://security-tracker.debian.org/tracker/CVE-2017-11428}和Red Hat\footnote{https://bugzilla.redhat.com/show\_bug.cgi?id=CVE-2017-11428}）。此外，图中灰色为根节点和公告节点，紫色为混合节点，红色为补丁（代码提交）节点，绿色为问题节点，以及虚线处的设置将在后文中逐步陈述。
 \end{exmp}
 
 然后，\tool 通过网络请求分别获取NVD、Debian和Red Hat平台中该漏洞的漏洞公告。NVD平台中，漏洞公告以JSON形式按年份存储于结构化数据\footnote{https://nvd.nist.gov/vuln/data-feeds}中，\tool 通过下载并解析相应的JSON文件即可获得NVD中该漏洞的公告信息。Debian平台中，漏洞公告也以结构化数据的形式存储在仓库\footnote{https://salsa.debian.org/security-tracker-team/security-tracker/-/tree/master/data/CVE}中，\tool 可直接从中解析Debian提供的该漏洞公告信息。Red Hat平台提供了WebService API\footnote{https://bugzilla.redhat.com/docs/en/html/api/index.html}服务，\tool 可以直接使用该服务来检索Red Hat平台的漏洞公告。其中，Debian会跟踪NVD上的所有漏洞，而Red Hat仅跟踪NVD上的部分漏洞。
@@ -154,9 +154,9 @@
 步骤二的设计目标是尽可能准确且完整地从该漏洞参考链接网络中选择出补丁节点。为了实现这一目标，本小节设计了以下两种补丁选择方法。
 
 \subsection{基于置信度的补丁选择方法}
-在该方法中，\tool 将直接选择具有高置信度的补丁作为正确的补丁。具体来说，本文认为参考链接网络中的两种补丁节点具有比较高的置信度。
+在该方法中，\tool 将直接选择具有高置信度的补丁作为正确的补丁。这里的高置信度补丁是指，基于经验研究和实验验证的结果，具有较高可能性为正确补丁的代码提交，实验验证和讨论分析见表格\ref{table:heuristic}。具体来说，本文认为参考链接网络中的两种补丁节点具有比较高的置信度。
 
-第一种，为被NVD直接引用的补丁节点，即图中作为NVD子节点的补丁节点，被认为具有高置信度。这是因为NVD数据库建立在强大的社区支持下，每个漏洞的信息都经过多个流程的人工确认，且初始漏洞报告在发布后还会不断维护更新。因此，本文认为NVD中的补丁具有较高的精度。此外，已有的很多工作\cite{duan2019automating, li2016vulpecker, li2018vuldeepecker}都是基于这种方法来识别补丁。
+第一种，为被NVD直接引用的补丁节点，即图中作为NVD子节点的补丁节点，被认为具有高置信度。如表 这是因为NVD数据库建立在强大的社区支持下，每个漏洞的信息都经过多个流程的人工确认，且初始漏洞报告在发布后还会不断维护更新。因此，本文认为NVD中的补丁具有较高的精度。此外，已有的很多工作\cite{duan2019automating, li2016vulpecker, li2018vuldeepecker}都是基于这种方法来识别补丁。
 
 第二种，为从GitHub直接搜索出的补丁节点，即图中作为GitHub子节点的补丁节点，被认为具有高置信度。这是因为在将此类补丁节点添加到网络前，经过了较为严苛的确认。\tool 会确保代码提交信息中包含该漏洞的CVE ID、 Advisory ID或Issue ID，并且其所属的仓库信息必须与该漏洞的CPE名称成功匹配。这种方法也在已有的很多工作\cite{you2017semfuzz, Wang2020empirical}中使用。
 
