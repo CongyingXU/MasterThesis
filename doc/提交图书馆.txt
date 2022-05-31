@@ -1,0 +1,73 @@
+https://thesis.fudan.edu.cn//changeEmail.action?moredocid=137714
+
+
+开源软件（Open Source Software， OSS）漏洞管理是一个广受关注的研究问题。开源软件漏洞数据库作为各项软件安全任务的基础设施，数据库中漏洞知识的质量已受到越来越多的关注和研究。然而，现有的漏洞数据库中补丁知识的质量和特征尚未被系统地研究；此外，漏洞数据库中的补丁也多是由人工或基于启发式规则的方法半自动化收集，这些方法人工成本高并且为任务定制化，无法应用于所有开源软件漏洞。
+    
+针对上述问题，本文先开展了一项针对开源软件漏洞补丁的经验研究，以了解当前商业漏洞数据库中开源软件漏洞补丁的质量和特征。该经验研究涵盖五个方面，包括补丁覆盖度分析、补丁一致性分析、补丁类型分析、补丁映射关系以及补丁准确性分析。研究发现：（1）商业漏洞数据库中开源软件漏洞补丁的质量并不理想。补丁缺失情况较为普遍，商业数据库中漏洞补丁覆盖率仅为41.0%左右。对于有多个补丁的漏洞，商业数据库会遗漏部分补丁。（2）开源软件漏洞补丁在类型、映射关系方面有一定的特殊性。93.7%的补丁类型都是GitHub的代码提交，且超过40%的漏洞与其补丁是一对多的映射关系。
+    
+基于经验研究的发现，本文提出了一种名为TRACER的基于多源知识的开源软件漏洞的补丁识别方法。该方法可以识别代码提交类型的补丁，并构建一对多的漏洞补丁映射关系。该方法的核心思想是：漏洞补丁会在讨论和解决漏洞的、多种来源的漏洞公告、分析报告等参考链接中被频繁地提及和引用。因此，本文首先设计了一种基于多知识源的漏洞参考链接网络，再从该网络中选出具有高可信源和连通度的补丁节点作为结果，并基于选定的补丁进行扩增，从而构建一对多的漏洞补丁映射关系。
+    
+本文通过五个研究问题，从准确性、通用性、实用性等多个方面对TRACER进行了实验评估。实验结果表明：（1）在包含1,295个漏洞的实验数据集上，TRACER可以达到88.0%的补丁覆盖率、0.864的补丁精确率和0.864的补丁召回率。（2）与现有的基于启发式规则的方法相比，TRACER可以将补丁覆盖率提高到273.8%，将F1值提高116.8%。（3）与商业漏洞数据库相比，TRACER的召回率高出18.4%。这表明，TRACER可用于补充现有漏洞数据库缺失的漏洞补丁。（4）在更大范围包含3,185和5,468个漏洞的数据集上，TRACER具有较好的通用性。即使在商业漏洞数据库都没有补丁的情况下，TRACER仍能达到67.7%和51.5%的补丁覆盖率。这表明，TRACER可以极大地补充或增强现有的商业漏洞数据库。在实际工作场景中，TRACER被证明有助于用户更准确、更快速地识别到补丁。
+
+
+
+
+Open source software (OSS) vulnerability management has become an open problem of great concern.OSS vulnerability databases, as the basis of security-related tasks, have arisen a growing concern about their information quality. However, it is unclear how the quality and characteristics of patches in existing vulnerability databases are. Further, existing manual or heuristic-based approaches for patch identification are either too expensive or too specific to be applied to all OSS vulnerabilities.
+    
+To address these problems, this thesis first conducts an empirical study to understand the quality and characteristics of patches for OSS vulnerabilities in two commercial vulnerability databases. Our study is designed to cover five dimensions, i.e., the coverage, consistency, type, cardinality and accuracy of patches. The result shows that (1) the quality of vulnerability patches in commercial vulnerability databases is not great. The lack of patches is prevalent, and the coverage of patches for vulnerabilities is only about 41.0%. Patches in commercial vulnerability databases are of high accuracy, but for vulnerabilities with multiple patches, patches are often not complete. (2) In terms of patch types and mapping relationships, 93.7% of patches are in the form of GitHub commits, and more than 40% of vulnerabilities have a one-to-many mapping relationship with patches.
+    
+Then, inspired by our study, this thesis proposes an automated approach, named TRACER, to identify patches for an OSS vulnerability from multi-source knowledge. TRACER is designed to identify patch commits and build a one-to-many mapping between vulnerabilities and patches. Our key idea is that patch commits will be frequently referenced during the reporting, discussion and resolution of an OSS vulnerability. Therefore, we first design a reference network based on multi-source knowledge, and then select patch nodes with the highest confidence and connectivity from the network. Based on selected patches, TRACER expands the patch list.
+    
+With five research questions, TRACER is evaluated in terms of accuracy, generality, usefulness, etc. The extensive evaluation has indicated that (1) on the dataset of 1,295 CVEs, TRACER can achieve the coverage, precision, and recall in 88.0%, 0.864, and 0.864 respectively. (2) Compared with existing heuristic-based approaches, TRACER improves the patch coverage by 273.8%, and the F1 value by 116.8%. (3) Compared with commercial vulnerability databases, TRACER improves the recall by 18.4%. This suggests that TRACER can be used to supplement the patch missing from commercial vulnerability databases. (4) TRACER is general to larger datasets containing 3,185 and 5,468 OSS vulnerabilities. TRACER can still achieve the patch coverage of 67.7% and 51.5%, while commercial vulnerability databases provide no patch for these vulnerabilities. This suggests that TRACER can greatly enhance existing commercial vulnerability databases. In practice, TRACER can assist users in identifying patches more accurately and quickly.
+
+
+[1] WANG Y, CHEN B, HUANG K, et al. An empirical study of usages, updates and risks of third-party libraries in java projects[C]//Proceedings of the 36th IEEE International Conference on Software Maintenance and Evolution. 2020: 35-45. 
+[2] 何熙巽, 张玉清, 刘奇旭. 软件供应链安全综述[J]. 信息安全学报, 2020, 5: 57-73. 
+[3] 刘剑, 苏璞睿, 杨珉, 等. 软件与网络安全研究综述[J]. 软件学报, 2018, 29: 42-68. 
+[4] LI Z, ZOU D, XU S, et al. Vulpecker: an automated vulnerability detection system based on code similarity analysis[C]//Proceedings of the 32nd Annual Conference on Computer Security Applications. 2016: 201-213. 
+[5] LI Z, ZOU D, XU S, et al. Vuldeepecker: A deep learning-based system for vulnerability detection[C]//Proceedings of the 25th Annual Network and Distributed System Security Symposium. 2018. 
+[6] ZHOU Y, LIU S, SIOW J, et al. Devign: Effective vulnerability identification by learning comprehensive program semantics via graph neural networks[C]// Proceedings of the 32nd Annual Conference on Neural Information Processing Systems. 2019: 10197-10207. 
+[7] JIMENEZ M, RWEMALIKA R, PAPADAKIS M, et al. The importance of accounting for real-world labelling when predicting software vulnerabilities[C]// Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering. 2019: 695-705. 
+[8] JANG J, AGRAWAL A, BRUMLEY D. Redebug: finding unpatched code clones in entire os distributions[C]//Proceedings of the IEEE Symposium on Security and Privacy. 2012: 48-62. 
+[9] KIM S, WOO S, LEE H, et al. Vuddy: A scalable approach for vulnerable code clone discovery[C]//Proceedings of the IEEE Symposium on Security and Privacy. 2017: 595-614. 
+[10] XU Y, XU Z, CHEN B, et al. Patch based vulnerability matching for binary programs[C]//Proceedings of the 29th ACM SIGSOFT International Symposium on Software Testing and Analysis. 2020: 376-387. 
+[11] XIAO Y, CHEN B, YU C, et al. {MVP}: Detecting vulnerabilities using patchenhanced vulnerability signatures[C]//Proceedings of the 29th USENIX Security Symposium. 2020: 1165-1182. 
+[12] CUI L, HAO Z, JIAO Y, et al. Vuldetector: Detecting vulnerabilities using weighted feature graph comparison[J]. IEEE Transactions on Information Forensics and Security, 2021, 16: 2004-2017. 
+[13] PASHCHENKO I, PLATE H, PONTA S E, et al. Vulnerable open source dependencies: Counting those that matter[C]//Proceedings of the 12th ACM/IEEE International Symposium on Empirical Software Engineering and Measurement. 2018: 1-10. 
+[14] PONTA S E, PLATE H, SABETTA A. Detection, assessment and mitigation of vulnerabilities in open source dependencies[J]. Empirical Software Engineering, 2020, 25(5): 3175-3215. 
+[15] PASHCHENKO I, PLATE H, PONTA S E, et al. Vuln4real: A methodology for counting actually vulnerable dependencies[J]. IEEE Transactions on Software Engineering, 2020. 
+[16] PONTA S E, PLATE H, SABETTA A, et al. A manually-curated dataset of fixes to vulnerabilities of open-source software[C]//Proceedings of the IEEE/ACM 16th International Conference on Mining Software Repositories. 2019: 383-387. 
+[17] FAN J, LI Y, WANG S, et al. A c/c++ code vulnerability dataset with code changes and cve summaries[C]//Proceedings of the 17th International Conference on Mining Software Repositories. 2020: 508-512. 
+[18] JIMENEZ M, LE TRAON Y, PAPADAKIS M. Enabling the continous analysis of security vulnerabilities with vuldata7[C]//Proceedings of the IEEE International Working Conference on Source Code Analysis and Manipulation. 2018: 56-61. 
+[19] GKORTZIS A, MITROPOULOS D, SPINELLIS D. Vulinoss: a dataset of security vulnerabilities in open-source systems[C]//Proceedings of the 15th International Conference on Mining Software Repositories. 2018: 18-21. 
+[20] NAMRUD Z, KPODJEDO S, TALHI C. Androvul: a repository for android security vulnerabilities[C]//Proceedings of the 29th Annual International Conference on Computer Science and Software Engineering. 2019: 64-71. 
+[21] DONG Y, GUO W, CHEN Y, et al. Towards the detection of inconsistencies in public security vulnerability reports[C]//Proceedings of the 28th USENIX Security Symposium. 2019: 869-885. 
+[22] CHAPARRO O, LU J, ZAMPETTI F, et al. Detecting missing information in bug descriptions[C]//Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering. 2017: 396-407. 
+[23] MU D, CUEVAS A, YANG L, et al. Understanding the reproducibility of crowdreported security vulnerabilities[C]//Proceedings of the 27th USENIX Security Symposium. 2018: 919-936. 
+[24] MULLINER C, OBERHEIDE J, ROBERTSON W, et al. Patchdroid: Scalable third-party security patches for android devices[C]//Proceedings of the 29th Annual Computer Security Applications Conference. 2013: 259-268. 
+[25] DUAN R, BIJLANI A, JI Y, et al. Automating patching of vulnerable open-source software versions in application binaries.[C]//Proceedings of the 26th Annual Network and Distributed System Security Symposium. 2019. 
+[26] XU Z, ZHANG Y, ZHENG L, et al. Automatic hot patch generation for android kernels[C]//Proceedings of the 29th USENIX Security Symposium. 2020: 2397- 2414. 
+[27] ZHANG H, QIAN Z. Precise and accurate patch presence test for binaries[C]// Proceedings of the 27th USENIX Security Symposium. 2018: 887-902. 
+[28] JIANG Z, ZHANG Y, XU J, et al. Pdiff: Semantic-based patch presence testing for downstream kernels[C]//Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications Security. 2020: 1149-1163. 
+[29] DAI J, ZHANG Y, JIANG Z, et al. Bscout: Direct whole patch presence test for java executables[C]//Proceedings of the 29th USENIX Security Symposium. 2020: 1147-1164. 
+[30] ZHOU Y, SHARMA A. Automated identification of security issues from commit messages and bug reports[C]//Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering. 2017: 914-919. 
+[31] SABETTA A, BEZZI M. A practical approach to the automatic classification of security-relevant commits[C]//Proceedings of the IEEE International Conference on Software Maintenance and Evolution. 2018: 579-582. 
+[32] CHEN Y, SANTOSA A E, YI A M, et al. A machine learning approach for vulnerability curation[C]//Proceedings of the 17th International Conference on Mining Software Repositories. 2020: 32-42. 
+[33] YOU W, ZONG P, CHEN K, et al. Semfuzz: Semantics-based automatic generation of proof-of-concept exploits[C]//Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security. 2017: 2139-2154. 
+[34] MITRE. About cve[EB/OL]. 2021. https://cve.mitre.org/. 
+[35] NGUYEN V H, MASSACCI F. The (un) reliability of nvd vulnerable versions data: An empirical experiment on google chrome vulnerabilities[C]//Proceedings of the 8th ACM SIGSAC Symposium on Information, Computer and Communications Security. 2013: 493-498. 
+[36] NGUYEN V H, DASHEVSKYI S, MASSACCI F. An automatic method for assessing the versions affected by a vulnerability[J]. Empirical Software Engineering, 2016, 21(6): 2268-2297. 
+[37] DASHEVSKYI S, BRUCKER A D, MASSACCI F. A screening test for disclosed vulnerabilities in foss components[J]. IEEE Transactions on Software Engineering, 2019, 45(10): 945-966. 
+[38] TAN X, ZHANG Y, MI C, et al. Locating the security patches for disclosed oss vulnerabilities with vulnerability-commit correlation ranking[C]//Proceedings of the 28th ACM Conference on Computer and Communications Security. 2021. 
+[39] 周鹏, 武延军, 赵琛. 一种 Linux 安全漏洞修复补丁自动识别方法[J]. 计算机研究与发展, 2022, 59: 197-208. 
+[40] 邹雅毅, 李珍. 开源软件漏洞补丁的采集与整理[J]. 河北省科学院学报, 2016, 33: 18-22. 
+[41] 李瑞科, 刘元, 廖雷, 等. 1999–2018 年安全漏洞数据集[J]. 中国科学数据 (中英文网络版), 2019, 4: 123-132. 
+[42] LI F, PAXSON V. A large-scale empirical study of security patches[C]// Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security. 2017: 2201-2215. 
+[43] LIU B, MENG G, ZOU W, et al. A large-scale empirical study on vulnerability distribution within projects and the lessons learned[C]//Proceedings of the IEEE/ACM 42nd International Conference on Software Engineering. 2020: 1547- 1559. 
+[44] 文琪, 江喆越, 张源. 基于关键路径测试的安全补丁存在性检测[J]. 计算机应用与软件, 2020, 37: 1-7. 
+[45] BRUMLEY D, POOSANKAM P, SONG D, et al. Automatic patch-based exploit generation is possible: Techniques and implications[C]//Proceedings of the IEEE Symposium on Security and Privacy. 2008: 143-157. 
+[46] 李舟军, 张俊贤, 廖湘科, 等. 软件安全漏洞检测技术[J]. 计算机学报, 2015, 38: 717-732. 
+[47] 李韵, 黄辰林, 王中锋, 等. 基于机器学习的软件漏洞挖掘方法综述[J]. 软件学报, 2020, 31: 2040-2061. 
+[48] 李赞, 边攀, 石文昌, 等. 一种利用补丁的未知漏洞发现方法[J]. 软件学报, 2018, 29: 1119-1212. 
+[49] 李元诚, 黄戎, 来风刚, 等. 基于深度聚类的开源软件漏洞检测方法[J]. 计算机应用研究, 2020, 37: 1107-1110. 
+[50] ANTAL G, KELETI M, HEGEDŬS P. Exploring the security awareness of the python and javascript open source communities[C]//Proceedings of the 17th International Conference on Mining Software Repositories. 2020: 16-20.
